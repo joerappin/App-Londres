@@ -75,7 +75,7 @@
     .tl-line { width:2px; flex:1; background:#DCDFE6; margin-top:3px; }
     .event-col  { flex:1; padding:0 18px 18px 10px; }
     .event-slot { min-height:40px; }
-    .event-chip { border-radius:8px; padding:10px 14px; cursor:pointer; display:flex; flex-direction:column; box-shadow:0 2px 10px rgba(0,0,0,0.18); user-select:none; transition:opacity 0.12s; }
+    .event-chip { border-radius:8px; padding:10px 14px; cursor:pointer; display:flex; flex-direction:column; box-shadow:0 2px 10px rgba(0,0,0,0.18); user-select:none; transition:opacity 0.12s; overflow:hidden; }
     .event-chip:active { opacity:0.75; }
     .event-chip-header { display:flex; align-items:center; gap:8px; }
     .event-chip-label { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.28); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; }
@@ -619,21 +619,21 @@
     E:'#6A1B9A', F:'#4527A0', G:'#E65100', H:'#1565C0',
   };
 
-  // ── Événements (coords vérifiées) ──────────────────
+  // ── Événements (start/end en minutes depuis minuit) ─
   const EVENTS = {
     0: {
-       6: { label:'A', title:'✈ Vol Marseille → Londres', time:'06:05 – 07:05', color:PALETTE.A, modal:'flight-out',    coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
-       7: { label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – 09:00', color:PALETTE.B, modal:'transfer-in',   coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel', travelRoute:0 },
-      14: { label:'C', title:'🦕 Natural History Museum', time:'14:30 – 17:30', color:PALETTE.C, modal:'nhm',           coords:[51.4967, -0.1764], mapName:'Natural History Museum' },
-      15: { label:'D', title:'🏨 Check-in Hôtel',         time:'dès 15h00',     color:PALETTE.D, modal:'hotel',         coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel by Thistle' },
+       6: { label:'A', title:'✈ Vol Marseille → Londres', time:'06:05 – 07:05',        color:PALETTE.A, modal:'flight-out',    coords:[51.8870,  0.2441], mapName:'London Stansted (STN)',         start: 6*60+ 5, end: 7*60+ 5 },
+       7: { label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – 09:00',        color:PALETTE.B, modal:'transfer-in',   coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel',             start: 7*60+ 5, end: 9*60,    travelRoute:0 },
+      14: { label:'C', title:'🦕 Natural History Museum', time:'14:30 – 17:30',        color:PALETTE.C, modal:'nhm',           coords:[51.4967, -0.1764], mapName:'Natural History Museum',        start:14*60+30, end:17*60+30 },
+      18: { label:'D', title:'🏨 Check-in Hôtel',         time:'dès 15h00',            color:PALETTE.D, modal:'hotel',         coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel by Thistle',  start:18*60,    end:19*60    },
     },
     1: {
-      12: { label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PALETTE.E, modal:'hp', coords:[51.5235, -0.1273], mapName:'RDV Coach – Bedford Way', travelRoute:1 },
+      12: { label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PALETTE.E, modal:'hp',            coords:[51.5235, -0.1273], mapName:'RDV Coach – Bedford Way',       start:12*60+50, end:18*60,    travelRoute:1 },
     },
     2: {
-      10: { label:'F', title:'🏨 Check-out Hôtel',         time:'avant 11h00',    color:PALETTE.F, modal:'checkout',       coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel' },
-      11: { label:'G', title:'🚗 Navette → Stansted',      time:'~11h00',         color:PALETTE.G, modal:'transfer-out',  coords:[51.8870,  0.2441], mapName:'London Stansted (STN)', travelRoute:2 },
-      13: { label:'H', title:'✈ Vol Londres → Marseille', time:'13:25 – 16:25',  color:PALETTE.H, modal:'flight-return', coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
+      10: { label:'F', title:'🏨 Check-out Hôtel',         time:'avant 11h00',         color:PALETTE.F, modal:'checkout',      coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel',             start:10*60,    end:11*60    },
+      11: { label:'G', title:'🚗 Navette → Stansted',      time:'~11h00',              color:PALETTE.G, modal:'transfer-out',  coords:[51.8870,  0.2441], mapName:'London Stansted (STN)',         start:11*60,    end:12*60+45, travelRoute:2 },
+      13: { label:'H', title:'✈ Vol Londres → Marseille', time:'13:25 – 16:25',       color:PALETTE.H, modal:'flight-return', coords:[51.8870,  0.2441], mapName:'London Stansted (STN)',         start:13*60+25, end:15*60+25 },
     },
   };
 
@@ -673,9 +673,46 @@
     buildTimeline(currentDay);
   }
 
+  // ── Arc de vol (courbe de Bézier quadratique) ──────
+  function flightArcPts(from, to, steps=50) {
+    const mLat = (from[0]+to[0])/2 + Math.abs(to[0]-from[0])*0.22;
+    const mLng = (from[1]+to[1])/2;
+    return Array.from({length:steps+1}, (_,i) => {
+      const t = i/steps;
+      return [(1-t)*(1-t)*from[0]+2*(1-t)*t*mLat+t*t*to[0],
+              (1-t)*(1-t)*from[1]+2*(1-t)*t*mLng+t*t*to[1]];
+    });
+  }
+
+  // ── Itinéraires par journée ─────────────────────────
+  const MRS = [43.4365, 5.2150]; // Aéroport Marseille Provence
+  const STN = [51.8870, 0.2441];
+  const HTL = [51.5141,-0.1566]; // Marble Arch Hotel
+  const NHM = [51.4967,-0.1764];
+  const BDW = [51.5235,-0.1273]; // Bedford Way
+  const WBS = [51.6903,-0.4181]; // Warner Bros Studios
+
+  const MAP_ROUTES = {
+    0: [
+      { pts:flightArcPts(MRS,STN),  color:'#1565C0', weight:3,   dash:null  }, // vol MRS→STN
+      { pts:[STN,HTL],               color:'#E65100', weight:2.5, dash:'9,5' }, // navette STN→Hôtel
+      { pts:[HTL,NHM],               color:'#1B5E20', weight:2,   dash:'6,5' }, // trajet Hôtel→NHM
+      { pts:[NHM,HTL],               color:'#4527A0', weight:2,   dash:'6,5' }, // retour NHM→Hôtel
+    ],
+    1: [
+      { pts:[BDW,WBS],               color:'#6A1B9A', weight:2.5, dash:'9,5' }, // coach Bedford→WB
+    ],
+    2: [
+      { pts:[HTL,STN],               color:'#E65100', weight:2.5, dash:'9,5' }, // navette Hôtel→STN
+      { pts:flightArcPts(STN,MRS),  color:'#1565C0', weight:3,   dash:null  }, // vol STN→MRS
+    ],
+  };
+
   // ── Points carte uniquement (hors agenda) ─────────
   const MAP_POINTS = [
-    { day:1, label:'W', title:'🎬 Warner Bros. Studios', time:'13:00 – ~18:00', color:'#6A1B9A', coords:[51.6903, -0.4181], mapName:'Warner Bros. Studio Tour Leavesden' },
+    { day:1, label:'W', title:'🎬 Warner Bros. Studios',   time:'13:00 – ~18:00', color:'#6A1B9A', coords:WBS, mapName:'Warner Bros. Studio Tour Leavesden' },
+    { day:0, label:'M', title:'✈ Départ Marseille',        time:'29 mai — 06h05', color:'#1565C0', coords:MRS, mapName:'Aéroport Marseille Provence (MRS)' },
+    { day:2, label:'M', title:'✈ Arrivée Marseille',       time:'31 mai — 16h25', color:'#1565C0', coords:[MRS[0]+0.0005,MRS[1]+0.0005], mapName:'Aéroport Marseille Provence (MRS)' },
   ];
 
   // ── QR codes NHM ──────────────────────────────────
@@ -805,32 +842,49 @@
     { name:'Samedi',   date:'30 mai 2026' },
     { name:'Dimanche', date:'31 mai 2026' },
   ];
-  const HOURS = Array.from({ length:15 }, (_, i) => i + 6);
-
   function buildTimeline(dayIdx) {
     const evts = EVENTS[dayIdx] || {};
-    document.getElementById('timeline').innerHTML = HOURS.map((h, i) => {
-      const ev = evts[h];
-      return `<div class="time-row">
-        <div class="hour-col"><span class="hour-label">${String(h).padStart(2,'0')}h00</span></div>
-        <div class="tl-col">
-          <div class="tl-dot"></div>
-          ${i < HOURS.length - 1 ? '<div class="tl-line"></div>' : ''}
+    const PX   = 68;      // px par heure
+    const BASE = 6 * 60;  // 06:00 en minutes
+    const NH   = 15;       // heures affichées 06h–20h
+    const px   = m => ((m - BASE) / 60) * PX;
+
+    const hoursHtml = Array.from({length:NH}, (_, i) => {
+      const h = i + 6;
+      return `<div style="height:${PX}px;text-align:right;padding-right:10px;padding-top:2px;
+        color:#012169;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;">
+        ${String(h).padStart(2,'0')}h00</div>`;
+    }).join('');
+
+    const dotsHtml = Array.from({length:NH}, (_, i) =>
+      `<div style="position:absolute;left:-6px;top:${i*PX+4}px;width:10px;height:10px;
+        border-radius:50%;background:#C8102E;z-index:2;"></div>`
+    ).join('');
+
+    const eventsHtml = Object.values(evts).map(ev => {
+      const top    = px(ev.start);
+      const height = Math.max(px(ev.end) - top, 38);
+      const travel = ev.travelRoute !== undefined && travelTimes[ev.travelRoute] !== null
+        ? `<a class="event-chip-travel" href="${TRAVEL_ROUTES[ev.travelRoute].mapsUrl}" target="_blank" onclick="event.stopPropagation()">🚗 ~${fmtDur(travelTimes[ev.travelRoute])} <span>Voir trafic →</span></a>` : '';
+      return `<div class="event-chip"
+          style="background:${ev.color};position:absolute;left:10px;right:0;top:${top}px;height:${height}px;"
+          onclick="${ev.modal ? `openModal('${ev.modal}')` : 'void 0'}">
+        <div class="event-chip-header">
+          <div class="event-chip-label">${ev.label}</div>
+          <span class="event-chip-title">${ev.title}</span>
         </div>
-        <div class="event-col">
-          ${ev ? `<div class="event-chip" style="background:${ev.color}" onclick="${ev.modal ? `openModal('${ev.modal}')` : 'void 0'}">
-            <div class="event-chip-header">
-              <div class="event-chip-label">${ev.label}</div>
-              <span class="event-chip-title">${ev.title}</span>
-            </div>
-            <div class="event-chip-time">${ev.time}</div>
-            ${ev.travelRoute !== undefined && travelTimes[ev.travelRoute] !== null
-              ? `<a class="event-chip-travel" href="${TRAVEL_ROUTES[ev.travelRoute].mapsUrl}" target="_blank" onclick="event.stopPropagation()">🚗 ~${fmtDur(travelTimes[ev.travelRoute])} <span>Voir trafic →</span></a>`
-              : ''}
-          </div>` : `<div class="event-slot"></div>`}
-        </div>
+        <div class="event-chip-time">${ev.time}</div>
+        ${travel}
       </div>`;
     }).join('');
+
+    document.getElementById('timeline').innerHTML =
+      `<div style="display:flex;padding:18px 18px 40px 0;">
+        <div style="width:80px;flex-shrink:0;">${hoursHtml}</div>
+        <div style="flex:1;position:relative;border-left:2px solid #DCDFE6;height:${NH*PX}px;">
+          ${dotsHtml}${eventsHtml}
+        </div>
+      </div>`;
   }
 
   let currentDay = 0;
@@ -865,6 +919,7 @@
   // ── Carte Leaflet ─────────────────────────────────
   let lMap = null;
   const mapMarkersByDay = { 0:[], 1:[], 2:[] };
+  const mapRoutesByDay  = { 0:[], 1:[], 2:[] };
 
   function showMap() {
     showScreen('map-screen');
@@ -931,32 +986,49 @@
         </div>`, { maxWidth:240 });
       mapMarkersByDay[pt.day].push(marker);
     });
+
+    // Itinéraires
+    Object.entries(MAP_ROUTES).forEach(([dayStr, routes]) => {
+      const day = parseInt(dayStr);
+      routes.forEach(r => {
+        const poly = L.polyline(r.pts, { color:r.color, weight:r.weight, dashArray:r.dash, opacity:0.70 });
+        mapRoutesByDay[day].push(poly);
+      });
+    });
   }
 
   function filterMapDay(dayIdx) {
-    // Update active tab
+    // Onglet actif
     document.querySelectorAll('#map-tab-bar .tab').forEach(t => {
       t.classList.toggle('active', parseInt(t.dataset.mapday) === dayIdx);
     });
 
-    // Show/hide markers
+    // Marqueurs
     Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
-      const visible = dayIdx === -1 || parseInt(day) === dayIdx;
+      const vis = dayIdx === -1 || parseInt(day) === dayIdx;
       markers.forEach(m => {
-        if (visible && !lMap.hasLayer(m)) m.addTo(lMap);
-        if (!visible && lMap.hasLayer(m)) lMap.removeLayer(m);
+        if (vis  && !lMap.hasLayer(m)) m.addTo(lMap);
+        if (!vis &&  lMap.hasLayer(m)) lMap.removeLayer(m);
       });
     });
 
-    // Refit bounds to visible markers
-    const visible = [];
-    Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
-      if (dayIdx === -1 || parseInt(day) === dayIdx) {
-        markers.forEach(m => visible.push(m.getLatLng()));
-      }
+    // Itinéraires
+    Object.entries(mapRoutesByDay).forEach(([day, routes]) => {
+      const vis = dayIdx === -1 || parseInt(day) === dayIdx;
+      routes.forEach(r => {
+        if (vis  && !lMap.hasLayer(r)) r.addTo(lMap);
+        if (!vis &&  lMap.hasLayer(r)) lMap.removeLayer(r);
+      });
     });
-    if (visible.length === 1)    lMap.setView(visible[0], 13);
-    else if (visible.length > 1) lMap.fitBounds(visible, { padding:[50,50] });
+
+    // Recadrage sur les éléments visibles
+    const pts = [];
+    Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
+      if (dayIdx === -1 || parseInt(day) === dayIdx)
+        markers.forEach(m => pts.push(m.getLatLng()));
+    });
+    if (pts.length === 1)    lMap.setView(pts[0], 13);
+    else if (pts.length > 1) lMap.fitBounds(pts, { padding:[50,50] });
   }
 </script>
 </body>
