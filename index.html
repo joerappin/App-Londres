@@ -213,6 +213,28 @@
       <div style="width:38px"></div>
     </div>
     <div id="leaflet-map"></div>
+    <div class="tab-bar" id="map-tab-bar">
+      <div class="tab" data-mapday="-1" onclick="filterMapDay(-1)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num" style="font-size:18px">Tous</div>
+        <div class="tab-sub">3 jours</div>
+      </div>
+      <div class="tab" data-mapday="0" onclick="filterMapDay(0)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num">29</div>
+        <div class="tab-sub">Vendredi</div>
+      </div>
+      <div class="tab" data-mapday="1" onclick="filterMapDay(1)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num">30</div>
+        <div class="tab-sub">Samedi</div>
+      </div>
+      <div class="tab" data-mapday="2" onclick="filterMapDay(2)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num">31</div>
+        <div class="tab-sub">Dimanche</div>
+      </div>
+    </div>
   </div>
 
   <!-- ══ MODAL — Vol aller FR1467 ════════════════════ -->
@@ -786,11 +808,16 @@
 
   // ── Carte Leaflet ─────────────────────────────────
   let lMap = null;
+  const mapMarkersByDay = { 0:[], 1:[], 2:[] };
 
   function showMap() {
     showScreen('map-screen');
-    if (!lMap) { setTimeout(initMap, 80); }
-    else { lMap.invalidateSize(); }
+    if (!lMap) {
+      setTimeout(() => { initMap(); filterMapDay(currentDay); }, 80);
+    } else {
+      lMap.invalidateSize();
+      filterMapDay(currentDay);
+    }
   }
 
   function initMap() {
@@ -799,24 +826,23 @@
       attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>', maxZoom:18
     }).addTo(lMap);
 
-    const allCoords = [];
-    const usedKeys  = {};
+    const usedKeys = {};
 
-    Object.values(EVENTS).forEach(dayEvts => {
+    Object.entries(EVENTS).forEach(([dayStr, dayEvts]) => {
+      const day = parseInt(dayStr);
       Object.values(dayEvts).forEach(ev => {
         if (!ev.coords) return;
         const key = ev.coords.join(',');
         const n   = usedKeys[key] = (usedKeys[key] || 0) + 1;
         const off = (n - 1) * 0.0003;
         const c   = [ev.coords[0] + off, ev.coords[1] + off];
-        allCoords.push(c);
 
         const icon = L.divIcon({
           html:`<div style="background:${ev.color};color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:0 3px 12px rgba(0,0,0,0.45);border:3px solid #fff;font-family:-apple-system,sans-serif;">${ev.label}</div>`,
           className:'', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22],
         });
 
-        L.marker(c, { icon }).addTo(lMap).bindPopup(`
+        const marker = L.marker(c, { icon }).bindPopup(`
           <div style="font-family:-apple-system,sans-serif;min-width:170px;margin:0">
             <div style="background:${ev.color};color:#fff;padding:7px 12px;margin:-1px -1px 8px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px;">${ev.label} — ${ev.mapName}</div>
             <div style="padding:0 12px 10px">
@@ -824,11 +850,36 @@
               <div style="font-size:12px;color:#888;margin-top:3px;font-variant-numeric:tabular-nums;">${ev.time}</div>
             </div>
           </div>`, { maxWidth:240 });
+
+        mapMarkersByDay[day].push(marker);
+      });
+    });
+  }
+
+  function filterMapDay(dayIdx) {
+    // Update active tab
+    document.querySelectorAll('#map-tab-bar .tab').forEach(t => {
+      t.classList.toggle('active', parseInt(t.dataset.mapday) === dayIdx);
+    });
+
+    // Show/hide markers
+    Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
+      const visible = dayIdx === -1 || parseInt(day) === dayIdx;
+      markers.forEach(m => {
+        if (visible && !lMap.hasLayer(m)) m.addTo(lMap);
+        if (!visible && lMap.hasLayer(m)) lMap.removeLayer(m);
       });
     });
 
-    if (allCoords.length === 1)      lMap.setView(allCoords[0], 13);
-    else if (allCoords.length > 1)   lMap.fitBounds(allCoords, { padding:[50,50] });
+    // Refit bounds to visible markers
+    const visible = [];
+    Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
+      if (dayIdx === -1 || parseInt(day) === dayIdx) {
+        markers.forEach(m => visible.push(m.getLatLng()));
+      }
+    });
+    if (visible.length === 1)    lMap.setView(visible[0], 13);
+    else if (visible.length > 1) lMap.fitBounds(visible, { padding:[50,50] });
   }
 </script>
 </body>
