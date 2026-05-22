@@ -118,6 +118,18 @@
     }
     .btn-enter:active { opacity: 0.72; }
 
+    /* ── FLAG RAIN ───────────────────────────────────── */
+    @keyframes flag-fall {
+      0%   {
+        transform: translateY(0) translateX(0) rotate(var(--rot-start));
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(112vh) translateX(var(--drift)) rotate(var(--rot-end));
+        opacity: 0.25;
+      }
+    }
+
     /* ── AGENDA ──────────────────────────────────────── */
     #agenda { background: #F7F8FA; }
 
@@ -319,7 +331,7 @@
       <div class="txt-clock" id="clock-display">00:00:00</div>
     </div>
 
-    <button class="btn-enter" onclick="showScreen('agenda')">Entrer</button>
+    <button class="btn-enter" onclick="triggerFlagRain()">Entrer</button>
   </div>
 
   <!-- ══ AGENDA SCREEN ════════════════════════════════ -->
@@ -357,6 +369,56 @@
 
 </div>
 <script>
+  // ── Flag Rain ────────────────────────────────────────
+  // Mini Union Jack en base64 (simplifié pour les petites tailles)
+  const FLAG_URL = (() => {
+    const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">` +
+      `<rect width="60" height="30" fill="#012169"/>` +
+      `<path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>` +
+      `<path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>` +
+      `<path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>` +
+      `</svg>`;
+    return 'data:image/svg+xml;base64,' + btoa(s);
+  })();
+
+  function triggerFlagRain() {
+    const rain = document.createElement('div');
+    rain.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;';
+    document.body.appendChild(rain);
+
+    for (let i = 0; i < 38; i++) {
+      const el    = document.createElement('div');
+      const w     = 22 + Math.random() * 44;          // 22–66 px de large
+      const delay = Math.random() * 750;               // décalage 0–750 ms
+      const dur   = 950 + Math.random() * 1050;        // chute 0.95–2 s
+      const left  = -5 + Math.random() * 110;          // -5 % → 105 %
+      const rotS  = -40 + Math.random() * 80;          // rotation initiale
+      const rotE  = rotS + (-220 + Math.random() * 440); // rotation finale
+      const drift = -55 + Math.random() * 110;         // dérive horizontale px
+
+      el.style.cssText =
+        `position:absolute;` +
+        `left:${left}%;` +
+        `top:-${w * 0.6 + 12}px;` +
+        `width:${w}px;` +
+        `height:${w * 0.5}px;` +
+        `background:url("${FLAG_URL}") center/cover no-repeat;` +
+        `border-radius:2px;` +
+        `box-shadow:0 2px 8px rgba(0,0,0,0.32);` +
+        `animation:flag-fall ${dur}ms ease-in ${delay}ms both;`;
+      el.style.setProperty('--rot-start', rotS + 'deg');
+      el.style.setProperty('--rot-end',   rotE + 'deg');
+      el.style.setProperty('--drift',     drift + 'px');
+      rain.appendChild(el);
+    }
+
+    // Naviguer vers l'agenda après le pic de la pluie
+    setTimeout(() => {
+      showScreen('agenda');
+      setTimeout(() => rain.remove(), 700);
+    }, 1150);
+  }
+
   // ── Navigation ──────────────────────────────────────
   function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
