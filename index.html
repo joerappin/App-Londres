@@ -10,72 +10,62 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-    html, body {
-      height: 100%; overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
-      background: #012169;
-    }
-
+    html, body { height:100%; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif; background:#012169; }
     #app { width:100%; height:100%; position:relative; overflow:hidden; }
 
-    /* ── SCREENS ───────────────────────────────────────── */
+    /* ── SCREENS ─────────────────────────────────────── */
     .screen { position:absolute; inset:0; display:none; flex-direction:column; }
     .screen.active { display:flex; }
 
-    /* ── HOME ─────────────────────────────────────────── */
+    /* ── HOME ────────────────────────────────────────── */
     #home { align-items:center; justify-content:center; background:#012169; }
     .union-jack { position:absolute; inset:0; width:100%; height:100%; }
     .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.50); }
-    .home-content {
-      position:relative; z-index:1;
-      display:flex; flex-direction:column; align-items:center; text-align:center;
-      margin-bottom:56px;
-    }
+    .home-content { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; margin-bottom:56px; }
     .txt-weekend { color:rgba(255,255,255,0.78); font-size:clamp(18px,5vw,28px); font-weight:300; letter-spacing:10px; text-transform:uppercase; }
     .txt-city    { color:#fff; font-size:clamp(44px,13vw,64px); font-weight:800; letter-spacing:12px; text-transform:uppercase; margin-top:6px; }
     .txt-spacer  { height:30px; }
     .txt-days    { color:#C8102E; font-size:clamp(60px,20vw,88px); font-weight:900; letter-spacing:2px; line-height:1; text-shadow:0 4px 16px rgba(0,0,0,0.55); }
     .txt-clock   { color:rgba(255,255,255,0.92); font-size:clamp(34px,10vw,50px); font-weight:200; letter-spacing:5px; font-variant-numeric:tabular-nums; margin-top:12px; }
-    .btn-enter {
-      position:relative; z-index:1;
-      background:#C8102E; color:#fff;
-      border:2px solid rgba(255,255,255,0.5); border-radius:5px;
-      padding:18px 68px; font-size:18px; font-weight:700;
-      letter-spacing:7px; text-transform:uppercase;
-      cursor:pointer; transition:opacity 0.15s; font-family:inherit;
-    }
+    .btn-enter { position:relative; z-index:1; background:#C8102E; color:#fff; border:2px solid rgba(255,255,255,0.5); border-radius:5px; padding:18px 68px; font-size:18px; font-weight:700; letter-spacing:7px; text-transform:uppercase; cursor:pointer; transition:opacity 0.15s; font-family:inherit; }
     .btn-enter:active { opacity:0.72; }
 
-    /* ── FLAG RAIN ────────────────────────────────────── */
+    /* ── FLAG RAIN ───────────────────────────────────── */
     @keyframes flag-fall {
       0%   { transform:translateY(0) translateX(0) rotate(var(--rot-start)); opacity:1; }
       100% { transform:translateY(112vh) translateX(var(--drift)) rotate(var(--rot-end)); opacity:0.25; }
     }
 
-    /* ── SHARED HEADER ───────────────────────────────── */
-    .header {
-      background:#012169; display:flex; align-items:center;
-      padding:50px 14px 16px; flex-shrink:0;
+    /* ── HP ANIMATION ────────────────────────────────── */
+    @keyframes hp-glow {
+      0%  { opacity:0; }
+      30% { opacity:1; }
+      100%{ opacity:0; }
     }
+    @keyframes hp-bolt {
+      0%  { opacity:0; transform:translate(-50%,-50%) scale(0.2) rotate(-15deg); }
+      25% { opacity:1; transform:translate(-50%,-50%) scale(1.4) rotate(8deg); }
+      65% { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0deg); }
+      100%{ opacity:0; transform:translate(-50%,-50%) scale(0.6) rotate(12deg); }
+    }
+    @keyframes hp-sparkle {
+      0%  { opacity:0; transform:translate(0,0) scale(0); }
+      35% { opacity:1; transform:translate(calc(var(--tx)*0.5),calc(var(--ty)*0.5)) scale(1.2); }
+      100%{ opacity:0; transform:translate(var(--tx),var(--ty)) scale(0.2); }
+    }
+
+    /* ── SHARED HEADER ───────────────────────────────── */
+    .header { background:#012169; display:flex; align-items:center; padding:50px 14px 16px; flex-shrink:0; }
     .back-btn { width:42px; color:#fff; font-size:36px; font-weight:300; cursor:pointer; line-height:1; flex-shrink:0; user-select:none; }
     .back-btn:active { opacity:0.6; }
     .header-mid { flex:1; text-align:center; }
     .header-dayname { color:#fff; font-size:22px; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
     .header-daydate { color:rgba(255,255,255,0.58); font-size:13px; margin-top:3px; letter-spacing:0.8px; }
-
-    /* Map button */
-    .map-btn {
-      width:38px; height:38px; border-radius:50%;
-      background:rgba(255,255,255,0.18);
-      display:flex; align-items:center; justify-content:center;
-      font-size:18px; cursor:pointer; flex-shrink:0; user-select:none;
-    }
+    .map-btn { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; user-select:none; }
     .map-btn:active { opacity:0.6; }
 
     /* ── AGENDA ──────────────────────────────────────── */
     #agenda { background:#F7F8FA; }
-
     .timeline { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 0 8px; }
     .time-row   { display:flex; min-height:68px; }
     .hour-col   { width:66px; text-align:right; padding-right:10px; padding-top:2px; flex-shrink:0; }
@@ -85,22 +75,10 @@
     .tl-line { width:2px; flex:1; background:#DCDFE6; margin-top:3px; }
     .event-col  { flex:1; padding:0 18px 18px 10px; }
     .event-slot { min-height:40px; }
-
-    /* Event chip */
-    .event-chip {
-      border-radius:8px; padding:10px 14px;
-      cursor:pointer; display:flex; flex-direction:column;
-      box-shadow:0 2px 10px rgba(0,0,0,0.18);
-      user-select:none; transition:opacity 0.12s;
-    }
+    .event-chip { border-radius:8px; padding:10px 14px; cursor:pointer; display:flex; flex-direction:column; box-shadow:0 2px 10px rgba(0,0,0,0.18); user-select:none; transition:opacity 0.12s; }
     .event-chip:active { opacity:0.75; }
     .event-chip-header { display:flex; align-items:center; gap:8px; }
-    .event-chip-label {
-      width:22px; height:22px; border-radius:50%;
-      background:rgba(255,255,255,0.28);
-      display:flex; align-items:center; justify-content:center;
-      font-size:11px; font-weight:900; color:#fff; flex-shrink:0;
-    }
+    .event-chip-label { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.28); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; }
     .event-chip-title { color:#fff; font-size:14px; font-weight:700; }
     .event-chip-time  { color:rgba(255,255,255,0.75); font-size:11px; margin-top:4px; font-variant-numeric:tabular-nums; padding-left:30px; }
 
@@ -118,34 +96,20 @@
     /* ── MAP ─────────────────────────────────────────── */
     #map-screen { background:#F7F8FA; }
     #leaflet-map { flex:1; }
-
-    /* Leaflet popup override */
     .leaflet-popup-content-wrapper { border-radius:10px; padding:0; overflow:hidden; }
     .leaflet-popup-content { margin:0; }
 
     /* ── MODALS ──────────────────────────────────────── */
-    .modal-backdrop {
-      position:fixed; inset:0;
-      background:rgba(0,0,0,0.62);
-      z-index:2000;
-      display:none; align-items:flex-end; justify-content:center;
-    }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.62); z-index:2000; display:none; align-items:flex-end; justify-content:center; }
     .modal-backdrop.open { display:flex; }
-    .modal-sheet {
-      background:#fff; border-radius:20px 20px 0 0;
-      width:100%; max-width:520px;
-      padding-bottom:env(safe-area-inset-bottom,24px);
-      max-height:88vh; overflow-y:auto;
-    }
+    .modal-sheet { background:#fff; border-radius:20px 20px 0 0; width:100%; max-width:520px; padding-bottom:env(safe-area-inset-bottom,24px); max-height:88vh; overflow-y:auto; }
     .modal-handle-bar { width:40px; height:4px; background:#DDD; border-radius:2px; margin:14px auto 0; }
     .modal-close-row { display:flex; justify-content:flex-end; padding:10px 18px 0; }
-    .modal-close-btn {
-      font-size:20px; color:#999; cursor:pointer;
-      width:34px; height:34px; display:flex; align-items:center; justify-content:center;
-      border-radius:50%; background:#F0F0F0;
-    }
+    .modal-close-btn { font-size:20px; color:#999; cursor:pointer; width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:#F0F0F0; }
     .modal-close-btn:active { opacity:0.6; }
     .modal-logo-wrap { display:flex; justify-content:center; padding:10px 24px 18px; }
+    .modal-title-hero { text-align:center; font-size:20px; font-weight:800; color:#1A1A1A; padding:6px 24px 16px; letter-spacing:0.5px; }
+    .modal-subtitle-hero { text-align:center; font-size:14px; color:#777; padding:0 24px 16px; }
     .modal-airport { text-align:center; font-size:22px; font-weight:800; color:#073590; letter-spacing:1px; padding:0 24px 20px; }
     .modal-airport span { font-size:14px; font-weight:500; color:#888; display:block; margin-top:2px; }
     .modal-divider { height:1px; background:#EBEBEB; margin:0 24px; }
@@ -154,18 +118,29 @@
     .modal-icon { font-size:22px; width:28px; flex-shrink:0; margin-top:1px; }
     .modal-info-label { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:2px; }
     .modal-info-value { font-size:16px; font-weight:600; color:#1A1A1A; }
-    .modal-reservation {
-      background:#073590; color:#fff;
-      border-radius:8px; padding:12px 18px;
-      margin:16px 24px; display:flex; align-items:center; gap:12px;
-    }
+    .modal-info-value-sm { font-size:14px; font-weight:600; color:#1A1A1A; }
+    .modal-reservation { background:#073590; color:#fff; border-radius:8px; padding:12px 18px; margin:16px 24px; display:flex; align-items:center; gap:12px; }
     .modal-reservation-label { font-size:11px; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.8px; }
     .modal-reservation-code  { font-size:26px; font-weight:900; letter-spacing:4px; }
-    .modal-note {
-      background:#FFF8E1; border-left:4px solid #F7BE00;
-      margin:4px 24px 20px; padding:12px 14px;
-      border-radius:0 8px 8px 0; font-size:14px; color:#555; font-weight:500;
-    }
+    .modal-reservation-sub   { font-size:13px; font-weight:600; letter-spacing:1px; color:rgba(255,255,255,0.85); margin-top:2px; }
+    .modal-note { background:#FFF8E1; border-left:4px solid #F7BE00; margin:4px 24px 12px; padding:12px 14px; border-radius:0 8px 8px 0; font-size:14px; color:#555; font-weight:500; }
+    .modal-map-link { display:flex; align-items:center; justify-content:center; gap:8px; background:#E8F5E9; border-radius:8px; padding:12px 18px; margin:8px 24px 20px; color:#2E7D32; font-size:14px; font-weight:600; text-decoration:none; }
+    .modal-map-link:active { opacity:0.7; }
+    .modal-passengers { background:#F3F4F6; border-radius:8px; padding:12px 16px; margin:0 24px 16px; }
+    .modal-passengers-title { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
+    .modal-passenger-row { display:flex; align-items:center; gap:10px; padding:5px 0; font-size:14px; font-weight:600; color:#1A1A1A; }
+    .modal-qr-section { padding:0 24px 8px; }
+    .modal-qr-title { font-size:12px; color:#777; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; text-align:center; }
+    .modal-qr-item { background:#F8F8F8; border-radius:10px; padding:14px 14px 10px; margin-bottom:10px; text-align:center; }
+    .modal-qr-label { font-size:12px; color:#777; font-weight:600; margin-bottom:8px; }
+    .modal-qr-box { display:flex; justify-content:center; }
+    .modal-qr-box canvas, .modal-qr-box img { border-radius:6px; }
+    .modal-qr-code { font-size:10px; color:#BBB; margin-top:6px; font-variant-numeric:tabular-nums; letter-spacing:0.5px; }
+    .modal-pin-box { background:#4A1A7A; color:#fff; border-radius:8px; padding:12px 18px; margin:0 24px 12px; display:flex; align-items:center; gap:14px; }
+    .modal-pin-label { font-size:11px; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.8px; }
+    .modal-pin-value { font-size:22px; font-weight:900; letter-spacing:3px; }
+    .modal-hp-hero { text-align:center; font-size:56px; padding:4px 0 8px; }
+    .modal-section-title { font-size:13px; color:#999; text-transform:uppercase; letter-spacing:0.8px; padding:12px 24px 6px; }
   </style>
 </head>
 <body>
@@ -240,15 +215,13 @@
     <div id="leaflet-map"></div>
   </div>
 
-  <!-- ══ MODAL VOL ══════════════════════════════════════ -->
-  <div id="modal-flight" class="modal-backdrop" onclick="closeModal('flight')">
+  <!-- ══ MODAL — Vol aller FR1467 ════════════════════ -->
+  <div id="modal-flight-out" class="modal-backdrop" onclick="closeModal('flight-out')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
-      <div class="modal-close-row">
-        <div class="modal-close-btn" onclick="closeModal('flight')">✕</div>
-      </div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('flight-out')">✕</div></div>
       <div class="modal-logo-wrap">
-        <svg viewBox="0 0 300 75" xmlns="http://www.w3.org/2000/svg" style="width:210px;height:auto">
+        <svg viewBox="0 0 300 75" xmlns="http://www.w3.org/2000/svg" style="width:200px;height:auto">
           <rect width="300" height="75" fill="#073590" rx="8"/>
           <rect x="14" y="12" width="5" height="52" fill="#F7BE00" rx="2.5"/>
           <path d="M19,12 C19,12 46,6 50,32" stroke="#F7BE00" stroke-width="5" fill="none" stroke-linecap="round"/>
@@ -258,84 +231,416 @@
           <line x1="20" y1="37" x2="49" y2="34" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
           <line x1="20" y1="45" x2="48" y2="34" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
           <line x1="20" y1="53" x2="44" y2="35" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
-          <text x="68" y="52" fill="#F7BE00" font-size="34" font-weight="900"
-                font-family="Arial Black, Arial, sans-serif" letter-spacing="-0.5">Ryanair</text>
+          <text x="68" y="52" fill="#F7BE00" font-size="34" font-weight="900" font-family="Arial Black,Arial,sans-serif" letter-spacing="-0.5">Ryanair</text>
         </svg>
       </div>
-      <div class="modal-airport">
-        London Stansted
-        <span>STN — Royaume-Uni</span>
-      </div>
+      <div class="modal-airport">Marseille MRS → London STN<span>Vol FR1467 — Vendredi 29 mai 2026</span></div>
       <div class="modal-divider"></div>
       <div class="modal-reservation">
         <span style="font-size:26px">🎫</span>
         <div>
-          <div class="modal-reservation-label">Réservation</div>
+          <div class="modal-reservation-label">Code réservation</div>
           <div class="modal-reservation-code">U36IQW</div>
         </div>
+      </div>
+      <div class="modal-passengers">
+        <div class="modal-passengers-title">Passagers</div>
+        <div class="modal-passenger-row">👩 Aurélia Rappin</div>
+        <div class="modal-passenger-row">👨 Jonathan Rappin</div>
+        <div class="modal-passenger-row">👧 Mia Rappin</div>
       </div>
       <div class="modal-rows">
         <div class="modal-row">
           <div class="modal-icon">✈️</div>
-          <div>
-            <div class="modal-info-label">Départ</div>
-            <div class="modal-info-value">Marseille — 29 mai, 06h05</div>
-          </div>
+          <div><div class="modal-info-label">Départ</div><div class="modal-info-value">Marseille — 29 mai, 06h05</div></div>
         </div>
         <div class="modal-row">
           <div class="modal-icon">🚪</div>
-          <div>
-            <div class="modal-info-label">Fermeture de la porte</div>
-            <div class="modal-info-value">05h35</div>
-          </div>
+          <div><div class="modal-info-label">Fermeture de la porte</div><div class="modal-info-value">05h35 — soyez à la porte !</div></div>
         </div>
         <div class="modal-row">
           <div class="modal-icon">🛬</div>
-          <div>
-            <div class="modal-info-label">Arrivée</div>
-            <div class="modal-info-value">London Stansted — 07h05</div>
-          </div>
+          <div><div class="modal-info-label">Arrivée</div><div class="modal-info-value">London Stansted (STN) — 07h05</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">📱</div>
+          <div><div class="modal-info-label">Check-in en ligne</div><div class="modal-info-value-sm">Disponible dès le 28 mai</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🧳</div>
+          <div><div class="modal-info-label">Bagages</div><div class="modal-info-value-sm">1 bagage cabine + 1 bagage soute (20 kg) par passager</div></div>
         </div>
       </div>
-      <div class="modal-note">⚠️ Se présenter à la porte avant <strong>05h35</strong></div>
+      <div class="modal-note">⚠️ Présence obligatoire à la porte avant <strong>05h35</strong></div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport sur Google Maps</a>
     </div>
   </div>
 
-</div>
+  <!-- ══ MODAL — Navette aller ════════════════════════ -->
+  <div id="modal-transfer-in" class="modal-backdrop" onclick="closeModal('transfer-in')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('transfer-in')">✕</div></div>
+      <div class="modal-title-hero">🚗 UK-Royal Drive</div>
+      <div class="modal-subtitle-hero">Transfert privé — Aéroport → Hôtel</div>
+      <div class="modal-divider"></div>
+      <div class="modal-reservation">
+        <span style="font-size:26px">📋</span>
+        <div>
+          <div class="modal-reservation-label">Référence réservation</div>
+          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">28782554</div>
+          <div class="modal-reservation-sub">Voiture privée</div>
+        </div>
+      </div>
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">🛬</div>
+          <div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">London Stansted Airport</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🏨</div>
+          <div><div class="modal-info-label">Destination</div><div class="modal-info-value">Marble Arch Hotel by Thistle</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">👥</div>
+          <div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div>
+        </div>
+      </div>
+      <div class="modal-note">✅ Transfert confirmé — Le chauffeur vous attend à la sortie arrivées</div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel sur Google Maps</a>
+    </div>
+  </div>
+
+  <!-- ══ MODAL — Natural History Museum ══════════════ -->
+  <div id="modal-nhm" class="modal-backdrop" onclick="closeModal('nhm')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('nhm')">✕</div></div>
+      <div class="modal-title-hero">🦕 Natural History Museum</div>
+      <div class="modal-subtitle-hero">South Kensington, Londres</div>
+      <div class="modal-divider"></div>
+      <div class="modal-reservation">
+        <span style="font-size:26px">🎟️</span>
+        <div>
+          <div class="modal-reservation-label">Référence</div>
+          <div class="modal-reservation-code" style="font-size:14px;letter-spacing:1px">20260509-S16744756</div>
+          <div class="modal-reservation-sub">Order #7296234</div>
+        </div>
+      </div>
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">📅</div>
+          <div><div class="modal-info-label">Date &amp; Heure</div><div class="modal-info-value">29 mai 2026 — 14h30</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🎫</div>
+          <div><div class="modal-info-label">Billets</div><div class="modal-info-value">Gratuit — 2 Adultes + 1 Enfant</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">⏰</div>
+          <div><div class="modal-info-label">Dernière entrée</div><div class="modal-info-value">17h30</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🚇</div>
+          <div><div class="modal-info-label">Métro</div><div class="modal-info-value-sm">South Kensington (District / Circle / Piccadilly)</div></div>
+        </div>
+      </div>
+      <div class="modal-divider" style="margin:4px 24px 14px"></div>
+      <div class="modal-qr-section">
+        <div class="modal-qr-title">Billets d'entrée — Scanner en caisse</div>
+        <div class="modal-qr-item">
+          <div class="modal-qr-label">🎟 Billet 1 — Aurélia Rappin</div>
+          <div id="qr-nhm-1" class="modal-qr-box"></div>
+          <div class="modal-qr-code">1001401807011380629</div>
+        </div>
+        <div class="modal-qr-item">
+          <div class="modal-qr-label">🎟 Billet 2 — Jonathan Rappin</div>
+          <div id="qr-nhm-2" class="modal-qr-box"></div>
+          <div class="modal-qr-code">1001401807011380630</div>
+        </div>
+        <div class="modal-qr-item">
+          <div class="modal-qr-label">🎟 Billet 3 — Mia Rappin</div>
+          <div id="qr-nhm-3" class="modal-qr-box"></div>
+          <div class="modal-qr-code">1001401807011380631</div>
+        </div>
+      </div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.4967,-0.1764" target="_blank">🗺️ Natural History Museum sur Google Maps</a>
+    </div>
+  </div>
+
+  <!-- ══ MODAL — Hôtel Check-in ══════════════════════ -->
+  <div id="modal-hotel" class="modal-backdrop" onclick="closeModal('hotel')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('hotel')">✕</div></div>
+      <div class="modal-title-hero">🏨 Marble Arch Hotel by Thistle</div>
+      <div class="modal-subtitle-hero">★★★★ — Bryanston Street, London W1H 7EH</div>
+      <div class="modal-divider"></div>
+      <div class="modal-reservation">
+        <span style="font-size:26px">🗝️</span>
+        <div>
+          <div class="modal-reservation-label">Code réservation lastminute</div>
+          <div class="modal-reservation-code" style="font-size:18px;letter-spacing:2px">164-10868035</div>
+          <div class="modal-reservation-sub">ID: 3195598446</div>
+        </div>
+      </div>
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">📅</div>
+          <div><div class="modal-info-label">Séjour</div><div class="modal-info-value">29 – 31 mai 2026 (2 nuits)</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🛎️</div>
+          <div><div class="modal-info-label">Check-in / Check-out</div><div class="modal-info-value">Dès 15h00 / Avant 11h00</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🛏️</div>
+          <div><div class="modal-info-label">Chambre</div><div class="modal-info-value">Deluxe King — 3 pers.</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">☕</div>
+          <div><div class="modal-info-label">Petit déjeuner</div><div class="modal-info-value">Inclus</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">📞</div>
+          <div><div class="modal-info-label">Téléphone hôtel</div><div class="modal-info-value">+44 207 523 5060</div></div>
+        </div>
+      </div>
+      <div class="modal-note">ℹ️ Arrivée possible avant 15h — Bagages déposés à la réception</div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel sur Google Maps</a>
+    </div>
+  </div>
+
+  <!-- ══ MODAL — Harry Potter Studio Tour ════════════ -->
+  <div id="modal-hp" class="modal-backdrop" onclick="closeModal('hp')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('hp')">✕</div></div>
+      <div class="modal-hp-hero">⚡🧙🏰</div>
+      <div class="modal-title-hero">Warner Bros. Studio Tour</div>
+      <div class="modal-subtitle-hero">The Making of Harry Potter — Samedi 30 mai 2026</div>
+      <div class="modal-divider"></div>
+      <div class="modal-reservation">
+        <span style="font-size:26px">🎫</span>
+        <div>
+          <div class="modal-reservation-label">Réservation GetYourGuide</div>
+          <div class="modal-reservation-code" style="font-size:16px;letter-spacing:2px">GYGG45WY2992</div>
+          <div class="modal-reservation-sub">Axis &amp; Globe Travel</div>
+        </div>
+      </div>
+      <div class="modal-pin-box">
+        <span style="font-size:26px">🔑</span>
+        <div>
+          <div class="modal-pin-label">Code PIN de confirmation</div>
+          <div class="modal-pin-value">KTpPsRjX</div>
+        </div>
+      </div>
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">📍</div>
+          <div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value">Bedford Way, London — 12h50</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🎬</div>
+          <div><div class="modal-info-label">Départ visite</div><div class="modal-info-value">Warner Bros. Leavesden — 13h00</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">👥</div>
+          <div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">❌</div>
+          <div><div class="modal-info-label">Annulation gratuite avant</div><div class="modal-info-value">27 mai 2026, 13h00</div></div>
+        </div>
+      </div>
+      <div class="modal-note">🧙 RDV impératif à Bedford Way à <strong>12h50</strong> — le coach part sans attendre !</div>
+      <div style="display:flex;gap:8px;margin:0 24px 20px;">
+        <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5235,-0.1273" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Bedford Way (RDV)</a>
+        <a class="modal-map-link" href="https://maps.google.com/maps?q=51.6903,-0.4181" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Warner Bros. Studios</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL — Check-out ════════════════════════════ -->
+  <div id="modal-checkout" class="modal-backdrop" onclick="closeModal('checkout')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('checkout')">✕</div></div>
+      <div class="modal-title-hero">🏨 Check-out</div>
+      <div class="modal-subtitle-hero">Marble Arch Hotel by Thistle</div>
+      <div class="modal-divider"></div>
+      <div class="modal-rows" style="margin-top:8px">
+        <div class="modal-row">
+          <div class="modal-icon">⏰</div>
+          <div><div class="modal-info-label">Heure limite</div><div class="modal-info-value" style="color:#C8102E">Avant 11h00</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">📅</div>
+          <div><div class="modal-info-label">Date</div><div class="modal-info-value">Dimanche 31 mai 2026</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🧳</div>
+          <div><div class="modal-info-label">Bagages</div><div class="modal-info-value-sm">Préparer les valises la veille pour partir sereinement</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">📞</div>
+          <div><div class="modal-info-label">Réception hôtel</div><div class="modal-info-value">+44 207 523 5060</div></div>
+        </div>
+      </div>
+      <div class="modal-note">🚌 La navette retour part peu après — être prêts dès 10h30</div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel sur Google Maps</a>
+    </div>
+  </div>
+
+  <!-- ══ MODAL — Navette retour ══════════════════════ -->
+  <div id="modal-transfer-out" class="modal-backdrop" onclick="closeModal('transfer-out')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('transfer-out')">✕</div></div>
+      <div class="modal-title-hero">🚗 UK-Royal Drive</div>
+      <div class="modal-subtitle-hero">Transfert privé — Hôtel → Aéroport</div>
+      <div class="modal-divider"></div>
+      <div class="modal-reservation">
+        <span style="font-size:26px">📋</span>
+        <div>
+          <div class="modal-reservation-label">Référence réservation</div>
+          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">28782554</div>
+          <div class="modal-reservation-sub">Voiture privée</div>
+        </div>
+      </div>
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">🏨</div>
+          <div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">Marble Arch Hotel — ~11h00</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">✈️</div>
+          <div><div class="modal-info-label">Destination</div><div class="modal-info-value">London Stansted Airport</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">⏱️</div>
+          <div><div class="modal-info-label">Durée estimée</div><div class="modal-info-value-sm">~1h30 — variable selon trafic</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">👥</div>
+          <div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div>
+        </div>
+      </div>
+      <div class="modal-note">✅ Transfert confirmé — Vol départ 13h25, prévoir d'arriver à STN avant 12h00</div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport sur Google Maps</a>
+    </div>
+  </div>
+
+  <!-- ══ MODAL — Vol retour FR6541 ═══════════════════ -->
+  <div id="modal-flight-return" class="modal-backdrop" onclick="closeModal('flight-return')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('flight-return')">✕</div></div>
+      <div class="modal-logo-wrap">
+        <svg viewBox="0 0 300 75" xmlns="http://www.w3.org/2000/svg" style="width:200px;height:auto">
+          <rect width="300" height="75" fill="#073590" rx="8"/>
+          <rect x="14" y="12" width="5" height="52" fill="#F7BE00" rx="2.5"/>
+          <path d="M19,12 C19,12 46,6 50,32" stroke="#F7BE00" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M14,64 C14,64 36,70 50,32" stroke="#F7BE00" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <line x1="20" y1="21" x2="43" y2="33" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="29" x2="47" y2="33" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="37" x2="49" y2="34" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="45" x2="48" y2="34" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="53" x2="44" y2="35" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <text x="68" y="52" fill="#F7BE00" font-size="34" font-weight="900" font-family="Arial Black,Arial,sans-serif" letter-spacing="-0.5">Ryanair</text>
+        </svg>
+      </div>
+      <div class="modal-airport">London STN → Marseille MRS<span>Vol FR6541 — Dimanche 31 mai 2026</span></div>
+      <div class="modal-divider"></div>
+      <div class="modal-reservation">
+        <span style="font-size:26px">🎫</span>
+        <div>
+          <div class="modal-reservation-label">Code réservation</div>
+          <div class="modal-reservation-code">U36IQW</div>
+        </div>
+      </div>
+      <div class="modal-passengers">
+        <div class="modal-passengers-title">Passagers</div>
+        <div class="modal-passenger-row">👩 Aurélia Rappin</div>
+        <div class="modal-passenger-row">👨 Jonathan Rappin</div>
+        <div class="modal-passenger-row">👧 Mia Rappin</div>
+      </div>
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">✈️</div>
+          <div><div class="modal-info-label">Départ</div><div class="modal-info-value">London Stansted (STN) — 13h25</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🛬</div>
+          <div><div class="modal-info-label">Arrivée</div><div class="modal-info-value">Marseille (MRS) — 16h25</div></div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">⏱️</div>
+          <div><div class="modal-info-label">Durée</div><div class="modal-info-value">2h00</div></div>
+        </div>
+      </div>
+      <div class="modal-note">🚨 Arriver à Stansted avant <strong>12h00</strong> pour l'enregistrement</div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport sur Google Maps</a>
+    </div>
+  </div>
+
+</div><!-- #app -->
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  // ── Palette couleurs événements ─────────────────────
-  // Coordonnées sources : latitude.to / coordinatesfinder.com
+  // ── Palette ────────────────────────────────────────
   const PALETTE = {
-    A: '#1565C0', // bleu aviation
-    B: '#E65100', // orange navette
-    C: '#2E7D32', // vert
-    D: '#6A1B9A', // violet
-    E: '#00838F', // teal
-    F: '#AD1457', // rose
+    A:'#1565C0', B:'#E65100', C:'#1B5E20', D:'#4527A0',
+    E:'#6A1B9A', F:'#4527A0', G:'#E65100', H:'#1565C0',
   };
 
-  // ── Données événements ───────────────────────────────
-  // coords: [lat, lng] — sources vérifiées en ligne
+  // ── Événements (coords vérifiées) ──────────────────
   const EVENTS = {
-    0: { // Vendredi 29 mai
-      6: {
-        label: 'A', title: '✈ Vol Marseille → Londres',
-        time: '06:05 – 07:05', color: PALETTE.A, modal: 'flight',
-        coords: [51.8870, 0.2441],   // London Stansted Airport (STN) — Essex
-        mapName: 'London Stansted Airport (STN)',
-      },
-      7: {
-        label: 'B', title: '🚌 Navette Aéroport → Hôtel',
-        time: '07:05 – 08:00', color: PALETTE.B, modal: null,
-        coords: [51.5180, -0.0822], // Liverpool Street Station — City of London
-        mapName: 'Liverpool Street Station, Londres',
-      },
+    0: {
+       6: { label:'A', title:'✈ Vol Marseille → Londres', time:'06:05 – 07:05', color:PALETTE.A, modal:'flight-out',    coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
+       7: { label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – 09:00', color:PALETTE.B, modal:'transfer-in',   coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel' },
+      14: { label:'C', title:'🦕 Natural History Museum', time:'14:30 – 17:30', color:PALETTE.C, modal:'nhm',           coords:[51.4967, -0.1764], mapName:'Natural History Museum' },
+      15: { label:'D', title:'🏨 Check-in Hôtel',         time:'dès 15h00',     color:PALETTE.D, modal:'hotel',         coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel by Thistle' },
+    },
+    1: {
+      12: { label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PALETTE.E, modal:'hp', coords:[51.5235, -0.1273], mapName:'RDV Coach – Bedford Way' },
+    },
+    2: {
+      10: { label:'F', title:'🏨 Check-out Hôtel',         time:'avant 11h00',    color:PALETTE.F, modal:'checkout',       coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel' },
+      11: { label:'G', title:'🚗 Navette → Stansted',      time:'~11h00',         color:PALETTE.G, modal:'transfer-out',  coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
+      13: { label:'H', title:'✈ Vol Londres → Marseille', time:'13:25 – 16:25',  color:PALETTE.H, modal:'flight-return', coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
     },
   };
 
-  // ── Flag Rain ─────────────────────────────────────────
+  // ── QR codes NHM ──────────────────────────────────
+  let nhmQrDone = false;
+  const NHM_BARCODES = ['1001401807011380629','1001401807011380630','1001401807011380631'];
+
+  // ── Navigation ────────────────────────────────────
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // ── Modal ─────────────────────────────────────────
+  function openModal(id) {
+    document.getElementById('modal-' + id).classList.add('open');
+    if (id === 'nhm' && !nhmQrDone) {
+      nhmQrDone = true;
+      setTimeout(() => {
+        NHM_BARCODES.forEach((code, i) => {
+          const el = document.getElementById('qr-nhm-' + (i + 1));
+          if (el && !el.firstChild) {
+            new QRCode(el, { text:code, width:160, height:160, colorDark:'#000', colorLight:'#fff' });
+          }
+        });
+      }, 120);
+    }
+  }
+  function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
+
+  // ── Flag Rain + Fade transition ───────────────────
   const FLAG_URL = (() => {
     const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">` +
       `<rect width="60" height="30" fill="#012169"/>` +
@@ -370,20 +675,54 @@
       el.style.setProperty('--drift',     dr + 'px');
       rain.appendChild(el);
     }
-    setTimeout(() => { showScreen('agenda'); setTimeout(() => rain.remove(), 700); }, 1150);
+    setTimeout(() => {
+      const agenda = document.getElementById('agenda');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      agenda.classList.add('active');
+      agenda.style.opacity = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          agenda.style.transition = 'opacity 0.65s ease';
+          agenda.style.opacity = '1';
+          setTimeout(() => { agenda.style.transition = ''; rain.remove(); }, 750);
+        });
+      });
+    }, 1150);
   }
 
-  // ── Navigation ────────────────────────────────────────
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
+  // ── Harry Potter animation ────────────────────────
+  function hpAnimation(callback) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:1500;overflow:hidden;';
+
+    const glow = document.createElement('div');
+    glow.style.cssText = 'position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(212,175,55,0.45) 0%,rgba(106,27,154,0.30) 40%,transparent 70%);animation:hp-glow 820ms ease-out forwards;';
+    overlay.appendChild(glow);
+
+    const bolt = document.createElement('div');
+    bolt.style.cssText = 'position:absolute;top:50%;left:50%;font-size:80px;animation:hp-bolt 820ms ease-out forwards;';
+    bolt.textContent = '⚡';
+    overlay.appendChild(bolt);
+
+    const symbols = ['✨','⭐','🌟','💫','✨','🌟','💫','⭐'];
+    for (let i = 0; i < 20; i++) {
+      const sp = document.createElement('div');
+      const angle = (i / 20) * 360;
+      const dist  = 90 + Math.random() * 110;
+      const tx = Math.cos(angle * Math.PI / 180) * dist;
+      const ty = Math.sin(angle * Math.PI / 180) * dist;
+      const delay = Math.random() * 250;
+      const sz = 14 + Math.random() * 18;
+      sp.style.cssText = `position:absolute;top:50%;left:50%;margin:-${sz/2}px;font-size:${sz}px;--tx:${tx}px;--ty:${ty}px;animation:hp-sparkle 720ms ease-out ${delay}ms forwards;`;
+      sp.textContent = symbols[i % symbols.length];
+      overlay.appendChild(sp);
+    }
+
+    document.body.appendChild(overlay);
+    setTimeout(() => { overlay.remove(); callback(); }, 830);
   }
 
-  // ── Modal ─────────────────────────────────────────────
-  function openModal(id) { document.getElementById('modal-' + id).classList.add('open'); }
-  function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
-
-  // ── Countdown ─────────────────────────────────────────
+  // ── Countdown ─────────────────────────────────────
   const DEPARTURE = new Date(2026, 4, 29, 6, 5, 0);
   function pad2(n) { return String(Math.floor(Math.abs(n))).padStart(2,'0'); }
   function tick() {
@@ -395,8 +734,8 @@
   }
   tick(); setInterval(tick, 1000);
 
-  // ── Agenda ────────────────────────────────────────────
-  const DAYS  = [
+  // ── Agenda ────────────────────────────────────────
+  const DAYS = [
     { name:'Vendredi', date:'29 mai 2026' },
     { name:'Samedi',   date:'30 mai 2026' },
     { name:'Dimanche', date:'31 mai 2026' },
@@ -414,95 +753,82 @@
           ${i < HOURS.length - 1 ? '<div class="tl-line"></div>' : ''}
         </div>
         <div class="event-col">
-          ${ev ? `
-            <div class="event-chip" style="background:${ev.color}"
-                 onclick="${ev.modal ? `openModal('${ev.modal}')` : 'void 0'}">
-              <div class="event-chip-header">
-                <div class="event-chip-label">${ev.label}</div>
-                <span class="event-chip-title">${ev.title}</span>
-              </div>
-              <div class="event-chip-time">${ev.time}</div>
-            </div>` : `<div class="event-slot"></div>`}
+          ${ev ? `<div class="event-chip" style="background:${ev.color}" onclick="${ev.modal ? `openModal('${ev.modal}')` : 'void 0'}">
+            <div class="event-chip-header">
+              <div class="event-chip-label">${ev.label}</div>
+              <span class="event-chip-title">${ev.title}</span>
+            </div>
+            <div class="event-chip-time">${ev.time}</div>
+          </div>` : `<div class="event-slot"></div>`}
         </div>
       </div>`;
     }).join('');
   }
 
+  let currentDay = 0;
+
   function selectDay(idx) {
-    document.getElementById('hdr-name').textContent = DAYS[idx].name;
-    document.getElementById('hdr-date').textContent = DAYS[idx].date;
+    if (idx === currentDay) return;
+    currentDay = idx;
     document.querySelectorAll('#tab-bar .tab').forEach((t, i) => t.classList.toggle('active', i === idx));
     document.getElementById('timeline').scrollTop = 0;
-    buildTimeline(idx);
+    hpAnimation(() => {
+      document.getElementById('hdr-name').textContent = DAYS[idx].name;
+      document.getElementById('hdr-date').textContent = DAYS[idx].date;
+      buildTimeline(idx);
+    });
   }
 
+  // Init agenda
+  document.getElementById('hdr-name').textContent = DAYS[0].name;
+  document.getElementById('hdr-date').textContent = DAYS[0].date;
   buildTimeline(0);
 
-  // ── Carte Leaflet ─────────────────────────────────────
+  // ── Carte Leaflet ─────────────────────────────────
   let lMap = null;
 
   function showMap() {
     showScreen('map-screen');
-    if (!lMap) {
-      // Initialiser après que le div soit visible
-      setTimeout(initMap, 80);
-    } else {
-      lMap.invalidateSize();
-    }
+    if (!lMap) { setTimeout(initMap, 80); }
+    else { lMap.invalidateSize(); }
   }
 
   function initMap() {
-    lMap = L.map('leaflet-map', { zoomControl: true });
-
+    lMap = L.map('leaflet-map', { zoomControl:true });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>',
-      maxZoom: 18,
+      attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>', maxZoom:18
     }).addTo(lMap);
 
     const allCoords = [];
+    const usedKeys  = {};
 
     Object.values(EVENTS).forEach(dayEvts => {
       Object.values(dayEvts).forEach(ev => {
         if (!ev.coords) return;
-        allCoords.push(ev.coords);
+        const key = ev.coords.join(',');
+        const n   = usedKeys[key] = (usedKeys[key] || 0) + 1;
+        const off = (n - 1) * 0.0003;
+        const c   = [ev.coords[0] + off, ev.coords[1] + off];
+        allCoords.push(c);
 
         const icon = L.divIcon({
-          html: `<div style="
-            background:${ev.color};color:#fff;
-            width:36px;height:36px;border-radius:50%;
-            display:flex;align-items:center;justify-content:center;
-            font-weight:900;font-size:15px;
-            box-shadow:0 3px 12px rgba(0,0,0,0.45);
-            border:3px solid #fff;
-            font-family:-apple-system,sans-serif;
-          ">${ev.label}</div>`,
-          className: '',
-          iconSize: [36, 36],
-          iconAnchor: [18, 18],
-          popupAnchor: [0, -22],
+          html:`<div style="background:${ev.color};color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:0 3px 12px rgba(0,0,0,0.45);border:3px solid #fff;font-family:-apple-system,sans-serif;">${ev.label}</div>`,
+          className:'', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22],
         });
 
-        L.marker(ev.coords, { icon })
-          .addTo(lMap)
-          .bindPopup(`
-            <div style="font-family:-apple-system,sans-serif;min-width:170px;margin:0">
-              <div style="background:${ev.color};color:#fff;padding:7px 12px;margin:-1px -1px 8px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px;">
-                ${ev.label} — ${ev.mapName}
-              </div>
-              <div style="padding:0 12px 10px">
-                <div style="font-size:13px;color:#222;font-weight:600;">${ev.title}</div>
-                <div style="font-size:12px;color:#888;margin-top:3px;font-variant-numeric:tabular-nums;">${ev.time}</div>
-              </div>
+        L.marker(c, { icon }).addTo(lMap).bindPopup(`
+          <div style="font-family:-apple-system,sans-serif;min-width:170px;margin:0">
+            <div style="background:${ev.color};color:#fff;padding:7px 12px;margin:-1px -1px 8px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px;">${ev.label} — ${ev.mapName}</div>
+            <div style="padding:0 12px 10px">
+              <div style="font-size:13px;color:#222;font-weight:600;">${ev.title}</div>
+              <div style="font-size:12px;color:#888;margin-top:3px;font-variant-numeric:tabular-nums;">${ev.time}</div>
             </div>
-          `, { maxWidth: 240 });
+          </div>`, { maxWidth:240 });
       });
     });
 
-    if (allCoords.length === 1) {
-      lMap.setView(allCoords[0], 13);
-    } else if (allCoords.length > 1) {
-      lMap.fitBounds(allCoords, { padding: [50, 50] });
-    }
+    if (allCoords.length === 1)      lMap.setView(allCoords[0], 13);
+    else if (allCoords.length > 1)   lMap.fitBounds(allCoords, { padding:[50,50] });
   }
 </script>
 </body>
