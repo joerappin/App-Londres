@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#012169">
+  <title>Week end Londres</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+      background: #012169;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── SCREENS ─────────────────────────────────────── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+    }
+    .screen.active { display: flex; }
+
+    /* ── HOME ────────────────────────────────────────── */
+    #home {
+      align-items: center;
+      justify-content: center;
+      background: #012169;
+    }
+
+    .union-jack {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.50);
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .txt-weekend {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: clamp(18px, 5vw, 28px);
+      font-weight: 300;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+    }
+
+    .txt-city {
+      color: #ffffff;
+      font-size: clamp(44px, 13vw, 64px);
+      font-weight: 800;
+      letter-spacing: 12px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .txt-spacer { height: 30px; }
+
+    .txt-days {
+      color: #C8102E;
+      font-size: clamp(60px, 20vw, 88px);
+      font-weight: 900;
+      letter-spacing: 2px;
+      line-height: 1;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.55);
+    }
+
+    .txt-clock {
+      color: rgba(255, 255, 255, 0.92);
+      font-size: clamp(34px, 10vw, 50px);
+      font-weight: 200;
+      letter-spacing: 5px;
+      font-variant-numeric: tabular-nums;
+      margin-top: 12px;
+    }
+
+    .btn-enter {
+      position: relative;
+      z-index: 1;
+      background: #C8102E;
+      color: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 5px;
+      padding: 18px 68px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      font-family: inherit;
+    }
+    .btn-enter:active { opacity: 0.72; }
+
+    /* ── AGENDA ──────────────────────────────────────── */
+    #agenda { background: #F7F8FA; }
+
+    .header {
+      background: #012169;
+      display: flex;
+      align-items: center;
+      padding: 50px 14px 16px;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      width: 42px;
+      color: #ffffff;
+      font-size: 36px;
+      font-weight: 300;
+      cursor: pointer;
+      line-height: 1;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .back-btn:active { opacity: 0.6; }
+
+    .header-mid {
+      flex: 1;
+      text-align: center;
+    }
+
+    .header-dayname {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .header-daydate {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+      margin-top: 3px;
+      letter-spacing: 0.8px;
+    }
+
+    .header-spacer { width: 42px; }
+
+    /* Timeline */
+    .timeline {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 18px 0 8px;
+    }
+
+    .time-row {
+      display: flex;
+      min-height: 68px;
+    }
+
+    .hour-col {
+      width: 66px;
+      text-align: right;
+      padding-right: 10px;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .hour-label {
+      color: #012169;
+      font-size: 13px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tl-col {
+      width: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .tl-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #C8102E;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .tl-line {
+      width: 2px;
+      flex: 1;
+      background: #DCDFE6;
+      margin-top: 3px;
+    }
+
+    .event-col {
+      flex: 1;
+      padding: 0 18px 18px 10px;
+    }
+
+    .event-slot {
+      min-height: 40px;
+    }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex;
+      background: #ffffff;
+      border-top: 1px solid #E2E5EC;
+      flex-shrink: 0;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 0 10px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+    }
+    .tab:active { opacity: 0.7; }
+
+    .tab-indicator {
+      position: absolute;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      height: 3px;
+      background: #C8102E;
+      border-radius: 0 0 3px 3px;
+      display: none;
+    }
+    .tab.active .tab-indicator { display: block; }
+
+    .tab-num {
+      font-size: 24px;
+      font-weight: 500;
+      color: #AAAAAA;
+      line-height: 1.15;
+    }
+    .tab.active .tab-num {
+      color: #C8102E;
+      font-weight: 800;
+    }
+
+    .tab-sub {
+      font-size: 10px;
+      color: #BBBBBB;
+      letter-spacing: 0.4px;
+      margin-top: 1px;
+    }
+    .tab.active .tab-sub { color: #C8102E; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ══ HOME SCREEN ══════════════════════════════════ -->
+  <div id="home" class="screen active">
+
+    <!-- Union Jack (spec officielle 60×30, ratio 2:1) -->
+    <svg class="union-jack" viewBox="0 0 60 30"
+         xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <clipPath id="flag-clip">
+          <path d="M0,0 v30 h60 v-30 z"/>
+        </clipPath>
+        <clipPath id="cc-clip">
+          <!-- Masque pour le croix de St Patrick contreplaqué -->
+          <path d="M30,15 h30 v15 z v-30 h-30 z h-30 v-15 z v30 h30 z"/>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#flag-clip)">
+        <!-- Fond bleu -->
+        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+        <!-- Sautoir blanc — croix de St André -->
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" stroke-width="6"/>
+        <!-- Sautoir rouge — croix de St Patrick (contreplaqué) -->
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"
+              clip-path="url(#cc-clip)"/>
+        <!-- Croix blanche — croix de St Georges -->
+        <path d="M30,0 v30 M0,15 h60" stroke="#FFFFFF" stroke-width="10"/>
+        <!-- Croix rouge — croix de St Georges -->
+        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+      </g>
+    </svg>
+
+    <div class="overlay"></div>
+
+    <div class="home-content">
+      <div class="txt-weekend">Week end</div>
+      <div class="txt-city">Londres</div>
+      <div class="txt-spacer"></div>
+      <div class="txt-days" id="days-display">J- 07</div>
+      <div class="txt-clock" id="clock-display">00:00:00</div>
+    </div>
+
+    <button class="btn-enter" onclick="showScreen('agenda')">Entrer</button>
+  </div>
+
+  <!-- ══ AGENDA SCREEN ════════════════════════════════ -->
+  <div id="agenda" class="screen">
+
+    <div class="header">
+      <div class="back-btn" onclick="showScreen('home')">‹</div>
+      <div class="header-mid">
+        <div class="header-dayname" id="hdr-name">Vendredi</div>
+        <div class="header-daydate" id="hdr-date">29 mai 2026</div>
+      </div>
+      <div class="header-spacer"></div>
+    </div>
+
+    <div class="timeline" id="timeline"></div>
+
+    <div class="tab-bar" id="tab-bar">
+      <div class="tab active" onclick="selectDay(0)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num">29</div>
+        <div class="tab-sub">Vendredi</div>
+      </div>
+      <div class="tab" onclick="selectDay(1)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num">30</div>
+        <div class="tab-sub">Samedi</div>
+      </div>
+      <div class="tab" onclick="selectDay(2)">
+        <div class="tab-indicator"></div>
+        <div class="tab-num">31</div>
+        <div class="tab-sub">Dimanche</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+  // ── Navigation ──────────────────────────────────────
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // ── Countdown ───────────────────────────────────────
+  // Vol vendredi 29 mai 2026 à 06h05 heure locale
+  const DEPARTURE = new Date(2026, 4, 29, 6, 5, 0);
+
+  function pad2(n) {
+    return String(Math.floor(Math.abs(n))).padStart(2, '0');
+  }
+
+  function tick() {
+    const diff = Math.max(0, Math.floor((DEPARTURE - Date.now()) / 1000));
+    const days    = Math.floor(diff / 86400);
+    const rem     = diff % 86400;
+    const hours   = Math.floor(rem / 3600);
+    const minutes = Math.floor((rem % 3600) / 60);
+    const seconds = rem % 60;
+
+    document.getElementById('days-display').textContent =
+      'J- ' + pad2(days);
+    document.getElementById('clock-display').textContent =
+      pad2(hours) + ':' + pad2(minutes) + ':' + pad2(seconds);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ── Agenda ──────────────────────────────────────────
+  const DAYS = [
+    { name: 'Vendredi', date: '29 mai 2026' },
+    { name: 'Samedi',   date: '30 mai 2026' },
+    { name: 'Dimanche', date: '31 mai 2026' },
+  ];
+
+  // Créneaux de 6h à 20h inclus
+  const HOURS = Array.from({ length: 15 }, (_, i) => i + 6);
+
+  (function buildTimeline() {
+    const container = document.getElementById('timeline');
+    container.innerHTML = HOURS.map((h, i) => `
+      <div class="time-row">
+        <div class="hour-col">
+          <span class="hour-label">${String(h).padStart(2,'0')}h00</span>
+        </div>
+        <div class="tl-col">
+          <div class="tl-dot"></div>
+          ${i < HOURS.length - 1 ? '<div class="tl-line"></div>' : ''}
+        </div>
+        <div class="event-col">
+          <div class="event-slot"></div>
+        </div>
+      </div>
+    `).join('');
+  })();
+
+  function selectDay(index) {
+    document.getElementById('hdr-name').textContent = DAYS[index].name;
+    document.getElementById('hdr-date').textContent = DAYS[index].date;
+
+    document.querySelectorAll('#tab-bar .tab').forEach((tab, i) => {
+      tab.classList.toggle('active', i === index);
+    });
+
+    document.getElementById('timeline').scrollTop = 0;
+  }
+</script>
+</body>
+</html>
