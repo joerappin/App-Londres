@@ -25,7 +25,7 @@
     .txt-weekend { color:rgba(255,255,255,0.78); font-size:clamp(18px,5vw,28px); font-weight:300; letter-spacing:10px; text-transform:uppercase; }
     .txt-city    { color:#fff; font-size:clamp(44px,13vw,64px); font-weight:800; letter-spacing:12px; text-transform:uppercase; margin-top:6px; }
     .txt-spacer  { height:30px; }
-    .txt-days    { color:#C8102E; font-size:clamp(60px,20vw,88px); font-weight:900; letter-spacing:2px; line-height:1; text-shadow:0 4px 16px rgba(0,0,0,0.55); }
+    .txt-days    { color:#42B0FF; font-size:clamp(60px,20vw,88px); font-weight:900; letter-spacing:2px; line-height:1; text-shadow:0 4px 16px rgba(0,0,0,0.55); }
     .txt-clock   { color:rgba(255,255,255,0.92); font-size:clamp(34px,10vw,50px); font-weight:200; letter-spacing:5px; font-variant-numeric:tabular-nums; margin-top:12px; }
     .btn-enter { position:relative; z-index:1; background:#C8102E; color:#fff; border:2px solid rgba(255,255,255,0.5); border-radius:5px; padding:18px 68px; font-size:18px; font-weight:700; letter-spacing:7px; text-transform:uppercase; cursor:pointer; transition:opacity 0.15s; font-family:inherit; }
     .btn-enter:active { opacity:0.72; }
@@ -81,6 +81,8 @@
     .event-chip-label { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.28); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; }
     .event-chip-title { color:#fff; font-size:14px; font-weight:700; }
     .event-chip-time  { color:rgba(255,255,255,0.75); font-size:11px; margin-top:4px; font-variant-numeric:tabular-nums; padding-left:30px; }
+    .event-chip-travel { display:flex;align-items:center;gap:4px;color:rgba(255,255,255,0.90);font-size:11px;margin-top:5px;padding-left:30px;text-decoration:none; }
+    .event-chip-travel span { text-decoration:underline;opacity:0.72; }
 
     /* Tab Bar */
     .tab-bar { display:flex; background:#fff; border-top:1px solid #E2E5EC; flex-shrink:0; padding-bottom:env(safe-area-inset-bottom,0px); }
@@ -621,19 +623,55 @@
   const EVENTS = {
     0: {
        6: { label:'A', title:'✈ Vol Marseille → Londres', time:'06:05 – 07:05', color:PALETTE.A, modal:'flight-out',    coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
-       7: { label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – 09:00', color:PALETTE.B, modal:'transfer-in',   coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel' },
+       7: { label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – 09:00', color:PALETTE.B, modal:'transfer-in',   coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel', travelRoute:0 },
       14: { label:'C', title:'🦕 Natural History Museum', time:'14:30 – 17:30', color:PALETTE.C, modal:'nhm',           coords:[51.4967, -0.1764], mapName:'Natural History Museum' },
       15: { label:'D', title:'🏨 Check-in Hôtel',         time:'dès 15h00',     color:PALETTE.D, modal:'hotel',         coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel by Thistle' },
     },
     1: {
-      12: { label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PALETTE.E, modal:'hp', coords:[51.5235, -0.1273], mapName:'RDV Coach – Bedford Way' },
+      12: { label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PALETTE.E, modal:'hp', coords:[51.5235, -0.1273], mapName:'RDV Coach – Bedford Way', travelRoute:1 },
     },
     2: {
       10: { label:'F', title:'🏨 Check-out Hôtel',         time:'avant 11h00',    color:PALETTE.F, modal:'checkout',       coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel' },
-      11: { label:'G', title:'🚗 Navette → Stansted',      time:'~11h00',         color:PALETTE.G, modal:'transfer-out',  coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
+      11: { label:'G', title:'🚗 Navette → Stansted',      time:'~11h00',         color:PALETTE.G, modal:'transfer-out',  coords:[51.8870,  0.2441], mapName:'London Stansted (STN)', travelRoute:2 },
       13: { label:'H', title:'✈ Vol Londres → Marseille', time:'13:25 – 16:25',  color:PALETTE.H, modal:'flight-return', coords:[51.8870,  0.2441], mapName:'London Stansted (STN)' },
     },
   };
+
+  // ── Temps de trajet (OSRM routing, aucune clé API) ─
+  const TRAVEL_ROUTES = [
+    { from:[51.8870, 0.2441], to:[51.5141,-0.1566], label:'Stansted → Marble Arch', fallback:5100,
+      mapsUrl:'https://www.google.com/maps/dir/51.8870,0.2441/51.5141,-0.1566' },
+    { from:[51.5235,-0.1273], to:[51.6903,-0.4181], label:'Bedford Way → Warner Bros', fallback:3000,
+      mapsUrl:'https://www.google.com/maps/dir/51.5235,-0.1273/51.6903,-0.4181' },
+    { from:[51.5141,-0.1566], to:[51.8870, 0.2441], label:'Marble Arch → Stansted', fallback:5100,
+      mapsUrl:'https://www.google.com/maps/dir/51.5141,-0.1566/51.8870,0.2441' },
+  ];
+  const travelTimes = [null, null, null];
+
+  function fmtDur(s) {
+    const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
+    return h > 0 ? (m > 0 ? `${h}h ${m} min` : `${h}h`) : `${m} min`;
+  }
+
+  async function fetchRoute(idx) {
+    const r = TRAVEL_ROUTES[idx];
+    const [lat1,lng1] = r.from, [lat2,lng2] = r.to;
+    try {
+      const res = await fetch(
+        `https://router.project-osrm.org/route/v1/driving/${lng1},${lat1};${lng2},${lat2}?overview=false`,
+        { signal: AbortSignal.timeout(8000) }
+      );
+      const d = await res.json();
+      if (d.code === 'Ok' && d.routes[0]) return d.routes[0].duration;
+    } catch (_) {}
+    return r.fallback;
+  }
+
+  async function loadTravelTimes() {
+    const res = await Promise.all([0,1,2].map(fetchRoute));
+    res.forEach((t,i) => { travelTimes[i] = t; });
+    buildTimeline(currentDay);
+  }
 
   // ── Points carte uniquement (hors agenda) ─────────
   const MAP_POINTS = [
@@ -786,6 +824,9 @@
               <span class="event-chip-title">${ev.title}</span>
             </div>
             <div class="event-chip-time">${ev.time}</div>
+            ${ev.travelRoute !== undefined && travelTimes[ev.travelRoute] !== null
+              ? `<a class="event-chip-travel" href="${TRAVEL_ROUTES[ev.travelRoute].mapsUrl}" target="_blank" onclick="event.stopPropagation()">🚗 ~${fmtDur(travelTimes[ev.travelRoute])} <span>Voir trafic →</span></a>`
+              : ''}
           </div>` : `<div class="event-slot"></div>`}
         </div>
       </div>`;
@@ -798,11 +839,19 @@
     if (idx === currentDay) return;
     currentDay = idx;
     document.querySelectorAll('#tab-bar .tab').forEach((t, i) => t.classList.toggle('active', i === idx));
-    document.getElementById('timeline').scrollTop = 0;
+    const tl = document.getElementById('timeline');
+    tl.scrollTop = 0;
+    tl.style.transition = 'opacity 0.18s ease';
+    tl.style.opacity = '0';
     hpAnimation(() => {
       document.getElementById('hdr-name').textContent = DAYS[idx].name;
       document.getElementById('hdr-date').textContent = DAYS[idx].date;
       buildTimeline(idx);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        tl.style.transition = 'opacity 0.32s ease';
+        tl.style.opacity = '1';
+        setTimeout(() => { tl.style.transition = ''; }, 380);
+      }));
     });
   }
 
@@ -810,6 +859,8 @@
   document.getElementById('hdr-name').textContent = DAYS[0].name;
   document.getElementById('hdr-date').textContent = DAYS[0].date;
   buildTimeline(0);
+  loadTravelTimes();
+  setInterval(loadTravelTimes, 10 * 60 * 1000);
 
   // ── Carte Leaflet ─────────────────────────────────
   let lMap = null;
