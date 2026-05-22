@@ -635,6 +635,11 @@
     },
   };
 
+  // ── Points carte uniquement (hors agenda) ─────────
+  const MAP_POINTS = [
+    { day:1, label:'W', title:'🎬 Warner Bros. Studios', time:'13:00 – ~18:00', color:'#6A1B9A', coords:[51.6903, -0.4181], mapName:'Warner Bros. Studio Tour Leavesden' },
+  ];
+
   // ── QR codes NHM ──────────────────────────────────
   let nhmQrDone = false;
   const NHM_BARCODES = ['1001401807011380629','1001401807011380630','1001401807011380631'];
@@ -853,6 +858,27 @@
 
         mapMarkersByDay[day].push(marker);
       });
+    });
+
+    // Points carte uniquement (Warner Bros etc.)
+    MAP_POINTS.forEach(pt => {
+      const key = pt.coords.join(',');
+      const n   = usedKeys[key] = (usedKeys[key] || 0) + 1;
+      const off = (n - 1) * 0.0003;
+      const c   = [pt.coords[0] + off, pt.coords[1] + off];
+      const icon = L.divIcon({
+        html:`<div style="background:${pt.color};color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;box-shadow:0 3px 12px rgba(0,0,0,0.45);border:3px solid #fff;font-family:-apple-system,sans-serif;">${pt.label}</div>`,
+        className:'', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22],
+      });
+      const marker = L.marker(c, { icon }).bindPopup(`
+        <div style="font-family:-apple-system,sans-serif;min-width:170px;margin:0">
+          <div style="background:${pt.color};color:#fff;padding:7px 12px;margin:-1px -1px 8px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px;">${pt.label} — ${pt.mapName}</div>
+          <div style="padding:0 12px 10px">
+            <div style="font-size:13px;color:#222;font-weight:600;">${pt.title}</div>
+            <div style="font-size:12px;color:#888;margin-top:3px;font-variant-numeric:tabular-nums;">${pt.time}</div>
+          </div>
+        </div>`, { maxWidth:240 });
+      mapMarkersByDay[pt.day].push(marker);
     });
   }
 
