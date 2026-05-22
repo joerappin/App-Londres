@@ -17,312 +17,180 @@
       background: #012169;
     }
 
-    #app {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-    }
+    #app { width: 100%; height: 100%; position: relative; overflow: hidden; }
 
     /* ── SCREENS ─────────────────────────────────────── */
-    .screen {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-    }
+    .screen { position: absolute; inset: 0; display: none; flex-direction: column; }
     .screen.active { display: flex; }
 
     /* ── HOME ────────────────────────────────────────── */
-    #home {
-      align-items: center;
-      justify-content: center;
-      background: #012169;
-    }
+    #home { align-items: center; justify-content: center; background: #012169; }
 
-    .union-jack {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
+    .union-jack { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.50);
-    }
+    .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.50); }
 
     .home-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
       margin-bottom: 56px;
     }
 
-    .txt-weekend {
-      color: rgba(255, 255, 255, 0.78);
-      font-size: clamp(18px, 5vw, 28px);
-      font-weight: 300;
-      letter-spacing: 10px;
-      text-transform: uppercase;
-    }
-
-    .txt-city {
-      color: #ffffff;
-      font-size: clamp(44px, 13vw, 64px);
-      font-weight: 800;
-      letter-spacing: 12px;
-      text-transform: uppercase;
-      margin-top: 6px;
-    }
-
-    .txt-spacer { height: 30px; }
-
-    .txt-days {
-      color: #C8102E;
-      font-size: clamp(60px, 20vw, 88px);
-      font-weight: 900;
-      letter-spacing: 2px;
-      line-height: 1;
-      text-shadow: 0 4px 16px rgba(0,0,0,0.55);
-    }
-
-    .txt-clock {
-      color: rgba(255, 255, 255, 0.92);
-      font-size: clamp(34px, 10vw, 50px);
-      font-weight: 200;
-      letter-spacing: 5px;
-      font-variant-numeric: tabular-nums;
-      margin-top: 12px;
-    }
+    .txt-weekend { color: rgba(255,255,255,0.78); font-size: clamp(18px,5vw,28px); font-weight: 300; letter-spacing: 10px; text-transform: uppercase; }
+    .txt-city    { color: #fff; font-size: clamp(44px,13vw,64px); font-weight: 800; letter-spacing: 12px; text-transform: uppercase; margin-top: 6px; }
+    .txt-spacer  { height: 30px; }
+    .txt-days    { color: #C8102E; font-size: clamp(60px,20vw,88px); font-weight: 900; letter-spacing: 2px; line-height: 1; text-shadow: 0 4px 16px rgba(0,0,0,0.55); }
+    .txt-clock   { color: rgba(255,255,255,0.92); font-size: clamp(34px,10vw,50px); font-weight: 200; letter-spacing: 5px; font-variant-numeric: tabular-nums; margin-top: 12px; }
 
     .btn-enter {
-      position: relative;
-      z-index: 1;
-      background: #C8102E;
-      color: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.5);
-      border-radius: 5px;
-      padding: 18px 68px;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 7px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      font-family: inherit;
+      position: relative; z-index: 1;
+      background: #C8102E; color: #fff;
+      border: 2px solid rgba(255,255,255,0.5); border-radius: 5px;
+      padding: 18px 68px; font-size: 18px; font-weight: 700;
+      letter-spacing: 7px; text-transform: uppercase;
+      cursor: pointer; transition: opacity 0.15s; font-family: inherit;
     }
     .btn-enter:active { opacity: 0.72; }
 
     /* ── FLAG RAIN ───────────────────────────────────── */
     @keyframes flag-fall {
-      0%   {
-        transform: translateY(0) translateX(0) rotate(var(--rot-start));
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(112vh) translateX(var(--drift)) rotate(var(--rot-end));
-        opacity: 0.25;
-      }
+      0%   { transform: translateY(0) translateX(0) rotate(var(--rot-start)); opacity: 1; }
+      100% { transform: translateY(112vh) translateX(var(--drift)) rotate(var(--rot-end)); opacity: 0.25; }
     }
 
     /* ── AGENDA ──────────────────────────────────────── */
     #agenda { background: #F7F8FA; }
 
     .header {
-      background: #012169;
-      display: flex;
-      align-items: center;
-      padding: 50px 14px 16px;
-      flex-shrink: 0;
+      background: #012169; display: flex; align-items: center;
+      padding: 50px 14px 16px; flex-shrink: 0;
     }
-
-    .back-btn {
-      width: 42px;
-      color: #ffffff;
-      font-size: 36px;
-      font-weight: 300;
-      cursor: pointer;
-      line-height: 1;
-      flex-shrink: 0;
-      user-select: none;
-    }
+    .back-btn  { width: 42px; color: #fff; font-size: 36px; font-weight: 300; cursor: pointer; line-height: 1; flex-shrink: 0; user-select: none; }
     .back-btn:active { opacity: 0.6; }
-
-    .header-mid {
-      flex: 1;
-      text-align: center;
-    }
-
-    .header-dayname {
-      color: #ffffff;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .header-daydate {
-      color: rgba(255, 255, 255, 0.58);
-      font-size: 13px;
-      margin-top: 3px;
-      letter-spacing: 0.8px;
-    }
-
+    .header-mid    { flex: 1; text-align: center; }
+    .header-dayname { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    .header-daydate { color: rgba(255,255,255,0.58); font-size: 13px; margin-top: 3px; letter-spacing: 0.8px; }
     .header-spacer { width: 42px; }
 
     /* Timeline */
-    .timeline {
-      flex: 1;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 18px 0 8px;
-    }
+    .timeline { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 18px 0 8px; }
 
-    .time-row {
-      display: flex;
-      min-height: 68px;
-    }
+    .time-row   { display: flex; min-height: 68px; }
+    .hour-col   { width: 66px; text-align: right; padding-right: 10px; padding-top: 2px; flex-shrink: 0; }
+    .hour-label { color: #012169; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
 
-    .hour-col {
-      width: 66px;
-      text-align: right;
-      padding-right: 10px;
-      padding-top: 2px;
-      flex-shrink: 0;
-    }
+    .tl-col { width: 22px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: #C8102E; margin-top: 5px; flex-shrink: 0; }
+    .tl-line { width: 2px; flex: 1; background: #DCDFE6; margin-top: 3px; }
 
-    .hour-label {
-      color: #012169;
-      font-size: 13px;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
+    .event-col  { flex: 1; padding: 0 18px 18px 10px; }
+    .event-slot { min-height: 40px; }
 
-    .tl-col {
-      width: 22px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-shrink: 0;
+    /* Event chip */
+    .event-chip {
+      border-radius: 8px; padding: 10px 14px;
+      cursor: pointer; display: flex; flex-direction: column;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+      user-select: none; transition: opacity 0.12s;
     }
-
-    .tl-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #C8102E;
-      margin-top: 5px;
-      flex-shrink: 0;
-    }
-
-    .tl-line {
-      width: 2px;
-      flex: 1;
-      background: #DCDFE6;
-      margin-top: 3px;
-    }
-
-    .event-col {
-      flex: 1;
-      padding: 0 18px 18px 10px;
-    }
-
-    .event-slot {
-      min-height: 40px;
-    }
+    .event-chip:active { opacity: 0.78; }
+    .event-chip-title { color: #fff; font-size: 14px; font-weight: 700; }
+    .event-chip-time  { color: rgba(255,255,255,0.78); font-size: 11px; margin-top: 3px; font-variant-numeric: tabular-nums; }
 
     /* Tab Bar */
-    .tab-bar {
-      display: flex;
-      background: #ffffff;
-      border-top: 1px solid #E2E5EC;
-      flex-shrink: 0;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    .tab {
-      flex: 1;
-      padding: 12px 0 10px;
-      text-align: center;
-      cursor: pointer;
-      position: relative;
-      user-select: none;
-    }
+    .tab-bar { display: flex; background: #fff; border-top: 1px solid #E2E5EC; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom,0px); }
+    .tab     { flex: 1; padding: 12px 0 10px; text-align: center; cursor: pointer; position: relative; user-select: none; }
     .tab:active { opacity: 0.7; }
-
-    .tab-indicator {
-      position: absolute;
-      top: 0;
-      left: 15%;
-      right: 15%;
-      height: 3px;
-      background: #C8102E;
-      border-radius: 0 0 3px 3px;
-      display: none;
-    }
+    .tab-indicator { position: absolute; top: 0; left: 15%; right: 15%; height: 3px; background: #C8102E; border-radius: 0 0 3px 3px; display: none; }
     .tab.active .tab-indicator { display: block; }
+    .tab-num  { font-size: 24px; font-weight: 500; color: #AAAAAA; line-height: 1.15; }
+    .tab.active .tab-num  { color: #C8102E; font-weight: 800; }
+    .tab-sub  { font-size: 10px; color: #BBBBBB; letter-spacing: 0.4px; margin-top: 1px; }
+    .tab.active .tab-sub  { color: #C8102E; }
 
-    .tab-num {
-      font-size: 24px;
-      font-weight: 500;
-      color: #AAAAAA;
-      line-height: 1.15;
+    /* ── MODAL ───────────────────────────────────────── */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.62);
+      z-index: 2000;
+      display: none; align-items: flex-end; justify-content: center;
     }
-    .tab.active .tab-num {
-      color: #C8102E;
-      font-weight: 800;
+    .modal-backdrop.open { display: flex; }
+
+    .modal-sheet {
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      width: 100%; max-width: 520px;
+      padding-bottom: env(safe-area-inset-bottom, 24px);
+      max-height: 88vh; overflow-y: auto;
     }
 
-    .tab-sub {
-      font-size: 10px;
-      color: #BBBBBB;
-      letter-spacing: 0.4px;
-      margin-top: 1px;
+    .modal-handle-bar { width: 40px; height: 4px; background: #DDD; border-radius: 2px; margin: 14px auto 0; }
+
+    .modal-close-row {
+      display: flex; justify-content: flex-end;
+      padding: 10px 18px 0;
     }
-    .tab.active .tab-sub { color: #C8102E; }
+    .modal-close-btn {
+      font-size: 22px; color: #999; cursor: pointer;
+      width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: #F0F0F0; font-weight: 300;
+    }
+    .modal-close-btn:active { opacity: 0.6; }
+
+    .modal-logo-wrap { display: flex; justify-content: center; padding: 10px 24px 18px; }
+
+    .modal-airport {
+      text-align: center;
+      font-size: 22px; font-weight: 800;
+      color: #073590; letter-spacing: 1px;
+      padding: 0 24px 20px;
+    }
+    .modal-airport span { font-size: 14px; font-weight: 500; color: #888; display: block; margin-top: 2px; }
+
+    .modal-divider { height: 1px; background: #EBEBEB; margin: 0 24px; }
+
+    .modal-rows { padding: 16px 24px 8px; display: flex; flex-direction: column; gap: 16px; }
+
+    .modal-row { display: flex; align-items: flex-start; gap: 14px; }
+    .modal-icon { font-size: 22px; width: 28px; flex-shrink: 0; margin-top: 1px; }
+    .modal-info-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+    .modal-info-value { font-size: 16px; font-weight: 600; color: #1A1A1A; }
+
+    .modal-reservation {
+      background: #073590; color: #fff;
+      border-radius: 8px; padding: 12px 18px;
+      margin: 16px 24px; display: flex; align-items: center; gap: 12px;
+    }
+    .modal-reservation-label { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.8px; }
+    .modal-reservation-code  { font-size: 26px; font-weight: 900; letter-spacing: 4px; }
+
+    .modal-note {
+      background: #FFF8E1; border-left: 4px solid #F7BE00;
+      margin: 4px 24px 20px; padding: 12px 14px;
+      border-radius: 0 8px 8px 0; font-size: 14px; color: #555; font-weight: 500;
+    }
   </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ══ HOME SCREEN ══════════════════════════════════ -->
+  <!-- ══ HOME ═════════════════════════════════════════ -->
   <div id="home" class="screen active">
-
-    <!-- Union Jack (spec officielle 60×30, ratio 2:1) -->
-    <svg class="union-jack" viewBox="0 0 60 30"
-         xmlns="http://www.w3.org/2000/svg"
-         preserveAspectRatio="xMidYMid slice">
+    <svg class="union-jack" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
       <defs>
-        <clipPath id="flag-clip">
-          <path d="M0,0 v30 h60 v-30 z"/>
-        </clipPath>
-        <clipPath id="cc-clip">
-          <!-- Masque pour le croix de St Patrick contreplaqué -->
-          <path d="M30,15 h30 v15 z v-30 h-30 z h-30 v-15 z v30 h30 z"/>
-        </clipPath>
+        <clipPath id="flag-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+        <clipPath id="cc-clip"><path d="M30,15 h30 v15 z v-30 h-30 z h-30 v-15 z v30 h30 z"/></clipPath>
       </defs>
       <g clip-path="url(#flag-clip)">
-        <!-- Fond bleu -->
         <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-        <!-- Sautoir blanc — croix de St André -->
         <path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" stroke-width="6"/>
-        <!-- Sautoir rouge — croix de St Patrick (contreplaqué) -->
-        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"
-              clip-path="url(#cc-clip)"/>
-        <!-- Croix blanche — croix de St Georges -->
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4" clip-path="url(#cc-clip)"/>
         <path d="M30,0 v30 M0,15 h60" stroke="#FFFFFF" stroke-width="10"/>
-        <!-- Croix rouge — croix de St Georges -->
         <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
       </g>
     </svg>
-
     <div class="overlay"></div>
-
     <div class="home-content">
       <div class="txt-weekend">Week end</div>
       <div class="txt-city">Londres</div>
@@ -330,13 +198,11 @@
       <div class="txt-days" id="days-display">J- 07</div>
       <div class="txt-clock" id="clock-display">00:00:00</div>
     </div>
-
     <button class="btn-enter" onclick="triggerFlagRain()">Entrer</button>
   </div>
 
-  <!-- ══ AGENDA SCREEN ════════════════════════════════ -->
+  <!-- ══ AGENDA ═══════════════════════════════════════ -->
   <div id="agenda" class="screen">
-
     <div class="header">
       <div class="back-btn" onclick="showScreen('home')">‹</div>
       <div class="header-mid">
@@ -345,9 +211,7 @@
       </div>
       <div class="header-spacer"></div>
     </div>
-
     <div class="timeline" id="timeline"></div>
-
     <div class="tab-bar" id="tab-bar">
       <div class="tab active" onclick="selectDay(0)">
         <div class="tab-indicator"></div>
@@ -367,10 +231,91 @@
     </div>
   </div>
 
+  <!-- ══ MODAL VOL ════════════════════════════════════ -->
+  <div id="modal-flight" class="modal-backdrop" onclick="closeModal('flight')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row">
+        <div class="modal-close-btn" onclick="closeModal('flight')">✕</div>
+      </div>
+
+      <!-- Logo Ryanair -->
+      <div class="modal-logo-wrap">
+        <svg viewBox="0 0 300 75" xmlns="http://www.w3.org/2000/svg" style="width:210px;height:auto">
+          <rect width="300" height="75" fill="#073590" rx="8"/>
+          <!-- Harp -->
+          <rect x="14" y="12" width="5" height="52" fill="#F7BE00" rx="2.5"/>
+          <path d="M19,12 C19,12 46,6 50,32" stroke="#F7BE00" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M14,64 C14,64 36,70 50,32" stroke="#F7BE00" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <line x1="20" y1="21" x2="43" y2="33" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="29" x2="47" y2="33" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="37" x2="49" y2="34" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="45" x2="48" y2="34" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="20" y1="53" x2="44" y2="35" stroke="#F7BE00" stroke-width="1.8" stroke-linecap="round"/>
+          <!-- Text -->
+          <text x="68" y="52" fill="#F7BE00" font-size="34" font-weight="900"
+                font-family="Arial Black, Arial, sans-serif" letter-spacing="-0.5">Ryanair</text>
+        </svg>
+      </div>
+
+      <!-- Aéroport d'arrivée -->
+      <div class="modal-airport">
+        London Stansted
+        <span>STN — Royaume-Uni</span>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <!-- Code de réservation -->
+      <div class="modal-reservation">
+        <span style="font-size:26px">🎫</span>
+        <div>
+          <div class="modal-reservation-label">Réservation</div>
+          <div class="modal-reservation-code">U36IQW</div>
+        </div>
+      </div>
+
+      <!-- Détails du vol -->
+      <div class="modal-rows">
+        <div class="modal-row">
+          <div class="modal-icon">✈️</div>
+          <div>
+            <div class="modal-info-label">Départ</div>
+            <div class="modal-info-value">Marseille — 29 mai, 06h05</div>
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🚪</div>
+          <div>
+            <div class="modal-info-label">Fermeture de la porte</div>
+            <div class="modal-info-value">05h35</div>
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🛬</div>
+          <div>
+            <div class="modal-info-label">Arrivée</div>
+            <div class="modal-info-value">London Stansted — 07h05</div>
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-icon">🚌</div>
+          <div>
+            <div class="modal-info-label">Transfert</div>
+            <div class="modal-info-value">Navette Aéroport → Hôtel</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-note">
+        ⚠️ Se présenter à la porte avant <strong>05h35</strong>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script>
   // ── Flag Rain ────────────────────────────────────────
-  // Mini Union Jack en base64 (simplifié pour les petites tailles)
   const FLAG_URL = (() => {
     const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">` +
       `<rect width="60" height="30" fill="#012169"/>` +
@@ -385,34 +330,26 @@
     const rain = document.createElement('div');
     rain.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;';
     document.body.appendChild(rain);
-
     for (let i = 0; i < 38; i++) {
       const el    = document.createElement('div');
-      const w     = 22 + Math.random() * 44;          // 22–66 px de large
-      const delay = Math.random() * 750;               // décalage 0–750 ms
-      const dur   = 950 + Math.random() * 1050;        // chute 0.95–2 s
-      const left  = -5 + Math.random() * 110;          // -5 % → 105 %
-      const rotS  = -40 + Math.random() * 80;          // rotation initiale
-      const rotE  = rotS + (-220 + Math.random() * 440); // rotation finale
-      const drift = -55 + Math.random() * 110;         // dérive horizontale px
-
+      const w     = 22 + Math.random() * 44;
+      const delay = Math.random() * 750;
+      const dur   = 950 + Math.random() * 1050;
+      const left  = -5 + Math.random() * 110;
+      const rotS  = -40 + Math.random() * 80;
+      const rotE  = rotS + (-220 + Math.random() * 440);
+      const drift = -55 + Math.random() * 110;
       el.style.cssText =
-        `position:absolute;` +
-        `left:${left}%;` +
-        `top:-${w * 0.6 + 12}px;` +
-        `width:${w}px;` +
-        `height:${w * 0.5}px;` +
+        `position:absolute;left:${left}%;top:-${w*0.6+12}px;` +
+        `width:${w}px;height:${w*0.5}px;` +
         `background:url("${FLAG_URL}") center/cover no-repeat;` +
-        `border-radius:2px;` +
-        `box-shadow:0 2px 8px rgba(0,0,0,0.32);` +
+        `border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,0.32);` +
         `animation:flag-fall ${dur}ms ease-in ${delay}ms both;`;
       el.style.setProperty('--rot-start', rotS + 'deg');
       el.style.setProperty('--rot-end',   rotE + 'deg');
       el.style.setProperty('--drift',     drift + 'px');
       rain.appendChild(el);
     }
-
-    // Naviguer vers l'agenda après le pic de la pluie
     setTimeout(() => {
       showScreen('agenda');
       setTimeout(() => rain.remove(), 700);
@@ -425,26 +362,23 @@
     document.getElementById(id).classList.add('active');
   }
 
-  // ── Countdown ───────────────────────────────────────
-  // Vol vendredi 29 mai 2026 à 06h05 heure locale
-  const DEPARTURE = new Date(2026, 4, 29, 6, 5, 0);
-
-  function pad2(n) {
-    return String(Math.floor(Math.abs(n))).padStart(2, '0');
+  // ── Modal ────────────────────────────────────────────
+  function openModal(id) {
+    document.getElementById('modal-' + id).classList.add('open');
+  }
+  function closeModal(id) {
+    document.getElementById('modal-' + id).classList.remove('open');
   }
 
+  // ── Countdown ───────────────────────────────────────
+  const DEPARTURE = new Date(2026, 4, 29, 6, 5, 0);
+  function pad2(n) { return String(Math.floor(Math.abs(n))).padStart(2,'0'); }
   function tick() {
     const diff = Math.max(0, Math.floor((DEPARTURE - Date.now()) / 1000));
-    const days    = Math.floor(diff / 86400);
-    const rem     = diff % 86400;
-    const hours   = Math.floor(rem / 3600);
-    const minutes = Math.floor((rem % 3600) / 60);
-    const seconds = rem % 60;
-
-    document.getElementById('days-display').textContent =
-      'J- ' + pad2(days);
+    const days = Math.floor(diff / 86400), rem = diff % 86400;
+    document.getElementById('days-display').textContent  = 'J- ' + pad2(days);
     document.getElementById('clock-display').textContent =
-      pad2(hours) + ':' + pad2(minutes) + ':' + pad2(seconds);
+      pad2(Math.floor(rem/3600)) + ':' + pad2(Math.floor((rem%3600)/60)) + ':' + pad2(rem%60);
   }
   tick();
   setInterval(tick, 1000);
@@ -456,37 +390,53 @@
     { name: 'Dimanche', date: '31 mai 2026' },
   ];
 
-  // Créneaux de 6h à 20h inclus
   const HOURS = Array.from({ length: 15 }, (_, i) => i + 6);
 
-  (function buildTimeline() {
-    const container = document.getElementById('timeline');
-    container.innerHTML = HOURS.map((h, i) => `
-      <div class="time-row">
-        <div class="hour-col">
-          <span class="hour-label">${String(h).padStart(2,'0')}h00</span>
-        </div>
-        <div class="tl-col">
-          <div class="tl-dot"></div>
-          ${i < HOURS.length - 1 ? '<div class="tl-line"></div>' : ''}
-        </div>
-        <div class="event-col">
-          <div class="event-slot"></div>
-        </div>
-      </div>
-    `).join('');
-  })();
+  // Événements : EVENTS[jourIndex][heure] = objet événement
+  const EVENTS = {
+    0: {
+      6: {
+        title: '✈ Vol Marseille → Londres',
+        time:  '06:05 – 07:05',
+        color: '#073590',
+        modal: 'flight',
+      }
+    }
+  };
+
+  function buildTimeline(dayIndex) {
+    const dayEvts = EVENTS[dayIndex] || {};
+    document.getElementById('timeline').innerHTML = HOURS.map((h, i) => {
+      const ev = dayEvts[h];
+      return `
+        <div class="time-row">
+          <div class="hour-col"><span class="hour-label">${String(h).padStart(2,'0')}h00</span></div>
+          <div class="tl-col">
+            <div class="tl-dot"></div>
+            ${i < HOURS.length - 1 ? '<div class="tl-line"></div>' : ''}
+          </div>
+          <div class="event-col">
+            ${ev
+              ? `<div class="event-chip" style="background:${ev.color}" onclick="openModal('${ev.modal}')">
+                   <span class="event-chip-title">${ev.title}</span>
+                   <span class="event-chip-time">${ev.time}</span>
+                 </div>`
+              : `<div class="event-slot"></div>`
+            }
+          </div>
+        </div>`;
+    }).join('');
+  }
 
   function selectDay(index) {
     document.getElementById('hdr-name').textContent = DAYS[index].name;
     document.getElementById('hdr-date').textContent = DAYS[index].date;
-
-    document.querySelectorAll('#tab-bar .tab').forEach((tab, i) => {
-      tab.classList.toggle('active', i === index);
-    });
-
+    document.querySelectorAll('#tab-bar .tab').forEach((t, i) => t.classList.toggle('active', i === index));
     document.getElementById('timeline').scrollTop = 0;
+    buildTimeline(index);
   }
+
+  buildTimeline(0);
 </script>
 </body>
 </html>
