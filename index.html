@@ -215,6 +215,12 @@
     .menu-item:active { background:rgba(255,255,255,0.07); }
     .menu-item-icon { font-size:22px; width:28px; text-align:center; flex-shrink:0; }
     .menu-divider { height:1px; background:rgba(255,255,255,0.08); margin:4px 0; }
+    .menu-item-static { display:flex; align-items:center; gap:16px; padding:17px 22px 8px; color:#fff; font-size:16px; font-weight:600; user-select:none; cursor:default; }
+    .menu-sub-days { display:flex; gap:8px; padding:0 22px 14px; }
+    .menu-sub-day-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:10px 6px; border-radius:12px; border:1.5px solid rgba(255,255,255,0.22); background:rgba(255,255,255,0.07); color:#fff; font-family:inherit; cursor:pointer; transition:background 0.15s, border-color 0.15s; }
+    .menu-sub-day-btn:active { background:rgba(255,255,255,0.18); border-color:rgba(255,255,255,0.55); }
+    .menu-sub-day-num { font-size:20px; font-weight:800; line-height:1; }
+    .menu-sub-day-label { font-size:10px; font-weight:500; color:rgba(255,255,255,0.6); letter-spacing:0.3px; }
 
     /* SPIN WHEEL OVERLAY */
     #spin-overlay { display:none; position:fixed; inset:0; z-index:5500; background:#0a0a2e; flex-direction:column; align-items:center; justify-content:center; }
@@ -290,15 +296,15 @@
   <!-- AGENDA -->
   <div id="agenda" class="screen">
     <div class="header">
-      <button class="weather-btn" onclick="openWeatherPanel()" id="weather-btn-el">
-        <div class="weather-btn-icon" id="weather-btn-icon">🌤️</div>
-        <div class="weather-btn-temp" id="weather-btn-temp">—°</div>
-      </button>
       <div class="back-btn" onclick="showScreen('home')">‹</div>
       <div class="header-mid">
         <div class="header-dayname" id="hdr-name">Vendredi</div>
         <div class="header-daydate" id="hdr-date">29 mai 2026</div>
       </div>
+      <button class="weather-btn" onclick="openWeatherPanel()" id="weather-btn-el">
+        <div class="weather-btn-icon" id="weather-btn-icon">🌤️</div>
+        <div class="weather-btn-temp" id="weather-btn-temp">—°</div>
+      </button>
       <button class="menu-btn" id="menu-btn" onclick="openMenu()">
         <div class="menu-bars"><div class="menu-bar"></div><div class="menu-bar"></div><div class="menu-bar"></div></div>
         <div class="menu-hp-face">
@@ -764,10 +770,24 @@
           <span class="menu-item-icon">🗺️</span>
           <span>Carte</span>
         </button>
-        <button class="menu-item" onclick="openWeatherPanel()">
+        <div class="menu-item menu-item-static">
           <span class="menu-item-icon">🌤️</span>
           <span>Météo</span>
-        </button>
+        </div>
+        <div class="menu-sub-days">
+          <button class="menu-sub-day-btn" onclick="openWeatherPanel(0)">
+            <span class="menu-sub-day-num">29</span>
+            <span class="menu-sub-day-label">Vendredi</span>
+          </button>
+          <button class="menu-sub-day-btn" onclick="openWeatherPanel(1)">
+            <span class="menu-sub-day-num">30</span>
+            <span class="menu-sub-day-label">Samedi</span>
+          </button>
+          <button class="menu-sub-day-btn" onclick="openWeatherPanel(2)">
+            <span class="menu-sub-day-num">31</span>
+            <span class="menu-sub-day-label">Dimanche</span>
+          </button>
+        </div>
         <div class="menu-divider"></div>
         <button class="menu-item" onclick="openSpinWheel()">
           <span class="menu-item-icon">🎡</span>
@@ -1194,7 +1214,7 @@ async function loadWeatherBtn() {
   document.getElementById('weather-btn-temp').textContent = Math.round(cur.temperature) + '°';
 }
 
-async function openWeatherPanel() {
+async function openWeatherPanel(dayIdx) {
   closeMenu();
   document.getElementById('weather-panel').classList.add('open');
   const content = document.getElementById('weather-content');
@@ -1228,7 +1248,7 @@ async function openWeatherPanel() {
   ];
 
   if (hourly && hourly.time) {
-    tripDays.forEach(td => {
+    tripDays.forEach((td, tdIdx) => {
       const rows = [];
       hourly.time.forEach((t, i) => {
         if (!t.startsWith(td.dateStr)) return;
@@ -1248,7 +1268,7 @@ async function openWeatherPanel() {
         </div>`);
       });
       if (rows.length) {
-        html += `<div class="weather-day-section">
+        html += `<div class="weather-day-section" id="weather-day-${tdIdx}">
           <div class="weather-section-header">${td.label}</div>
           ${rows.join('')}
         </div>`;
@@ -1257,6 +1277,13 @@ async function openWeatherPanel() {
   }
 
   content.innerHTML = html || '<div class="weather-loading">Données météo indisponibles pour ces dates.</div>';
+
+  if (dayIdx !== undefined) {
+    requestAnimationFrame(() => {
+      const target = document.getElementById('weather-day-' + dayIdx);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 }
 function closeWeatherPanel() { document.getElementById('weather-panel').classList.remove('open'); }
 
