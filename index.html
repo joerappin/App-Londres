@@ -159,6 +159,17 @@
     .qr-popup-name { color:#fff; font-size:16px; font-weight:700; margin-top:18px; letter-spacing:0.5px; }
     .qr-popup-code { color:rgba(255,255,255,0.55); font-size:12px; margin-top:6px; font-variant-numeric:tabular-nums; letter-spacing:1px; }
     #qr-popup-canvas { background:#fff; padding:10px; border-radius:10px; }
+    #qr-popup.hp { background:linear-gradient(160deg,#0d0621 0%,#1a0a2e 55%,#0a1628 100%); }
+    #qr-popup.hp .qr-popup-close { background:rgba(245,215,120,0.15); color:#f5d778; }
+    #qr-popup.hp .qr-popup-name { color:#f5d778; }
+    #qr-popup.hp .qr-popup-code { color:rgba(245,215,120,0.55); }
+    #qr-popup.hp #qr-popup-canvas { box-shadow:0 0 40px rgba(220,180,30,0.4), 0 0 80px rgba(120,30,200,0.2); }
+    .modal-qr-item.hp { background:linear-gradient(135deg,#1a0a2e,#0d1a3a); border:1px solid rgba(245,215,120,0.25); }
+    .modal-qr-item.hp:active { opacity:0.75; }
+    .modal-qr-item.hp .modal-qr-label { color:#f5d778; }
+    .modal-qr-item.hp .modal-qr-code { color:rgba(245,215,120,0.5); }
+    .modal-qr-item.hp .modal-qr-tap-hint { color:rgba(245,215,120,0.4); }
+    .modal-qr-title.hp { color:#f5d778; opacity:0.7; }
 
     /* WEATHER PANEL */
     #weather-panel { display:none; position:fixed; inset:0; background:#012169; z-index:3500; flex-direction:column; overflow-y:auto; }
@@ -578,6 +589,27 @@
         <div class="modal-row"><div class="modal-icon">❌</div><div><div class="modal-info-label">Annulation gratuite avant</div><div class="modal-info-value">27 mai 2026, 13h00</div></div></div>
       </div>
       <div class="modal-note">🧙 RDV impératif à Bedford Way à <strong>12h50</strong> — le coach part sans attendre !</div>
+      <div class="modal-qr-section">
+        <div class="modal-qr-title hp">⚡ Appuyez sur un billet pour l'agrandir</div>
+        <div class="modal-qr-item hp" onclick="openQrPopup('Aurélia Rappin','PRIO7745781493071735',0,'hp')">
+          <div class="modal-qr-label">✦ Billet 1 — Aurélia Rappin · Adulte</div>
+          <div id="qr-hp-1" class="modal-qr-box"></div>
+          <div class="modal-qr-code">PRIO7745781493071735</div>
+          <div class="modal-qr-tap-hint">Appuyer pour agrandir →</div>
+        </div>
+        <div class="modal-qr-item hp" onclick="openQrPopup('Jonathan Rappin','PRIO7745781493077143',1,'hp')">
+          <div class="modal-qr-label">✦ Billet 2 — Jonathan Rappin · Adulte</div>
+          <div id="qr-hp-2" class="modal-qr-box"></div>
+          <div class="modal-qr-code">PRIO7745781493077143</div>
+          <div class="modal-qr-tap-hint">Appuyer pour agrandir →</div>
+        </div>
+        <div class="modal-qr-item hp" onclick="openQrPopup('Mia Rappin','PRIO7745781493018832',2,'hp')">
+          <div class="modal-qr-label">✦ Billet 3 — Mia Rappin · Enfant</div>
+          <div id="qr-hp-3" class="modal-qr-box"></div>
+          <div class="modal-qr-code">PRIO7745781493018832</div>
+          <div class="modal-qr-tap-hint">Appuyer pour agrandir →</div>
+        </div>
+      </div>
       <div style="display:flex;gap:8px;margin:0 24px 20px;">
         <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5235,-0.1273" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Bedford Way (RDV)</a>
         <a class="modal-map-link" href="https://maps.google.com/maps?q=51.6903,-0.4181" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Warner Bros.</a>
@@ -752,7 +784,7 @@
   <!-- QR FULLSCREEN -->
   <div id="qr-popup">
     <button class="qr-popup-close" onclick="closeQrPopup()">✕</button>
-    <div class="qr-popup-logo">
+    <div class="qr-popup-logo" id="qr-popup-logo">
       <div style="font-size:44px;margin-bottom:10px;">🦕</div>
       <div style="color:#fff;font-family:'Times New Roman',Georgia,serif;font-size:14px;letter-spacing:5px;font-weight:bold;text-align:center;">NATURAL HISTORY</div>
       <div style="color:#fff;font-family:'Times New Roman',Georgia,serif;font-size:14px;letter-spacing:5px;font-weight:bold;text-align:center;">MUSEUM · LONDON</div>
@@ -1153,6 +1185,15 @@ function openModal(id, ev) {
       });
     }, 100);
   }
+  if (id === 'hp') {
+    setTimeout(() => {
+      const codes = ['PRIO7745781493071735','PRIO7745781493077143','PRIO7745781493018832'];
+      codes.forEach((code,i) => {
+        const el = document.getElementById('qr-hp-' + (i+1));
+        if (el && !el.firstChild) new QRCode(el, { text:code, width:140, height:140, colorDark:'#1a0a2e', colorLight:'#fff' });
+      });
+    }, 100);
+  }
   document.getElementById('modal-' + id).classList.add('open');
 }
 function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
@@ -1171,18 +1212,30 @@ function deleteCurrentEvent() {
 const NHM_CODES = ['1001401807011380629','1001401807011380630','1001401807011380631'];
 let qrPopupGenerated = {};
 
-function openQrPopup(name, code, idx) {
+const QR_LOGOS = {
+  nhm: `<div style="font-size:44px;margin-bottom:10px;">🦕</div><div style="color:#fff;font-family:'Times New Roman',Georgia,serif;font-size:14px;letter-spacing:5px;font-weight:bold;text-align:center;">NATURAL HISTORY</div><div style="color:#fff;font-family:'Times New Roman',Georgia,serif;font-size:14px;letter-spacing:5px;font-weight:bold;text-align:center;">MUSEUM · LONDON</div><div style="width:120px;height:1px;background:rgba(255,255,255,0.3);margin:12px auto 0;"></div>`,
+  hp: `<div style="font-size:48px;margin-bottom:8px;">⚡</div><div style="color:#f5d778;font-family:'Times New Roman',Georgia,serif;font-size:15px;letter-spacing:4px;font-weight:bold;text-align:center;">WARNER BROS.</div><div style="color:#f5d778;font-family:'Times New Roman',Georgia,serif;font-size:13px;letter-spacing:4px;font-weight:bold;text-align:center;">STUDIO TOUR</div><div style="color:rgba(245,215,120,0.55);font-size:10px;letter-spacing:2px;text-align:center;margin-top:4px;font-style:italic;">The Making of Harry Potter</div><div style="width:120px;height:1px;background:rgba(245,215,120,0.3);margin:12px auto 0;"></div>`
+};
+function openQrPopup(name, code, idx, theme) {
+  theme = theme || 'nhm';
+  const popup = document.getElementById('qr-popup');
+  popup.classList.toggle('hp', theme === 'hp');
+  document.getElementById('qr-popup-logo').innerHTML = QR_LOGOS[theme] || QR_LOGOS.nhm;
   document.getElementById('qr-popup-name').textContent = name;
   document.getElementById('qr-popup-code').textContent = code;
   const container = document.getElementById('qr-popup-canvas');
   if (!qrPopupGenerated[code]) {
     container.innerHTML = '';
-    new QRCode(container, { text:code, width:220, height:220, colorDark:'#000', colorLight:'#fff' });
+    const dark = theme === 'hp' ? '#1a0a2e' : '#000';
+    new QRCode(container, { text:code, width:220, height:220, colorDark:dark, colorLight:'#fff' });
     qrPopupGenerated[code] = true;
   }
-  document.getElementById('qr-popup').classList.add('open');
+  popup.classList.add('open');
 }
-function closeQrPopup() { document.getElementById('qr-popup').classList.remove('open'); }
+function closeQrPopup() {
+  const popup = document.getElementById('qr-popup');
+  popup.classList.remove('open', 'hp');
+}
 
 // ── Day selection ────────────────────────────────────
 function selectDay(idx) {
