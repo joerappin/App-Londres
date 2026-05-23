@@ -248,7 +248,7 @@
     .winner-emoji-big { font-size:72px; animation:winner-pop 0.55s cubic-bezier(0.175,0.885,0.32,1.275); }
     .winner-person-name { color:#fff; font-size:42px; font-weight:900; text-shadow:0 3px 16px rgba(0,0,0,0.35); animation:winner-slide-up 0.5s 0.06s both; margin-top:14px; }
     .winner-challenge-line { color:rgba(255,255,255,0.88); font-size:15px; font-weight:500; animation:winner-slide-up 0.5s 0.14s both; margin-top:12px; text-align:center; line-height:1.5; }
-    .winner-color-name { color:#fff; font-size:48px; font-weight:900; text-shadow:0 4px 22px rgba(0,0,0,0.4); animation:winner-slide-up 0.5s 0.24s both; margin-top:6px; letter-spacing:2px; }
+    .winner-color-name { display:inline-block; background:rgba(255,255,255,0.96); border-radius:20px; padding:6px 32px; font-size:76px; font-weight:900; letter-spacing:3px; animation:winner-slide-up 0.5s 0.24s both; margin-top:12px; }
     @keyframes winner-pop { 0%{transform:scale(0);} 65%{transform:scale(1.25);} 100%{transform:scale(1);} }
     @keyframes winner-slide-up { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
 
@@ -914,6 +914,13 @@ const DAYS = [
   { name:'Dimanche', date:'31 mai 2026' },
 ];
 
+const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function relabelDay(dayIdx) {
+  const evts = EVENTS_BY_DAY[dayIdx] || [];
+  evts.sort((a, b) => a.start - b.start);
+  evts.forEach((ev, i) => { ev.label = ALPHA[i] || String(i + 1); });
+}
+
 function computeZIndices(events) {
   events.forEach(ev => {
     const dur = ev.end - ev.start;
@@ -928,6 +935,7 @@ function computeZIndices(events) {
 }
 
 function buildTimeline(dayIdx) {
+  relabelDay(dayIdx);
   const evts = EVENTS_BY_DAY[dayIdx] || [];
   computeZIndices(evts);
 
@@ -1487,6 +1495,7 @@ function makeMarker(coords, label, color, title, time, mapName, usedKeys) {
 
 function rebuildMapMarkers() {
   if (!lMap) return;
+  [0, 1, 2].forEach(relabelDay); // sync labels for all days before redrawing pins
   [0,1,2].forEach(d => mapMarkersByDay[d].forEach(m => lMap.hasLayer(m) && lMap.removeLayer(m)));
   mapMarkersByDay[0]=[]; mapMarkersByDay[1]=[]; mapMarkersByDay[2]=[];
   const usedKeys = {};
@@ -1562,6 +1571,7 @@ let spinAngle = 0;
 let spinAnimId = null;
 let spinIsSpinning = false;
 let spinSelected = -1;
+const spinNameColors = [null, null, null]; // dernière couleur gagnée par chaque prénom
 
 function drawSpinWheel(angle) {
   const canvas = document.getElementById('spin-canvas');
@@ -1661,10 +1671,16 @@ function showWinnerOverlay(sectorIdx) {
   if (btns) btns.style.filter = 'blur(10px)';
   if (hint) hint.style.opacity = '0';
 
+  // Stocker la couleur gagnée pour ce prénom et mettre à jour le bouton
+  spinNameColors[spinSelected] = hexColor;
+  applySpinNameColors();
+
   const ov = document.getElementById('winner-overlay');
   ov.querySelector('.winner-bg').style.background = `linear-gradient(135deg, ${hexColor} 0%, ${nextHex} 100%)`;
   ov.querySelector('#winner-person-name').textContent = personName;
-  ov.querySelector('#winner-color-name').textContent = colorName;
+  const colorEl = ov.querySelector('#winner-color-name');
+  colorEl.textContent = colorName;
+  colorEl.style.color = hexColor;
   ov.classList.add('open');
 
   setTimeout(() => {
@@ -1675,11 +1691,33 @@ function showWinnerOverlay(sectorIdx) {
   }, 3000);
 }
 
+function applySpinNameColors() {
+  document.querySelectorAll('.spin-name-btn').forEach((b, i) => {
+    if (spinNameColors[i]) {
+      b.style.background = spinNameColors[i];
+      b.style.borderColor = spinNameColors[i];
+      b.style.color = '#fff';
+    }
+  });
+}
+
 function openSpinWheel() {
   closeMenu();
   document.getElementById('spin-overlay').classList.add('open');
   spinSelected = -1;
-  document.querySelectorAll('.spin-name-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.spin-name-btn').forEach((b, i) => {
+    b.classList.remove('selected');
+    // restaurer la couleur précédente ou style par défaut
+    if (spinNameColors[i]) {
+      b.style.background = spinNameColors[i];
+      b.style.borderColor = spinNameColors[i];
+      b.style.color = '#fff';
+    } else {
+      b.style.background = '';
+      b.style.borderColor = '';
+      b.style.color = '';
+    }
+  });
   drawSpinWheel(spinAngle);
 }
 
@@ -1691,7 +1729,15 @@ function closeSpinWheel() {
 
 function selectSpinName(idx) {
   spinSelected = idx;
-  document.querySelectorAll('.spin-name-btn').forEach((b, i) => b.classList.toggle('selected', i === idx));
+  document.querySelectorAll('.spin-name-btn').forEach((b, i) => {
+    b.classList.toggle('selected', i === idx);
+    // conserver la couleur gagnée même quand sélectionné
+    if (spinNameColors[i]) {
+      b.style.background = spinNameColors[i];
+      b.style.borderColor = i === idx ? '#fff' : spinNameColors[i];
+      b.style.color = '#fff';
+    }
+  });
 }
 
 // ── Init ──────────────────────────────────────────────
