@@ -245,10 +245,10 @@
     @keyframes winner-fadein { from{opacity:0;} to{opacity:1;} }
     .winner-bg { position:absolute; inset:0; }
     .winner-body { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:24px; }
-    .winner-emoji-big { font-size:76px; animation:winner-pop 0.55s cubic-bezier(0.175,0.885,0.32,1.275); }
-    .winner-label { color:rgba(255,255,255,0.82); font-size:13px; font-weight:600; letter-spacing:3px; text-transform:uppercase; margin-top:18px; animation:winner-slide-up 0.5s 0.05s both; }
-    .winner-name-txt { color:#fff; font-size:56px; font-weight:900; text-shadow:0 4px 24px rgba(0,0,0,0.35); animation:winner-slide-up 0.5s 0.12s both; letter-spacing:1px; }
-    .winner-confetti-row { font-size:30px; margin-top:14px; animation:winner-slide-up 0.5s 0.22s both; letter-spacing:4px; }
+    .winner-emoji-big { font-size:72px; animation:winner-pop 0.55s cubic-bezier(0.175,0.885,0.32,1.275); }
+    .winner-person-name { color:#fff; font-size:42px; font-weight:900; text-shadow:0 3px 16px rgba(0,0,0,0.35); animation:winner-slide-up 0.5s 0.06s both; margin-top:14px; }
+    .winner-challenge-line { color:rgba(255,255,255,0.88); font-size:15px; font-weight:500; animation:winner-slide-up 0.5s 0.14s both; margin-top:12px; text-align:center; line-height:1.5; }
+    .winner-color-name { color:#fff; font-size:48px; font-weight:900; text-shadow:0 4px 22px rgba(0,0,0,0.4); animation:winner-slide-up 0.5s 0.24s both; margin-top:6px; letter-spacing:2px; }
     @keyframes winner-pop { 0%{transform:scale(0);} 65%{transform:scale(1.25);} 100%{transform:scale(1);} }
     @keyframes winner-slide-up { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
 
@@ -791,7 +791,7 @@
         <div class="menu-divider"></div>
         <button class="menu-item" onclick="openSpinWheel()">
           <span class="menu-item-icon">🎡</span>
-          <span>Roue de la fortune</span>
+          <span>Roue Couleurs</span>
         </button>
       </div>
     </div>
@@ -801,12 +801,12 @@
   <div id="spin-overlay">
     <div class="spin-top-bar">
       <div class="spin-close-btn" onclick="closeSpinWheel()">‹</div>
-      <div class="spin-title-txt">Roue de la fortune</div>
+      <div class="spin-title-txt">Roue Couleurs</div>
     </div>
     <div class="spin-canvas-wrap">
       <canvas id="spin-canvas" width="300" height="300"></canvas>
       <div class="spin-pointer-el"></div>
-      <div class="spin-center-btn" onclick="triggerSpin()">⚡</div>
+      <div class="spin-center-btn" onclick="triggerSpin()">📷</div>
     </div>
     <div class="spin-name-buttons">
       <button class="spin-name-btn" onclick="selectSpinName(0)">Mia</button>
@@ -820,10 +820,10 @@
   <div id="winner-overlay">
     <div class="winner-bg"></div>
     <div class="winner-body">
-      <div class="winner-emoji-big">🎉</div>
-      <div class="winner-label">C'est gagné !</div>
-      <div class="winner-name-txt">—</div>
-      <div class="winner-confetti-row">🎊 🎉 🎊</div>
+      <div class="winner-emoji-big">📷</div>
+      <div class="winner-person-name" id="winner-person-name"></div>
+      <div class="winner-challenge-line">tu devras faire un maximum de photos<br>avec la couleur</div>
+      <div class="winner-color-name" id="winner-color-name"></div>
     </div>
   </div>
 
@@ -1550,11 +1550,14 @@ function closeMenu() {
 // ── Spin Wheel ────────────────────────────────────────
 const SPIN_NAMES = ['Mia', 'Aurélia', 'Jonathan'];
 const SPIN_COLORS = [
-  ['#FF3B30', '#FF9500'],   // Mia: red, orange
-  ['#FFCC00', '#34C759'],   // Aurélia: yellow, green
-  ['#007AFF', '#AF52DE'],   // Jonathan: blue, purple
+  ['#FF3B30', '#FF9500'],   // Mia: rouge, orange
+  ['#FFCC00', '#34C759'],   // Aurélia: jaune, vert
+  ['#007AFF', '#AF52DE'],   // Jonathan: bleu, violet
 ];
-const SPIN_EMOJIS = ['🎀', '✨', '⚡'];
+// Noms FR des 6 secteurs dans l'ordre (2 par personne)
+const SPIN_SECTOR_COLOR_NAMES = ['Rouge', 'Orange', 'Jaune', 'Vert', 'Bleu', 'Violet'];
+// Couleur hex de chaque secteur pour le fond de l'overlay
+const SPIN_SECTOR_HEX = ['#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#007AFF', '#AF52DE'];
 let spinAngle = 0;
 let spinAnimId = null;
 let spinIsSpinning = false;
@@ -1594,26 +1597,6 @@ function drawSpinWheel(angle) {
     ctx.stroke();
   }
 
-  // Name labels rotated along each 120° zone
-  for (let i = 0; i < 3; i++) {
-    const midA = angle + (i * 2 + 1) * seg - Math.PI / 2;
-    const tr = r * 0.60;
-    const tx = cx + Math.cos(midA) * tr;
-    const ty = cy + Math.sin(midA) * tr;
-    ctx.save();
-    ctx.translate(tx, ty);
-    ctx.rotate(midA + Math.PI / 2);
-    ctx.font = 'bold 15px -apple-system,sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(255,255,255,0.95)';
-    ctx.shadowColor = 'rgba(0,0,0,0.65)';
-    ctx.shadowBlur = 5;
-    ctx.fillText(SPIN_NAMES[i], 0, 0);
-    ctx.shadowBlur = 0;
-    ctx.restore();
-  }
-
   // Outer rim
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -1622,15 +1605,19 @@ function drawSpinWheel(angle) {
   ctx.stroke();
 }
 
-function getSpinWinner(angle) {
+function getSpinSector(angle) {
   const seg = Math.PI * 2 / 6;
   const relAngle = ((-angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-  const sectorIdx = Math.floor(relAngle / seg) % 6;
-  return Math.floor(sectorIdx / 2);
+  return Math.floor(relAngle / seg) % 6; // 0-5
 }
 
 function triggerSpin() {
   if (spinIsSpinning) return;
+  if (spinSelected === -1) {
+    const hint = document.querySelector('.spin-hint-txt');
+    if (hint) { hint.style.color = '#FF9500'; hint.textContent = '⚠️ Sélectionne d\'abord ton prénom !'; setTimeout(() => { hint.style.color = ''; hint.textContent = 'Sélectionne ton prénom · Appuie au centre pour lancer'; }, 2200); }
+    return;
+  }
   spinIsSpinning = true;
   const spins = 6 + Math.random() * 4;
   const extraAngle = Math.random() * Math.PI * 2;
@@ -1653,18 +1640,20 @@ function triggerSpin() {
       spinAnimId = null;
       spinAngle = targetAngle;
       drawSpinWheel(spinAngle);
-      setTimeout(() => showWinnerOverlay(getSpinWinner(spinAngle)), 350);
+      setTimeout(() => showWinnerOverlay(getSpinSector(spinAngle)), 350);
     }
   }
   spinAnimId = requestAnimationFrame(frame);
 }
 
-function showWinnerOverlay(nameIdx) {
-  const name = SPIN_NAMES[nameIdx];
-  const colors = SPIN_COLORS[nameIdx];
-  const emoji = SPIN_EMOJIS[nameIdx];
+function showWinnerOverlay(sectorIdx) {
+  const personName = SPIN_NAMES[spinSelected];
+  const colorName  = SPIN_SECTOR_COLOR_NAMES[sectorIdx];
+  const hexColor   = SPIN_SECTOR_HEX[sectorIdx];
+  // Gradient: sector color → adjacent sector color for a richer bg
+  const nextHex    = SPIN_SECTOR_HEX[(sectorIdx + 1) % 6];
 
-  // Blur the spin screen content
+  // Blur spin content
   const wrap = document.querySelector('.spin-canvas-wrap');
   const btns = document.querySelector('.spin-name-buttons');
   const hint = document.querySelector('.spin-hint-txt');
@@ -1673,9 +1662,9 @@ function showWinnerOverlay(nameIdx) {
   if (hint) hint.style.opacity = '0';
 
   const ov = document.getElementById('winner-overlay');
-  ov.querySelector('.winner-bg').style.background = `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
-  ov.querySelector('.winner-name-txt').textContent = name;
-  ov.querySelector('.winner-emoji-big').textContent = emoji;
+  ov.querySelector('.winner-bg').style.background = `linear-gradient(135deg, ${hexColor} 0%, ${nextHex} 100%)`;
+  ov.querySelector('#winner-person-name').textContent = personName;
+  ov.querySelector('#winner-color-name').textContent = colorName;
   ov.classList.add('open');
 
   setTimeout(() => {
