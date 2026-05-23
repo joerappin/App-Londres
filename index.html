@@ -13,11 +13,10 @@
     html, body { height:100%; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif; background:#012169; }
     #app { width:100%; height:100%; position:relative; overflow:hidden; }
 
-    /* ── SCREENS ─────────────────────────────────────── */
     .screen { position:absolute; inset:0; display:none; flex-direction:column; }
     .screen.active { display:flex; }
 
-    /* ── HOME ────────────────────────────────────────── */
+    /* HOME */
     #home { align-items:center; justify-content:center; background:#012169; }
     .union-jack { position:absolute; inset:0; width:100%; height:100%; }
     .overlay { position:absolute; inset:0; background:rgba(0,0,0,0.50); }
@@ -30,17 +29,12 @@
     .btn-enter { position:relative; z-index:1; background:#C8102E; color:#fff; border:2px solid rgba(255,255,255,0.5); border-radius:5px; padding:18px 68px; font-size:18px; font-weight:700; letter-spacing:7px; text-transform:uppercase; cursor:pointer; transition:opacity 0.15s; font-family:inherit; }
     .btn-enter:active { opacity:0.72; }
 
-    /* ── FLAG RAIN ───────────────────────────────────── */
     @keyframes flag-fall {
       0%   { transform:translateY(0) translateX(0) rotate(var(--rot-start)); opacity:1; }
       100% { transform:translateY(112vh) translateX(var(--drift)) rotate(var(--rot-end)); opacity:0.25; }
     }
-
-    /* ── HP ANIMATION ────────────────────────────────── */
     @keyframes hp-glow {
-      0%  { opacity:0; }
-      30% { opacity:1; }
-      100%{ opacity:0; }
+      0%  { opacity:0; } 30% { opacity:1; } 100%{ opacity:0; }
     }
     @keyframes hp-bolt {
       0%  { opacity:0; transform:translate(-50%,-50%) scale(0.2) rotate(-15deg); }
@@ -54,35 +48,35 @@
       100%{ opacity:0; transform:translate(var(--tx),var(--ty)) scale(0.2); }
     }
 
-    /* ── SHARED HEADER ───────────────────────────────── */
-    .header { background:#012169; display:flex; align-items:center; padding:50px 14px 16px; flex-shrink:0; }
-    .back-btn { width:42px; color:#fff; font-size:36px; font-weight:300; cursor:pointer; line-height:1; flex-shrink:0; user-select:none; }
+    /* HEADER */
+    .header { background:#012169; display:flex; align-items:center; padding:50px 10px 14px; flex-shrink:0; gap:6px; }
+    .back-btn { width:36px; color:#fff; font-size:34px; font-weight:300; cursor:pointer; line-height:1; flex-shrink:0; user-select:none; }
     .back-btn:active { opacity:0.6; }
-    .header-mid { flex:1; text-align:center; }
-    .header-dayname { color:#fff; font-size:22px; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
-    .header-daydate { color:rgba(255,255,255,0.58); font-size:13px; margin-top:3px; letter-spacing:0.8px; }
-    .map-btn { width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; font-size:18px; cursor:pointer; flex-shrink:0; user-select:none; }
+    .weather-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:50px; height:38px; background:rgba(255,255,255,0.15); border-radius:20px; padding:0 10px; cursor:pointer; flex-shrink:0; user-select:none; border:none; font-family:inherit; }
+    .weather-btn:active { opacity:0.7; }
+    .weather-btn-icon { font-size:16px; line-height:1; }
+    .weather-btn-temp { color:#fff; font-size:11px; font-weight:700; letter-spacing:0.5px; margin-top:1px; }
+    .header-mid { flex:1; text-align:center; min-width:0; }
+    .header-dayname { color:#fff; font-size:20px; font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+    .header-daydate { color:rgba(255,255,255,0.58); font-size:12px; margin-top:2px; letter-spacing:0.8px; }
+    .add-btn { width:36px; height:36px; border-radius:50%; background:#C8102E; display:flex; align-items:center; justify-content:center; font-size:22px; color:#fff; cursor:pointer; flex-shrink:0; user-select:none; font-weight:300; line-height:1; }
+    .add-btn:active { opacity:0.7; }
+    .map-btn { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center; font-size:17px; cursor:pointer; flex-shrink:0; user-select:none; }
     .map-btn:active { opacity:0.6; }
 
-    /* ── AGENDA ──────────────────────────────────────── */
+    /* AGENDA */
     #agenda { background:#F7F8FA; }
-    .timeline { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 0 8px; }
-    .time-row   { display:flex; min-height:68px; }
-    .hour-col   { width:66px; text-align:right; padding-right:10px; padding-top:2px; flex-shrink:0; }
-    .hour-label { color:#012169; font-size:13px; font-weight:600; font-variant-numeric:tabular-nums; }
-    .tl-col { width:22px; display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
-    .tl-dot { width:10px; height:10px; border-radius:50%; background:#C8102E; margin-top:5px; flex-shrink:0; }
-    .tl-line { width:2px; flex:1; background:#DCDFE6; margin-top:3px; }
-    .event-col  { flex:1; padding:0 18px 18px 10px; }
-    .event-slot { min-height:40px; }
-    .event-chip { border-radius:8px; padding:10px 14px; cursor:pointer; display:flex; flex-direction:column; box-shadow:0 2px 10px rgba(0,0,0,0.18); user-select:none; transition:opacity 0.12s; overflow:hidden; }
-    .event-chip:active { opacity:0.75; }
+    .timeline { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 0 24px; }
+    .event-chip { border-radius:10px; padding:8px 12px 0; cursor:pointer; display:flex; flex-direction:column; box-shadow:0 2px 12px rgba(0,0,0,0.22); user-select:none; overflow:hidden; position:absolute; }
     .event-chip-header { display:flex; align-items:center; gap:8px; }
     .event-chip-label { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.28); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; }
-    .event-chip-title { color:#fff; font-size:14px; font-weight:700; }
-    .event-chip-time  { color:rgba(255,255,255,0.75); font-size:11px; margin-top:4px; font-variant-numeric:tabular-nums; padding-left:30px; }
-    .event-chip-travel { display:flex;align-items:center;gap:4px;color:rgba(255,255,255,0.90);font-size:11px;margin-top:5px;padding-left:30px;text-decoration:none; }
+    .event-chip-title { color:#fff; font-size:13px; font-weight:700; line-height:1.2; }
+    .event-chip-time  { color:rgba(255,255,255,0.80); font-size:11px; margin-top:3px; font-variant-numeric:tabular-nums; padding-left:30px; }
+    .event-chip-metro { color:rgba(255,255,255,0.85); font-size:10px; margin-top:2px; padding-left:30px; line-height:1.3; }
+    .event-chip-travel { display:flex;align-items:center;gap:4px;color:rgba(255,255,255,0.90);font-size:10px;margin-top:3px;padding-left:30px;text-decoration:none; }
     .event-chip-travel span { text-decoration:underline;opacity:0.72; }
+    .resize-handle { position:absolute; bottom:0; left:0; right:0; height:14px; cursor:ns-resize; display:flex; align-items:center; justify-content:center; touch-action:none; }
+    .resize-handle::after { content:''; width:28px; height:3px; border-radius:2px; background:rgba(255,255,255,0.45); }
 
     /* Tab Bar */
     .tab-bar { display:flex; background:#fff; border-top:1px solid #E2E5EC; flex-shrink:0; padding-bottom:env(safe-area-inset-bottom,0px); }
@@ -95,13 +89,13 @@
     .tab-sub { font-size:10px; color:#BBBBBB; letter-spacing:0.4px; margin-top:1px; }
     .tab.active .tab-sub { color:#C8102E; }
 
-    /* ── MAP ─────────────────────────────────────────── */
+    /* MAP */
     #map-screen { background:#F7F8FA; }
     #leaflet-map { flex:1; }
     .leaflet-popup-content-wrapper { border-radius:10px; padding:0; overflow:hidden; }
     .leaflet-popup-content { margin:0; }
 
-    /* ── MODALS ──────────────────────────────────────── */
+    /* MODALS */
     .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.62); z-index:2000; display:none; align-items:flex-end; justify-content:center; }
     .modal-backdrop.open { display:flex; }
     .modal-sheet { background:#fff; border-radius:20px 20px 0 0; width:100%; max-width:520px; padding-bottom:env(safe-area-inset-bottom,24px); max-height:88vh; overflow-y:auto; }
@@ -115,7 +109,7 @@
     .modal-airport { text-align:center; font-size:22px; font-weight:800; color:#073590; letter-spacing:1px; padding:0 24px 20px; }
     .modal-airport span { font-size:14px; font-weight:500; color:#888; display:block; margin-top:2px; }
     .modal-divider { height:1px; background:#EBEBEB; margin:0 24px; }
-    .modal-rows { padding:16px 24px 8px; display:flex; flex-direction:column; gap:16px; }
+    .modal-rows { padding:16px 24px 8px; display:flex; flex-direction:column; gap:14px; }
     .modal-row { display:flex; align-items:flex-start; gap:14px; }
     .modal-icon { font-size:22px; width:28px; flex-shrink:0; margin-top:1px; }
     .modal-info-label { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:2px; }
@@ -125,30 +119,149 @@
     .modal-reservation-label { font-size:11px; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.8px; }
     .modal-reservation-code  { font-size:26px; font-weight:900; letter-spacing:4px; }
     .modal-reservation-sub   { font-size:13px; font-weight:600; letter-spacing:1px; color:rgba(255,255,255,0.85); margin-top:2px; }
-    .modal-note { background:#FFF8E1; border-left:4px solid #F7BE00; margin:4px 24px 12px; padding:12px 14px; border-radius:0 8px 8px 0; font-size:14px; color:#555; font-weight:500; }
-    .modal-map-link { display:flex; align-items:center; justify-content:center; gap:8px; background:#E8F5E9; border-radius:8px; padding:12px 18px; margin:8px 24px 20px; color:#2E7D32; font-size:14px; font-weight:600; text-decoration:none; }
+    .modal-note { background:#FFF8E1; border-left:4px solid #F7BE00; margin:4px 24px 12px; padding:12px 14px; border-radius:0 8px 8px 0; font-size:13px; color:#555; font-weight:500; }
+    .modal-map-link { display:flex; align-items:center; justify-content:center; gap:8px; background:#E8F5E9; border-radius:8px; padding:12px 18px; margin:8px 24px 12px; color:#2E7D32; font-size:14px; font-weight:600; text-decoration:none; }
     .modal-map-link:active { opacity:0.7; }
     .modal-passengers { background:#F3F4F6; border-radius:8px; padding:12px 16px; margin:0 24px 16px; }
     .modal-passengers-title { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
     .modal-passenger-row { display:flex; align-items:center; gap:10px; padding:5px 0; font-size:14px; font-weight:600; color:#1A1A1A; }
     .modal-qr-section { padding:0 24px 8px; }
     .modal-qr-title { font-size:12px; color:#777; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; text-align:center; }
-    .modal-qr-item { background:#F8F8F8; border-radius:10px; padding:14px 14px 10px; margin-bottom:10px; text-align:center; }
-    .modal-qr-label { font-size:12px; color:#777; font-weight:600; margin-bottom:8px; }
-    .modal-qr-box { display:flex; justify-content:center; }
+    .modal-qr-item { background:#F8F8F8; border-radius:10px; padding:14px 14px 10px; margin-bottom:10px; text-align:center; cursor:pointer; transition:background 0.15s; }
+    .modal-qr-item:active { background:#EFEFEF; }
+    .modal-qr-label { font-size:12px; color:#555; font-weight:600; margin-bottom:8px; }
+    .modal-qr-tap-hint { font-size:10px; color:#999; margin-top:6px; }
+    .modal-qr-box { display:flex; justify-content:center; pointer-events:none; }
     .modal-qr-box canvas, .modal-qr-box img { border-radius:6px; }
-    .modal-qr-code { font-size:10px; color:#BBB; margin-top:6px; font-variant-numeric:tabular-nums; letter-spacing:0.5px; }
+    .modal-qr-code { font-size:10px; color:#BBB; margin-top:4px; font-variant-numeric:tabular-nums; letter-spacing:0.5px; }
     .modal-pin-box { background:#4A1A7A; color:#fff; border-radius:8px; padding:12px 18px; margin:0 24px 12px; display:flex; align-items:center; gap:14px; }
     .modal-pin-label { font-size:11px; color:rgba(255,255,255,0.7); text-transform:uppercase; letter-spacing:0.8px; }
     .modal-pin-value { font-size:22px; font-weight:900; letter-spacing:3px; }
     .modal-hp-hero { text-align:center; font-size:56px; padding:4px 0 8px; }
     .modal-section-title { font-size:13px; color:#999; text-transform:uppercase; letter-spacing:0.8px; padding:12px 24px 6px; }
+    .modal-pickup-link { display:flex; align-items:center; justify-content:center; gap:8px; background:#E3F2FD; border-radius:8px; padding:12px 18px; margin:0 24px 12px; color:#1565C0; font-size:14px; font-weight:600; text-decoration:none; }
+    .modal-pickup-link:active { opacity:0.7; }
+    .modal-delete-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:#FFEBEE; border-radius:8px; padding:12px 18px; margin:4px 24px 16px; color:#C62828; font-size:14px; font-weight:600; cursor:pointer; border:none; width:calc(100% - 48px); font-family:inherit; }
+    .modal-delete-btn:active { opacity:0.7; }
+
+    /* QR FULLSCREEN POPUP */
+    #qr-popup { display:none; position:fixed; inset:0; background:#000; z-index:5000; flex-direction:column; align-items:center; justify-content:center; }
+    #qr-popup.open { display:flex; }
+    .qr-popup-close { position:absolute; top:52px; right:20px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.15); color:#fff; font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:none; font-family:inherit; }
+    .qr-popup-logo { text-align:center; margin-bottom:24px; }
+    .qr-popup-name { color:#fff; font-size:16px; font-weight:700; margin-top:18px; letter-spacing:0.5px; }
+    .qr-popup-code { color:rgba(255,255,255,0.55); font-size:12px; margin-top:6px; font-variant-numeric:tabular-nums; letter-spacing:1px; }
+    #qr-popup-canvas { background:#fff; padding:10px; border-radius:10px; }
+
+    /* WEATHER PANEL */
+    #weather-panel { display:none; position:fixed; inset:0; background:#012169; z-index:3500; flex-direction:column; overflow-y:auto; }
+    #weather-panel.open { display:flex; }
+    .weather-panel-header { background:#012169; display:flex; align-items:center; padding:52px 18px 18px; gap:14px; flex-shrink:0; }
+    .weather-panel-back { color:#fff; font-size:32px; cursor:pointer; line-height:1; }
+    .weather-panel-title { color:#fff; font-size:20px; font-weight:700; }
+    .weather-panel-city { color:rgba(255,255,255,0.6); font-size:13px; margin-left:auto; }
+    .weather-cards { padding:16px 18px 32px; display:flex; flex-direction:column; gap:14px; }
+    .weather-card { background:rgba(255,255,255,0.1); border-radius:16px; padding:18px 20px; display:flex; align-items:center; gap:16px; }
+    .weather-card-day { color:#fff; font-size:15px; font-weight:700; width:80px; flex-shrink:0; }
+    .weather-card-day small { display:block; color:rgba(255,255,255,0.55); font-size:11px; font-weight:400; margin-top:2px; }
+    .weather-card-icon { font-size:40px; flex-shrink:0; }
+    .weather-card-info { flex:1; }
+    .weather-card-desc { color:rgba(255,255,255,0.85); font-size:13px; margin-bottom:4px; }
+    .weather-card-temps { color:#fff; font-size:22px; font-weight:700; }
+    .weather-card-temps small { color:rgba(255,255,255,0.55); font-size:15px; font-weight:400; margin-left:4px; }
+    .weather-card-wind { color:rgba(255,255,255,0.6); font-size:11px; margin-top:3px; }
+    .weather-loading { color:rgba(255,255,255,0.7); text-align:center; padding:60px 24px; font-size:16px; }
+    .weather-error { color:rgba(255,200,200,0.9); text-align:center; padding:40px 24px; font-size:14px; }
+
+    /* ADD EVENT MODAL */
+    .add-form-label { font-size:12px; color:#888; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; margin-top:16px; display:block; }
+    .add-form-input { width:100%; border:1.5px solid #E0E0E0; border-radius:10px; padding:12px 14px; font-size:15px; font-family:inherit; color:#1A1A1A; background:#FAFAFA; outline:none; }
+    .add-form-input:focus { border-color:#012169; background:#fff; }
+    .add-form-select { width:100%; border:1.5px solid #E0E0E0; border-radius:10px; padding:12px 14px; font-size:15px; font-family:inherit; color:#1A1A1A; background:#FAFAFA; outline:none; appearance:none; }
+    .add-form-select:focus { border-color:#012169; }
+    .add-day-picker { display:flex; gap:8px; }
+    .add-day-btn { flex:1; padding:10px 6px; border-radius:10px; border:1.5px solid #E0E0E0; background:#FAFAFA; font-family:inherit; font-size:13px; font-weight:600; color:#888; cursor:pointer; text-align:center; }
+    .add-day-btn.active { border-color:#012169; background:#012169; color:#fff; }
+    .add-time-row { display:flex; gap:10px; }
+    .add-time-row .add-form-select { flex:1; }
+    .add-colors { display:flex; gap:10px; flex-wrap:wrap; }
+    .add-color-dot { width:32px; height:32px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:border-color 0.15s; }
+    .add-color-dot.active { border-color:#1A1A1A; }
+    .add-submit-btn { width:100%; background:#C8102E; color:#fff; border:none; border-radius:12px; padding:16px; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; margin-top:20px; letter-spacing:0.5px; }
+    .add-submit-btn:active { opacity:0.8; }
+    .add-geocoding { color:#888; font-size:12px; text-align:center; margin-top:8px; min-height:18px; }
+
+    /* HAMBURGER / HP MENU BUTTON */
+    .menu-btn { width:44px; height:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; user-select:none; position:relative; border:none; background:none; padding:0; font-family:inherit; }
+    .menu-bars { display:flex; flex-direction:column; gap:5px; align-items:center; transition:opacity 0.28s 0.04s; }
+    .menu-bar { width:22px; height:2.5px; background:#fff; border-radius:2px; }
+    .menu-btn.hp-open .menu-bars { opacity:0; pointer-events:none; }
+    .menu-hp-face { position:absolute; opacity:0; transition:opacity 0.28s; pointer-events:none; }
+    .menu-btn.hp-open .menu-hp-face { opacity:1; }
+    .menu-btn:active { opacity:0.7; }
+
+    /* SLIDE-OUT MENU PANEL */
+    #menu-overlay { display:none; position:fixed; inset:0; z-index:4000; }
+    #menu-overlay.open { display:block; }
+    #menu-backdrop { position:absolute; inset:0; background:rgba(0,0,0,0.55); }
+    #menu-panel { position:absolute; top:0; right:0; bottom:0; width:272px; background:#011550; display:flex; flex-direction:column; transform:translateX(100%); transition:transform 0.32s cubic-bezier(0.4,0,0.2,1); box-shadow:-4px 0 28px rgba(0,0,0,0.5); }
+    #menu-overlay.open #menu-panel { transform:translateX(0); }
+    .menu-panel-top { padding:52px 18px 14px; border-bottom:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; }
+    .menu-panel-label { color:rgba(255,255,255,0.5); font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; }
+    .menu-close-x { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,0.1); color:#fff; border:none; font-size:17px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-family:inherit; flex-shrink:0; }
+    .menu-close-x:active { opacity:0.6; }
+    .menu-items-wrap { flex:1; display:flex; flex-direction:column; padding:8px 0; overflow-y:auto; }
+    .menu-item { display:flex; align-items:center; gap:16px; padding:17px 22px; color:#fff; font-size:16px; font-weight:600; cursor:pointer; user-select:none; border:none; background:none; font-family:inherit; width:100%; text-align:left; }
+    .menu-item:active { background:rgba(255,255,255,0.07); }
+    .menu-item-icon { font-size:22px; width:28px; text-align:center; flex-shrink:0; }
+    .menu-divider { height:1px; background:rgba(255,255,255,0.08); margin:4px 0; }
+
+    /* SPIN WHEEL OVERLAY */
+    #spin-overlay { display:none; position:fixed; inset:0; z-index:5500; background:#0a0a2e; flex-direction:column; align-items:center; justify-content:center; }
+    #spin-overlay.open { display:flex; }
+    .spin-top-bar { position:absolute; top:0; left:0; right:0; display:flex; align-items:center; padding:52px 18px 14px; }
+    .spin-close-btn { color:#fff; font-size:32px; cursor:pointer; width:36px; line-height:1; font-weight:300; }
+    .spin-title-txt { color:#fff; font-size:17px; font-weight:700; letter-spacing:0.5px; margin-left:10px; }
+    .spin-canvas-wrap { position:relative; width:300px; height:300px; flex-shrink:0; }
+    #spin-canvas { display:block; }
+    .spin-pointer-el { position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent; border-top:24px solid #fff; filter:drop-shadow(0 2px 5px rgba(0,0,0,0.65)); z-index:2; }
+    .spin-center-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.95); border:3px solid rgba(0,0,0,0.18); box-shadow:0 4px 18px rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; font-size:22px; cursor:pointer; z-index:3; user-select:none; transition:transform 0.1s; }
+    .spin-center-btn:active { transform:translate(-50%,-50%) scale(0.9); }
+    .spin-name-buttons { display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; justify-content:center; }
+    .spin-name-btn { padding:10px 22px; border-radius:24px; border:2px solid rgba(255,255,255,0.28); background:transparent; color:rgba(255,255,255,0.55); font-size:15px; font-weight:700; font-family:inherit; cursor:pointer; transition:all 0.18s; }
+    .spin-name-btn.selected { border-color:#fff; color:#fff; background:rgba(255,255,255,0.15); }
+    .spin-name-btn:active { opacity:0.7; }
+    .spin-hint-txt { color:rgba(255,255,255,0.32); font-size:12px; margin-top:16px; letter-spacing:0.3px; text-align:center; padding:0 32px; }
+
+    /* WINNER OVERLAY */
+    #winner-overlay { display:none; position:fixed; inset:0; z-index:6000; flex-direction:column; align-items:center; justify-content:center; }
+    #winner-overlay.open { display:flex; animation:winner-fadein 0.35s ease-out; }
+    @keyframes winner-fadein { from{opacity:0;} to{opacity:1;} }
+    .winner-bg { position:absolute; inset:0; }
+    .winner-body { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:24px; }
+    .winner-emoji-big { font-size:76px; animation:winner-pop 0.55s cubic-bezier(0.175,0.885,0.32,1.275); }
+    .winner-label { color:rgba(255,255,255,0.82); font-size:13px; font-weight:600; letter-spacing:3px; text-transform:uppercase; margin-top:18px; animation:winner-slide-up 0.5s 0.05s both; }
+    .winner-name-txt { color:#fff; font-size:56px; font-weight:900; text-shadow:0 4px 24px rgba(0,0,0,0.35); animation:winner-slide-up 0.5s 0.12s both; letter-spacing:1px; }
+    .winner-confetti-row { font-size:30px; margin-top:14px; animation:winner-slide-up 0.5s 0.22s both; letter-spacing:4px; }
+    @keyframes winner-pop { 0%{transform:scale(0);} 65%{transform:scale(1.25);} 100%{transform:scale(1);} }
+    @keyframes winner-slide-up { from{opacity:0;transform:translateY(22px);} to{opacity:1;transform:translateY(0);} }
+
+    /* HOURLY WEATHER */
+    .weather-current-card { background:rgba(255,255,255,0.16); border-radius:16px; margin:14px 18px; padding:16px 18px; display:flex; align-items:center; gap:14px; }
+    .weather-day-section { padding-bottom:6px; }
+    .weather-section-header { padding:14px 18px 8px; color:#fff; font-size:15px; font-weight:700; letter-spacing:0.4px; background:rgba(255,255,255,0.05); }
+    .weather-hour-row { display:flex; align-items:center; gap:12px; padding:9px 18px; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .weather-hour-time { color:rgba(255,255,255,0.52); font-size:13px; font-variant-numeric:tabular-nums; width:36px; flex-shrink:0; }
+    .weather-hour-icon { font-size:18px; width:26px; text-align:center; flex-shrink:0; }
+    .weather-hour-temp { color:#fff; font-size:14px; font-weight:700; width:38px; flex-shrink:0; }
+    .weather-hour-desc { color:rgba(255,255,255,0.58); font-size:12px; flex:1; }
+    .weather-hour-rain { color:#7EC8FF; font-size:11px; flex-shrink:0; min-width:36px; text-align:right; }
   </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ══ HOME ══════════════════════════════════════════ -->
+  <!-- HOME -->
   <div id="home" class="screen active">
     <svg class="union-jack" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
       <defs>
@@ -174,15 +287,36 @@
     <button class="btn-enter" onclick="triggerFlagRain()">Entrer</button>
   </div>
 
-  <!-- ══ AGENDA ════════════════════════════════════════ -->
+  <!-- AGENDA -->
   <div id="agenda" class="screen">
     <div class="header">
+      <button class="weather-btn" onclick="openWeatherPanel()" id="weather-btn-el">
+        <div class="weather-btn-icon" id="weather-btn-icon">🌤️</div>
+        <div class="weather-btn-temp" id="weather-btn-temp">—°</div>
+      </button>
       <div class="back-btn" onclick="showScreen('home')">‹</div>
       <div class="header-mid">
         <div class="header-dayname" id="hdr-name">Vendredi</div>
         <div class="header-daydate" id="hdr-date">29 mai 2026</div>
       </div>
-      <div class="map-btn" onclick="showMap()" title="Carte">🗺️</div>
+      <button class="menu-btn" id="menu-btn" onclick="openMenu()">
+        <div class="menu-bars"><div class="menu-bar"></div><div class="menu-bar"></div><div class="menu-bar"></div></div>
+        <div class="menu-hp-face">
+          <svg viewBox="0 0 40 40" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="20" cy="14" rx="13" ry="11" fill="#1a0800"/>
+            <ellipse cx="20" cy="23" rx="9.5" ry="11" fill="#fad4a0"/>
+            <ellipse cx="20" cy="11" rx="12" ry="7" fill="#1a0800"/>
+            <ellipse cx="9" cy="21" rx="4.5" ry="8" fill="#1a0800"/>
+            <ellipse cx="31" cy="21" rx="4.5" ry="8" fill="#1a0800"/>
+            <circle cx="15.5" cy="23" r="4.2" fill="none" stroke="#222" stroke-width="1.5"/>
+            <circle cx="24.5" cy="23" r="4.2" fill="none" stroke="#222" stroke-width="1.5"/>
+            <line x1="19.3" y1="23" x2="20.7" y2="23" stroke="#222" stroke-width="1.5"/>
+            <line x1="8" y1="22" x2="11.3" y2="23" stroke="#222" stroke-width="1.2"/>
+            <line x1="32" y1="22" x2="28.7" y2="23" stroke="#222" stroke-width="1.2"/>
+            <path d="M19.5,13 L18,17.5 L20.5,17.5 L19,21.5" stroke="#C8102E" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
     </div>
     <div class="timeline" id="timeline"></div>
     <div class="tab-bar" id="tab-bar">
@@ -204,7 +338,7 @@
     </div>
   </div>
 
-  <!-- ══ CARTE ═════════════════════════════════════════ -->
+  <!-- CARTE -->
   <div id="map-screen" class="screen">
     <div class="header">
       <div class="back-btn" onclick="showScreen('agenda')">‹</div>
@@ -212,7 +346,7 @@
         <div class="header-dayname">Carte</div>
         <div class="header-daydate">Week end à Londres</div>
       </div>
-      <div style="width:38px"></div>
+      <div style="width:36px"></div>
     </div>
     <div id="leaflet-map"></div>
     <div class="tab-bar" id="map-tab-bar">
@@ -239,7 +373,7 @@
     </div>
   </div>
 
-  <!-- ══ MODAL — Vol aller FR1467 ════════════════════ -->
+  <!-- MODAL — Vol aller -->
   <div id="modal-flight-out" class="modal-backdrop" onclick="closeModal('flight-out')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
@@ -274,68 +408,47 @@
         <div class="modal-passenger-row">👧 Mia Rappin</div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">✈️</div>
-          <div><div class="modal-info-label">Départ</div><div class="modal-info-value">Marseille — 29 mai, 06h05</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🚪</div>
-          <div><div class="modal-info-label">Fermeture de la porte</div><div class="modal-info-value">05h35 — soyez à la porte !</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🛬</div>
-          <div><div class="modal-info-label">Arrivée</div><div class="modal-info-value">London Stansted (STN) — 07h05</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">📱</div>
-          <div><div class="modal-info-label">Check-in en ligne</div><div class="modal-info-value-sm">Disponible dès le 28 mai</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🧳</div>
-          <div><div class="modal-info-label">Bagages</div><div class="modal-info-value-sm">1 bagage cabine + 1 bagage soute (20 kg) par passager</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">✈️</div><div><div class="modal-info-label">Départ</div><div class="modal-info-value">Marseille — 29 mai, 06h05</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🚪</div><div><div class="modal-info-label">Fermeture de la porte</div><div class="modal-info-value">05h35 — soyez à la porte !</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🛬</div><div><div class="modal-info-label">Arrivée</div><div class="modal-info-value">London Stansted (STN) — 07h05</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📱</div><div><div class="modal-info-label">Check-in en ligne</div><div class="modal-info-value-sm">Disponible dès le 28 mai</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🧳</div><div><div class="modal-info-label">Bagages</div><div class="modal-info-value-sm">1 cabine + 1 soute 20 kg / passager</div></div></div>
       </div>
       <div class="modal-note">⚠️ Présence obligatoire à la porte avant <strong>05h35</strong></div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport sur Google Maps</a>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport</a>
     </div>
   </div>
 
-  <!-- ══ MODAL — Navette aller ════════════════════════ -->
+  <!-- MODAL — Navette aller (Holiday Taxis) -->
   <div id="modal-transfer-in" class="modal-backdrop" onclick="closeModal('transfer-in')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
       <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('transfer-in')">✕</div></div>
-      <div class="modal-title-hero">🚗 UK-Royal Drive</div>
+      <div class="modal-title-hero">🚗 Holiday Taxis</div>
       <div class="modal-subtitle-hero">Transfert privé — Aéroport → Hôtel</div>
       <div class="modal-divider"></div>
       <div class="modal-reservation">
         <span style="font-size:26px">📋</span>
         <div>
           <div class="modal-reservation-label">Référence réservation</div>
-          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">28782554</div>
-          <div class="modal-reservation-sub">Voiture privée</div>
+          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">AG8NMB</div>
+          <div class="modal-reservation-sub">Voiture privée · Holiday Taxis</div>
         </div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">🛬</div>
-          <div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">London Stansted Airport</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🏨</div>
-          <div><div class="modal-info-label">Destination</div><div class="modal-info-value">Marble Arch Hotel by Thistle</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">👥</div>
-          <div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">🛬</div><div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">London Stansted Airport</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value-sm">Sortie arrivées — panneau Holiday Taxis</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🏨</div><div><div class="modal-info-label">Destination</div><div class="modal-info-value">Marble Arch Hotel by Thistle</div></div></div>
+        <div class="modal-row"><div class="modal-icon">👥</div><div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div></div>
+        <div class="modal-row"><div class="modal-icon">⏱️</div><div><div class="modal-info-label">Durée estimée</div><div class="modal-info-value-sm">~1h30 — variable selon trafic</div></div></div>
       </div>
-      <div class="modal-note">✅ Transfert confirmé — Le chauffeur vous attend à la sortie arrivées</div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel sur Google Maps</a>
+      <div class="modal-note">✅ Transfert confirmé — Le chauffeur attend à la sortie arrivées avec votre nom</div>
+      <a class="modal-pickup-link" href="https://checkpickup.com/AG8NMB" target="_blank">📲 Voir les instructions de prise en charge</a>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel</a>
     </div>
   </div>
 
-  <!-- ══ MODAL — Natural History Museum ══════════════ -->
+  <!-- MODAL — NHM -->
   <div id="modal-nhm" class="modal-backdrop" onclick="closeModal('nhm')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
@@ -352,47 +465,38 @@
         </div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">📅</div>
-          <div><div class="modal-info-label">Date &amp; Heure</div><div class="modal-info-value">29 mai 2026 — 14h30</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🎫</div>
-          <div><div class="modal-info-label">Billets</div><div class="modal-info-value">Gratuit — 2 Adultes + 1 Enfant</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">⏰</div>
-          <div><div class="modal-info-label">Dernière entrée</div><div class="modal-info-value">17h30</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🚇</div>
-          <div><div class="modal-info-label">Métro</div><div class="modal-info-value-sm">South Kensington (District / Circle / Piccadilly)</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">📅</div><div><div class="modal-info-label">Date &amp; Heure</div><div class="modal-info-value">29 mai 2026 — 14h30</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🎫</div><div><div class="modal-info-label">Billets</div><div class="modal-info-value">Gratuit — 2 Adultes + 1 Enfant</div></div></div>
+        <div class="modal-row"><div class="modal-icon">⏰</div><div><div class="modal-info-label">Dernière entrée</div><div class="modal-info-value">17h30</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🚇</div><div><div class="modal-info-label">Métro</div><div class="modal-info-value-sm">South Kensington · District / Circle / Piccadilly</div></div></div>
       </div>
       <div class="modal-divider" style="margin:4px 24px 14px"></div>
       <div class="modal-qr-section">
-        <div class="modal-qr-title">Billets d'entrée — Scanner en caisse</div>
-        <div class="modal-qr-item">
+        <div class="modal-qr-title">Appuyez sur un billet pour l'agrandir</div>
+        <div class="modal-qr-item" onclick="openQrPopup('Aurélia Rappin','1001401807011380629',0)">
           <div class="modal-qr-label">🎟 Billet 1 — Aurélia Rappin</div>
           <div id="qr-nhm-1" class="modal-qr-box"></div>
           <div class="modal-qr-code">1001401807011380629</div>
+          <div class="modal-qr-tap-hint">Appuyer pour agrandir →</div>
         </div>
-        <div class="modal-qr-item">
+        <div class="modal-qr-item" onclick="openQrPopup('Jonathan Rappin','1001401807011380630',1)">
           <div class="modal-qr-label">🎟 Billet 2 — Jonathan Rappin</div>
           <div id="qr-nhm-2" class="modal-qr-box"></div>
           <div class="modal-qr-code">1001401807011380630</div>
+          <div class="modal-qr-tap-hint">Appuyer pour agrandir →</div>
         </div>
-        <div class="modal-qr-item">
+        <div class="modal-qr-item" onclick="openQrPopup('Mia Rappin','1001401807011380631',2)">
           <div class="modal-qr-label">🎟 Billet 3 — Mia Rappin</div>
           <div id="qr-nhm-3" class="modal-qr-box"></div>
           <div class="modal-qr-code">1001401807011380631</div>
+          <div class="modal-qr-tap-hint">Appuyer pour agrandir →</div>
         </div>
       </div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.4967,-0.1764" target="_blank">🗺️ Natural History Museum sur Google Maps</a>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.4967,-0.1764" target="_blank">🗺️ Natural History Museum</a>
     </div>
   </div>
 
-  <!-- ══ MODAL — Hôtel Check-in ══════════════════════ -->
+  <!-- MODAL — Hôtel -->
   <div id="modal-hotel" class="modal-backdrop" onclick="closeModal('hotel')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
@@ -409,33 +513,19 @@
         </div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">📅</div>
-          <div><div class="modal-info-label">Séjour</div><div class="modal-info-value">29 – 31 mai 2026 (2 nuits)</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🛎️</div>
-          <div><div class="modal-info-label">Check-in / Check-out</div><div class="modal-info-value">Dès 15h00 / Avant 11h00</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🛏️</div>
-          <div><div class="modal-info-label">Chambre</div><div class="modal-info-value">Deluxe King — 3 pers.</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">☕</div>
-          <div><div class="modal-info-label">Petit déjeuner</div><div class="modal-info-value">Inclus</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">📞</div>
-          <div><div class="modal-info-label">Téléphone hôtel</div><div class="modal-info-value">+44 207 523 5060</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">📅</div><div><div class="modal-info-label">Séjour</div><div class="modal-info-value">29 – 31 mai 2026 (2 nuits)</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🛎️</div><div><div class="modal-info-label">Check-in / Check-out</div><div class="modal-info-value">Dès 15h00 / Avant 11h00</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🛏️</div><div><div class="modal-info-label">Chambre</div><div class="modal-info-value">Deluxe King — 3 pers.</div></div></div>
+        <div class="modal-row"><div class="modal-icon">☕</div><div><div class="modal-info-label">Petit déjeuner</div><div class="modal-info-value">Inclus</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📞</div><div><div class="modal-info-label">Téléphone hôtel</div><div class="modal-info-value">+44 207 523 5060</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🚇</div><div><div class="modal-info-label">Métro</div><div class="modal-info-value-sm">Marble Arch · Central line</div></div></div>
       </div>
       <div class="modal-note">ℹ️ Arrivée possible avant 15h — Bagages déposés à la réception</div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel sur Google Maps</a>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel</a>
     </div>
   </div>
 
-  <!-- ══ MODAL — Harry Potter Studio Tour ════════════ -->
+  <!-- MODAL — Harry Potter -->
   <div id="modal-hp" class="modal-backdrop" onclick="closeModal('hp')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
@@ -460,32 +550,21 @@
         </div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">📍</div>
-          <div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value">Bedford Way, London — 12h50</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🎬</div>
-          <div><div class="modal-info-label">Départ visite</div><div class="modal-info-value">Warner Bros. Leavesden — 13h00</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">👥</div>
-          <div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">❌</div>
-          <div><div class="modal-info-label">Annulation gratuite avant</div><div class="modal-info-value">27 mai 2026, 13h00</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value">Bedford Way, London — 12h50</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🎬</div><div><div class="modal-info-label">Départ visite</div><div class="modal-info-value">Warner Bros. Leavesden — 13h00</div></div></div>
+        <div class="modal-row"><div class="modal-icon">👥</div><div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🚇</div><div><div class="modal-info-label">Métro (RDV)</div><div class="modal-info-value-sm">Russell Square · Piccadilly line</div></div></div>
+        <div class="modal-row"><div class="modal-icon">❌</div><div><div class="modal-info-label">Annulation gratuite avant</div><div class="modal-info-value">27 mai 2026, 13h00</div></div></div>
       </div>
       <div class="modal-note">🧙 RDV impératif à Bedford Way à <strong>12h50</strong> — le coach part sans attendre !</div>
       <div style="display:flex;gap:8px;margin:0 24px 20px;">
         <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5235,-0.1273" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Bedford Way (RDV)</a>
-        <a class="modal-map-link" href="https://maps.google.com/maps?q=51.6903,-0.4181" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Warner Bros. Studios</a>
+        <a class="modal-map-link" href="https://maps.google.com/maps?q=51.6903,-0.4181" target="_blank" style="flex:1;margin:0;font-size:12px">🗺️ Warner Bros.</a>
       </div>
     </div>
   </div>
 
-  <!-- ══ MODAL — Check-out ════════════════════════════ -->
+  <!-- MODAL — Check-out -->
   <div id="modal-checkout" class="modal-backdrop" onclick="closeModal('checkout')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
@@ -494,68 +573,46 @@
       <div class="modal-subtitle-hero">Marble Arch Hotel by Thistle</div>
       <div class="modal-divider"></div>
       <div class="modal-rows" style="margin-top:8px">
-        <div class="modal-row">
-          <div class="modal-icon">⏰</div>
-          <div><div class="modal-info-label">Heure limite</div><div class="modal-info-value" style="color:#C8102E">Avant 11h00</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">📅</div>
-          <div><div class="modal-info-label">Date</div><div class="modal-info-value">Dimanche 31 mai 2026</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🧳</div>
-          <div><div class="modal-info-label">Bagages</div><div class="modal-info-value-sm">Préparer les valises la veille pour partir sereinement</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">📞</div>
-          <div><div class="modal-info-label">Réception hôtel</div><div class="modal-info-value">+44 207 523 5060</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">⏰</div><div><div class="modal-info-label">Heure limite</div><div class="modal-info-value" style="color:#C8102E">Avant 11h00</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📅</div><div><div class="modal-info-label">Date</div><div class="modal-info-value">Dimanche 31 mai 2026</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🧳</div><div><div class="modal-info-label">Bagages</div><div class="modal-info-value-sm">Préparer les valises la veille</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📞</div><div><div class="modal-info-label">Réception hôtel</div><div class="modal-info-value">+44 207 523 5060</div></div></div>
       </div>
-      <div class="modal-note">🚌 La navette retour part peu après — être prêts dès 10h30</div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel sur Google Maps</a>
+      <div class="modal-note">🚌 La navette Holiday Taxis part peu après — être prêts dès 10h45</div>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel</a>
     </div>
   </div>
 
-  <!-- ══ MODAL — Navette retour ══════════════════════ -->
+  <!-- MODAL — Navette retour (Holiday Taxis) -->
   <div id="modal-transfer-out" class="modal-backdrop" onclick="closeModal('transfer-out')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
       <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('transfer-out')">✕</div></div>
-      <div class="modal-title-hero">🚗 UK-Royal Drive</div>
+      <div class="modal-title-hero">🚗 Holiday Taxis</div>
       <div class="modal-subtitle-hero">Transfert privé — Hôtel → Aéroport</div>
       <div class="modal-divider"></div>
       <div class="modal-reservation">
         <span style="font-size:26px">📋</span>
         <div>
           <div class="modal-reservation-label">Référence réservation</div>
-          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">28782554</div>
-          <div class="modal-reservation-sub">Voiture privée</div>
+          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">AG8NMB</div>
+          <div class="modal-reservation-sub">Voiture privée · Holiday Taxis</div>
         </div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">🏨</div>
-          <div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">Marble Arch Hotel — ~11h00</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">✈️</div>
-          <div><div class="modal-info-label">Destination</div><div class="modal-info-value">London Stansted Airport</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">⏱️</div>
-          <div><div class="modal-info-label">Durée estimée</div><div class="modal-info-value-sm">~1h30 — variable selon trafic</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">👥</div>
-          <div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">🏨</div><div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">Marble Arch Hotel — ~11h00</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value-sm">Devant l'entrée principale de l'hôtel</div></div></div>
+        <div class="modal-row"><div class="modal-icon">✈️</div><div><div class="modal-info-label">Destination</div><div class="modal-info-value">London Stansted Airport</div></div></div>
+        <div class="modal-row"><div class="modal-icon">⏱️</div><div><div class="modal-info-label">Durée estimée</div><div class="modal-info-value-sm">~1h30 — variable selon trafic</div></div></div>
+        <div class="modal-row"><div class="modal-icon">👥</div><div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div></div>
       </div>
-      <div class="modal-note">✅ Transfert confirmé — Vol départ 13h25, prévoir d'arriver à STN avant 12h00</div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport sur Google Maps</a>
+      <div class="modal-note">✅ Vol départ 13h25 — arriver à STN avant 12h00 — être prêts à <strong>10h45</strong></div>
+      <a class="modal-pickup-link" href="https://checkpickup.com/AG8NMB" target="_blank">📲 Voir les instructions de prise en charge</a>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport</a>
     </div>
   </div>
 
-  <!-- ══ MODAL — Vol retour FR6541 ═══════════════════ -->
+  <!-- MODAL — Vol retour -->
   <div id="modal-flight-return" class="modal-backdrop" onclick="closeModal('flight-return')">
     <div class="modal-sheet" onclick="event.stopPropagation()">
       <div class="modal-handle-bar"></div>
@@ -590,21 +647,163 @@
         <div class="modal-passenger-row">👧 Mia Rappin</div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row">
-          <div class="modal-icon">✈️</div>
-          <div><div class="modal-info-label">Départ</div><div class="modal-info-value">London Stansted (STN) — 13h25</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">🛬</div>
-          <div><div class="modal-info-label">Arrivée</div><div class="modal-info-value">Marseille (MRS) — 16h25</div></div>
-        </div>
-        <div class="modal-row">
-          <div class="modal-icon">⏱️</div>
-          <div><div class="modal-info-label">Durée</div><div class="modal-info-value">2h00</div></div>
-        </div>
+        <div class="modal-row"><div class="modal-icon">✈️</div><div><div class="modal-info-label">Départ</div><div class="modal-info-value">London Stansted (STN) — 13h25</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🛬</div><div><div class="modal-info-label">Arrivée</div><div class="modal-info-value">Marseille (MRS) — 16h25</div></div></div>
+        <div class="modal-row"><div class="modal-icon">⏱️</div><div><div class="modal-info-label">Durée</div><div class="modal-info-value">2h00</div></div></div>
       </div>
       <div class="modal-note">🚨 Arriver à Stansted avant <strong>12h00</strong> pour l'enregistrement</div>
-      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport sur Google Maps</a>
+      <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport</a>
+    </div>
+  </div>
+
+  <!-- MODAL — Événement générique -->
+  <div id="modal-event-detail" class="modal-backdrop" onclick="closeModal('event-detail')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('event-detail')">✕</div></div>
+      <div class="modal-title-hero" id="ed-title">Événement</div>
+      <div class="modal-subtitle-hero" id="ed-subtitle"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-rows">
+        <div class="modal-row"><div class="modal-icon">🕐</div><div><div class="modal-info-label">Horaire</div><div class="modal-info-value" id="ed-time"></div></div></div>
+        <div class="modal-row" id="ed-metro-row" style="display:none"><div class="modal-icon">🚇</div><div><div class="modal-info-label">Métro le plus proche</div><div class="modal-info-value-sm" id="ed-metro"></div></div></div>
+      </div>
+      <div id="ed-map-wrap">
+        <a class="modal-map-link" id="ed-map-link" href="#" target="_blank">🗺️ Voir sur Google Maps</a>
+      </div>
+      <button class="modal-delete-btn" id="ed-delete-btn" style="display:none" onclick="deleteCurrentEvent()">🗑️ Supprimer cet événement</button>
+    </div>
+  </div>
+
+  <!-- MODAL — Ajouter un événement -->
+  <div id="modal-add-event" class="modal-backdrop" onclick="event.target===this&&closeModal('add-event')">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-handle-bar"></div>
+      <div class="modal-close-row"><div class="modal-close-btn" onclick="closeModal('add-event')">✕</div></div>
+      <div class="modal-title-hero">➕ Ajouter un événement</div>
+      <div style="padding:0 24px 24px;">
+        <label class="add-form-label">Activité / Lieu</label>
+        <input class="add-form-input" id="add-activity" type="text" placeholder="ex: Covent Garden, Pub...">
+
+        <label class="add-form-label">Jour</label>
+        <div class="add-day-picker">
+          <button class="add-day-btn active" onclick="selectAddDay(0)" id="add-day-0">29 Ven</button>
+          <button class="add-day-btn" onclick="selectAddDay(1)" id="add-day-1">30 Sam</button>
+          <button class="add-day-btn" onclick="selectAddDay(2)" id="add-day-2">31 Dim</button>
+        </div>
+
+        <label class="add-form-label">Heure de début</label>
+        <div class="add-time-row">
+          <select class="add-form-select" id="add-hour" style="flex:1"></select>
+          <select class="add-form-select" id="add-minute" style="flex:1">
+            <option value="0">:00</option>
+            <option value="15">:15</option>
+            <option value="30">:30</option>
+            <option value="45">:45</option>
+          </select>
+        </div>
+
+        <label class="add-form-label">Durée</label>
+        <select class="add-form-select" id="add-duration">
+          <option value="30">30 min</option>
+          <option value="60" selected>1 heure</option>
+          <option value="90">1h30</option>
+          <option value="120">2 heures</option>
+          <option value="180">3 heures</option>
+        </select>
+
+        <label class="add-form-label">Couleur</label>
+        <div class="add-colors" id="add-colors"></div>
+
+        <div class="add-geocoding" id="add-geocoding-status"></div>
+        <button class="add-submit-btn" onclick="submitAddEvent()">Ajouter à l'agenda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR FULLSCREEN -->
+  <div id="qr-popup">
+    <button class="qr-popup-close" onclick="closeQrPopup()">✕</button>
+    <div class="qr-popup-logo">
+      <div style="font-size:44px;margin-bottom:10px;">🦕</div>
+      <div style="color:#fff;font-family:'Times New Roman',Georgia,serif;font-size:14px;letter-spacing:5px;font-weight:bold;text-align:center;">NATURAL HISTORY</div>
+      <div style="color:#fff;font-family:'Times New Roman',Georgia,serif;font-size:14px;letter-spacing:5px;font-weight:bold;text-align:center;">MUSEUM · LONDON</div>
+      <div style="width:120px;height:1px;background:rgba(255,255,255,0.3);margin:12px auto 0;"></div>
+    </div>
+    <div id="qr-popup-canvas"></div>
+    <div class="qr-popup-name" id="qr-popup-name"></div>
+    <div class="qr-popup-code" id="qr-popup-code"></div>
+  </div>
+
+  <!-- WEATHER PANEL -->
+  <div id="weather-panel">
+    <div class="weather-panel-header">
+      <div class="weather-panel-back" onclick="closeWeatherPanel()">‹</div>
+      <div class="weather-panel-title">Météo</div>
+      <div class="weather-panel-city">🇬🇧 Londres</div>
+    </div>
+    <div id="weather-content">
+      <div class="weather-loading" id="weather-loading">Chargement de la météo…</div>
+    </div>
+  </div>
+
+  <!-- MENU OVERLAY -->
+  <div id="menu-overlay">
+    <div id="menu-backdrop" onclick="closeMenu()"></div>
+    <div id="menu-panel">
+      <div class="menu-panel-top">
+        <div class="menu-panel-label">Menu</div>
+        <button class="menu-close-x" onclick="closeMenu()">✕</button>
+      </div>
+      <div class="menu-items-wrap">
+        <button class="menu-item" onclick="closeMenu();openAddEvent()">
+          <span class="menu-item-icon">➕</span>
+          <span>Ajouter un événement</span>
+        </button>
+        <button class="menu-item" onclick="closeMenu();showMap()">
+          <span class="menu-item-icon">🗺️</span>
+          <span>Carte</span>
+        </button>
+        <button class="menu-item" onclick="openWeatherPanel()">
+          <span class="menu-item-icon">🌤️</span>
+          <span>Météo</span>
+        </button>
+        <div class="menu-divider"></div>
+        <button class="menu-item" onclick="openSpinWheel()">
+          <span class="menu-item-icon">🎡</span>
+          <span>Roue de la fortune</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPIN WHEEL OVERLAY -->
+  <div id="spin-overlay">
+    <div class="spin-top-bar">
+      <div class="spin-close-btn" onclick="closeSpinWheel()">‹</div>
+      <div class="spin-title-txt">Roue de la fortune</div>
+    </div>
+    <div class="spin-canvas-wrap">
+      <canvas id="spin-canvas" width="300" height="300"></canvas>
+      <div class="spin-pointer-el"></div>
+      <div class="spin-center-btn" onclick="triggerSpin()">⚡</div>
+    </div>
+    <div class="spin-name-buttons">
+      <button class="spin-name-btn" onclick="selectSpinName(0)">Mia</button>
+      <button class="spin-name-btn" onclick="selectSpinName(1)">Aurélia</button>
+      <button class="spin-name-btn" onclick="selectSpinName(2)">Jonathan</button>
+    </div>
+    <div class="spin-hint-txt">Sélectionne ton prénom · Appuie au centre pour lancer</div>
+  </div>
+
+  <!-- WINNER OVERLAY -->
+  <div id="winner-overlay">
+    <div class="winner-bg"></div>
+    <div class="winner-body">
+      <div class="winner-emoji-big">🎉</div>
+      <div class="winner-label">C'est gagné !</div>
+      <div class="winner-name-txt">—</div>
+      <div class="winner-confetti-row">🎊 🎉 🎊</div>
     </div>
   </div>
 
@@ -613,423 +812,880 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  // ── Palette ────────────────────────────────────────
-  const PALETTE = {
-    A:'#1565C0', B:'#E65100', C:'#1B5E20', D:'#4527A0',
-    E:'#6A1B9A', F:'#4527A0', G:'#E65100', H:'#1565C0',
-  };
+// ── Palette ─────────────────────────────────────────
+const PAL = {
+  blue:'#1565C0', orange:'#E65100', green:'#1B5E20', purple:'#4527A0',
+  violet:'#6A1B9A', red:'#B71C1C', slate:'#37474F', pink:'#880E4F',
+  teal:'#00695C', navy:'#1A237E', forest:'#2E7D32', indigo:'#283593',
+};
 
-  // ── Événements (start/end en minutes depuis minuit) ─
-  const EVENTS = {
-    0: {
-       6: { label:'A', title:'✈ Vol Marseille → Londres', time:'06:05 – 07:05',        color:PALETTE.A, modal:'flight-out',    coords:[51.8870,  0.2441], mapName:'London Stansted (STN)',         start: 6*60+ 5, end: 7*60+ 5 },
-       7: { label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – 09:00',        color:PALETTE.B, modal:'transfer-in',   coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel',             start: 7*60+ 5, end: 9*60,    travelRoute:0 },
-      14: { label:'C', title:'🦕 Natural History Museum', time:'14:30 – 17:30',        color:PALETTE.C, modal:'nhm',           coords:[51.4967, -0.1764], mapName:'Natural History Museum',        start:14*60+30, end:17*60+30 },
-      18: { label:'D', title:'🏨 Check-in Hôtel',         time:'dès 15h00',            color:PALETTE.D, modal:'hotel',         coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel by Thistle',  start:18*60,    end:19*60    },
-    },
-    1: {
-      12: { label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PALETTE.E, modal:'hp',            coords:[51.5235, -0.1273], mapName:'RDV Coach – Bedford Way',       start:12*60+50, end:18*60,    travelRoute:1 },
-    },
-    2: {
-      10: { label:'F', title:'🏨 Check-out Hôtel',         time:'avant 11h00',         color:PALETTE.F, modal:'checkout',      coords:[51.5141, -0.1566], mapName:'Marble Arch Hotel',             start:10*60,    end:11*60    },
-      11: { label:'G', title:'🚗 Navette → Stansted',      time:'~11h00',              color:PALETTE.G, modal:'transfer-out',  coords:[51.8870,  0.2441], mapName:'London Stansted (STN)',         start:11*60,    end:12*60+45, travelRoute:2 },
-      13: { label:'H', title:'✈ Vol Londres → Marseille', time:'13:25 – 16:25',       color:PALETTE.H, modal:'flight-return', coords:[51.8870,  0.2441], mapName:'London Stansted (STN)',         start:13*60+25, end:15*60+25 },
-    },
-  };
+// ── Données événements ───────────────────────────────
+let EVENTS_BY_DAY = {
+  0: [
+    { id:'flight-out',  day:0, label:'A', title:'✈ Vol Marseille → Londres', time:'06:05 – 07:05',      color:PAL.blue,   modal:'flight-out',   coords:[51.8870, 0.2441], mapName:'London Stansted (STN)',        start:6*60+5,    end:7*60+5,   metro:null },
+    { id:'transfer-in', day:0, label:'B', title:'🚗 Navette → Hôtel',        time:'07:05 – ~09:00',     color:PAL.orange, modal:'transfer-in',  coords:[51.5141,-0.1566], mapName:'Marble Arch Hotel',            start:7*60+5,    end:9*60,     metro:null, travelRoute:0 },
+    { id:'bp',          day:0, label:'I', title:'🏛 Buckingham Palace',       time:'10:00 – 11:00',      color:PAL.red,    modal:'event-detail', coords:[51.5014,-0.1419], mapName:'Buckingham Palace',            start:10*60,     end:11*60,    metro:'Victoria · Circle / District' },
+    { id:'guard',       day:0, label:'J', title:'💂 Relève de la Garde',      time:'11:00 – 12:00',      color:PAL.red,    modal:'event-detail', coords:[51.5014,-0.1419], mapName:'Buckingham Palace',            start:11*60,     end:12*60,    metro:'Victoria · Circle / District' },
+    { id:'westminster', day:0, label:'K', title:'🕌 Westminster · Big Ben · London Eye', time:'12:00 – 14:00', color:PAL.slate, modal:'event-detail', coords:[51.4994,-0.1272], mapName:'Westminster Bridge', start:12*60, end:14*60, metro:'Westminster · Circle / District / Jubilee' },
+    { id:'nhm',         day:0, label:'C', title:'🦕 Natural History Museum',  time:'14:30 – 17:30',      color:PAL.green,  modal:'nhm',          coords:[51.4967,-0.1764], mapName:'Natural History Museum',       start:14*60+30,  end:17*60+30, metro:'South Kensington · District / Circle / Piccadilly' },
+    { id:'hotel',       day:0, label:'D', title:'🏨 Check-in Hôtel',          time:'dès 15h00',          color:PAL.purple, modal:'hotel',        coords:[51.5141,-0.1566], mapName:'Marble Arch Hotel by Thistle', start:18*60,     end:19*60,    metro:'Marble Arch · Central' },
+    { id:'soho',        day:0, label:'L', title:'🌃 Soho / Piccadilly',        time:'19:00 – 21:00',      color:PAL.pink,   modal:'event-detail', coords:[51.5099,-0.1337], mapName:'Piccadilly Circus',            start:19*60,     end:21*60,    metro:'Piccadilly Circus · Piccadilly / Bakerloo' },
+  ],
+  1: [
+    { id:'notting',     day:1, label:'M', title:'🌸 Notting Hill',            time:'09:00 – 11:00',      color:PAL.teal,   modal:'event-detail', coords:[51.5130,-0.1979], mapName:'Notting Hill Gate',            start:9*60,      end:11*60,    metro:'Notting Hill Gate · Central / Circle / District' },
+    { id:'retour-htl',  day:1, label:'N', title:'🏨 Retour Hôtel',            time:'11:00 – 12:00',      color:PAL.purple, modal:'hotel',        coords:[51.5141,-0.1566], mapName:'Marble Arch Hotel',            start:11*60,     end:12*60,    metro:'Marble Arch · Central' },
+    { id:'hp',          day:1, label:'E', title:'⚡ Harry Potter Studio Tour', time:'RDV 12:50 – ~18:00', color:PAL.violet, modal:'hp',           coords:[51.5235,-0.1273], mapName:'RDV Coach – Bedford Way',     start:12*60+50,  end:18*60,    metro:'Russell Square · Piccadilly', travelRoute:1 },
+    { id:'tower',       day:1, label:'O', title:'🌉 Tower Bridge / La Cité',   time:'20:00 – 22:00',      color:PAL.navy,   modal:'event-detail', coords:[51.5055,-0.0754], mapName:'Tower Bridge',                 start:20*60,     end:22*60,    metro:'Tower Hill · Circle / District' },
+  ],
+  2: [
+    { id:'hyde',        day:2, label:'P', title:'🌿 Hyde Park / Paddington',   time:'09:00 – 10:00',      color:PAL.forest, modal:'event-detail', coords:[51.5073,-0.1657], mapName:'Hyde Park',                    start:9*60,      end:10*60,    metro:'Paddington · Circle / District / Bakerloo' },
+    { id:'checkout',    day:2, label:'F', title:'🏨 Check-out Hôtel',          time:'avant 11h00',        color:PAL.purple, modal:'checkout',     coords:[51.5141,-0.1566], mapName:'Marble Arch Hotel',            start:10*60,     end:11*60,    metro:'Marble Arch · Central' },
+    { id:'transfer-out',day:2, label:'G', title:'🚗 Navette → Stansted',       time:'~11h00',             color:PAL.orange, modal:'transfer-out', coords:[51.8870, 0.2441], mapName:'London Stansted (STN)',        start:11*60,     end:12*60+45, metro:null, travelRoute:2 },
+    { id:'flight-return',day:2,label:'H', title:'✈ Vol Londres → Marseille',  time:'13:25 – 16:25',      color:PAL.blue,   modal:'flight-return',coords:[51.8870, 0.2441], mapName:'London Stansted (STN)',        start:13*60+25,  end:15*60+25, metro:null },
+  ],
+};
 
-  // ── Temps de trajet (OSRM routing, aucune clé API) ─
-  const TRAVEL_ROUTES = [
-    { from:[51.8870, 0.2441], to:[51.5141,-0.1566], label:'Stansted → Marble Arch', fallback:5100,
-      mapsUrl:'https://www.google.com/maps/dir/51.8870,0.2441/51.5141,-0.1566' },
-    { from:[51.5235,-0.1273], to:[51.6903,-0.4181], label:'Bedford Way → Warner Bros', fallback:3000,
-      mapsUrl:'https://www.google.com/maps/dir/51.5235,-0.1273/51.6903,-0.4181' },
-    { from:[51.5141,-0.1566], to:[51.8870, 0.2441], label:'Marble Arch → Stansted', fallback:5100,
-      mapsUrl:'https://www.google.com/maps/dir/51.5141,-0.1566/51.8870,0.2441' },
-  ];
-  const travelTimes = [null, null, null];
-
-  function fmtDur(s) {
-    const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
-    return h > 0 ? (m > 0 ? `${h}h ${m} min` : `${h}h`) : `${m} min`;
-  }
-
-  async function fetchRoute(idx) {
-    const r = TRAVEL_ROUTES[idx];
-    const [lat1,lng1] = r.from, [lat2,lng2] = r.to;
-    try {
-      const res = await fetch(
-        `https://router.project-osrm.org/route/v1/driving/${lng1},${lat1};${lng2},${lat2}?overview=false`,
-        { signal: AbortSignal.timeout(8000) }
-      );
-      const d = await res.json();
-      if (d.code === 'Ok' && d.routes[0]) return d.routes[0].duration;
-    } catch (_) {}
-    return r.fallback;
-  }
-
-  async function loadTravelTimes() {
-    const res = await Promise.all([0,1,2].map(fetchRoute));
-    res.forEach((t,i) => { travelTimes[i] = t; });
-    buildTimeline(currentDay);
-  }
-
-  // ── Arc de vol (courbe de Bézier quadratique) ──────
-  function flightArcPts(from, to, steps=50) {
-    const mLat = (from[0]+to[0])/2 + Math.abs(to[0]-from[0])*0.22;
-    const mLng = (from[1]+to[1])/2;
-    return Array.from({length:steps+1}, (_,i) => {
-      const t = i/steps;
-      return [(1-t)*(1-t)*from[0]+2*(1-t)*t*mLat+t*t*to[0],
-              (1-t)*(1-t)*from[1]+2*(1-t)*t*mLng+t*t*to[1]];
+// Restore saved positions from previous session
+(function restorePositions() {
+  try {
+    const pos = JSON.parse(localStorage.getItem('ltr_positions') || '{}');
+    Object.values(EVENTS_BY_DAY).flat().forEach(ev => {
+      if (pos[ev.id]) { ev.start = pos[ev.id].s; ev.end = pos[ev.id].e; }
     });
-  }
+    const userEvts = JSON.parse(localStorage.getItem('ltr_user_events') || '[]');
+    userEvts.forEach(ev => { if (EVENTS_BY_DAY[ev.day]) EVENTS_BY_DAY[ev.day].push(ev); });
+  } catch(_) {}
+})();
 
-  // ── Itinéraires par journée ─────────────────────────
-  const MRS = [43.4365, 5.2150]; // Aéroport Marseille Provence
-  const STN = [51.8870, 0.2441];
-  const HTL = [51.5141,-0.1566]; // Marble Arch Hotel
-  const NHM = [51.4967,-0.1764];
-  const BDW = [51.5235,-0.1273]; // Bedford Way
-  const WBS = [51.6903,-0.4181]; // Warner Bros Studios
+function saveState() {
+  try {
+    const pos = {};
+    Object.values(EVENTS_BY_DAY).flat().forEach(ev => { pos[ev.id] = { s:ev.start, e:ev.end }; });
+    localStorage.setItem('ltr_positions', JSON.stringify(pos));
+    const userEvts = Object.values(EVENTS_BY_DAY).flat().filter(e => e.isUser);
+    localStorage.setItem('ltr_user_events', JSON.stringify(userEvts));
+  } catch(_) {}
+}
 
-  const MAP_ROUTES = {
-    0: [
-      { pts:flightArcPts(MRS,STN),  color:'#1565C0', weight:3,   dash:null  }, // vol MRS→STN
-      { pts:[STN,HTL],               color:'#E65100', weight:2.5, dash:'9,5' }, // navette STN→Hôtel
-      { pts:[HTL,NHM],               color:'#1B5E20', weight:2,   dash:'6,5' }, // trajet Hôtel→NHM
-      { pts:[NHM,HTL],               color:'#4527A0', weight:2,   dash:'6,5' }, // retour NHM→Hôtel
-    ],
-    1: [
-      { pts:[BDW,WBS],               color:'#6A1B9A', weight:2.5, dash:'9,5' }, // coach Bedford→WB
-    ],
-    2: [
-      { pts:[HTL,STN],               color:'#E65100', weight:2.5, dash:'9,5' }, // navette Hôtel→STN
-      { pts:flightArcPts(STN,MRS),  color:'#1565C0', weight:3,   dash:null  }, // vol STN→MRS
-    ],
-  };
+// ── Temps de trajet ──────────────────────────────────
+const TRAVEL_ROUTES = [
+  { from:[51.8870,0.2441], to:[51.5141,-0.1566], label:'Stansted → Marble Arch', fallback:5100, mapsUrl:'https://www.google.com/maps/dir/51.8870,0.2441/51.5141,-0.1566' },
+  { from:[51.5235,-0.1273], to:[51.6903,-0.4181], label:'Bedford Way → Warner Bros', fallback:3000, mapsUrl:'https://www.google.com/maps/dir/51.5235,-0.1273/51.6903,-0.4181' },
+  { from:[51.5141,-0.1566], to:[51.8870,0.2441], label:'Marble Arch → Stansted', fallback:5100, mapsUrl:'https://www.google.com/maps/dir/51.5141,-0.1566/51.8870,0.2441' },
+];
+const travelTimes = [null, null, null];
+function fmtDur(s) { const h=Math.floor(s/3600),m=Math.round((s%3600)/60); return h>0?(m>0?`${h}h ${m}min`:`${h}h`):`${m}min`; }
+async function fetchRoute(idx) {
+  const r=TRAVEL_ROUTES[idx]; const [a,b]=r.from,[c,d]=r.to;
+  try { const res=await fetch(`https://router.project-osrm.org/route/v1/driving/${b},${a};${d},${c}?overview=false`,{signal:AbortSignal.timeout(8000)}); const j=await res.json(); if(j.code==='Ok'&&j.routes[0]) return j.routes[0].duration; } catch(_){}
+  return r.fallback;
+}
+async function loadTravelTimes() { const r=await Promise.all([0,1,2].map(fetchRoute)); r.forEach((t,i)=>travelTimes[i]=t); buildTimeline(currentDay); }
 
-  // ── Points carte uniquement (hors agenda) ─────────
-  const MAP_POINTS = [
-    { day:1, label:'W', title:'🎬 Warner Bros. Studios',   time:'13:00 – ~18:00', color:'#6A1B9A', coords:WBS, mapName:'Warner Bros. Studio Tour Leavesden' },
-    { day:0, label:'M', title:'✈ Départ Marseille',        time:'29 mai — 06h05', color:'#1565C0', coords:MRS, mapName:'Aéroport Marseille Provence (MRS)' },
-    { day:2, label:'M', title:'✈ Arrivée Marseille',       time:'31 mai — 16h25', color:'#1565C0', coords:[MRS[0]+0.0005,MRS[1]+0.0005], mapName:'Aéroport Marseille Provence (MRS)' },
-  ];
+// ── Agenda / timeline ────────────────────────────────
+const PX = 68, BASE = 6*60, NH = 17;
+const px = m => ((m - BASE) / 60) * PX;
+const minFromPx = p => Math.round((p / PX) * 60) + BASE;
 
-  // ── QR codes NHM ──────────────────────────────────
-  let nhmQrDone = false;
-  const NHM_BARCODES = ['1001401807011380629','1001401807011380630','1001401807011380631'];
+let currentDay = 0;
+const DAYS = [
+  { name:'Vendredi', date:'29 mai 2026' },
+  { name:'Samedi',   date:'30 mai 2026' },
+  { name:'Dimanche', date:'31 mai 2026' },
+];
 
-  // ── Navigation ────────────────────────────────────
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
+function computeZIndices(events) {
+  events.forEach(ev => {
+    const dur = ev.end - ev.start;
+    let rank = 0;
+    events.forEach(o => {
+      if (o.id === ev.id) return;
+      if (o.end <= ev.start || o.start >= ev.end) return;
+      if ((o.end - o.start) > dur) rank++;
+    });
+    ev._z = rank + 1;
+  });
+}
 
-  // ── Modal ─────────────────────────────────────────
-  function openModal(id) {
-    document.getElementById('modal-' + id).classList.add('open');
-    if (id === 'nhm' && !nhmQrDone) {
-      nhmQrDone = true;
-      setTimeout(() => {
-        NHM_BARCODES.forEach((code, i) => {
-          const el = document.getElementById('qr-nhm-' + (i + 1));
-          if (el && !el.firstChild) {
-            new QRCode(el, { text:code, width:160, height:160, colorDark:'#000', colorLight:'#fff' });
-          }
-        });
-      }, 120);
-    }
-  }
-  function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
+function buildTimeline(dayIdx) {
+  const evts = EVENTS_BY_DAY[dayIdx] || [];
+  computeZIndices(evts);
 
-  // ── Flag Rain + Fade transition ───────────────────
-  const FLAG_URL = (() => {
-    const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30">` +
-      `<rect width="60" height="30" fill="#012169"/>` +
-      `<path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>` +
-      `<path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>` +
-      `<path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>` +
-      `</svg>`;
-    return 'data:image/svg+xml;base64,' + btoa(s);
-  })();
+  const hoursHtml = Array.from({length:NH}, (_,i) => {
+    const h = i + 6;
+    return `<div style="height:${PX}px;text-align:right;padding-right:10px;padding-top:2px;color:#012169;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;">${String(h).padStart(2,'0')}h00</div>`;
+  }).join('');
 
-  function triggerFlagRain() {
-    const rain = document.createElement('div');
-    rain.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;';
-    document.body.appendChild(rain);
-    for (let i = 0; i < 38; i++) {
-      const el  = document.createElement('div');
-      const w   = 22 + Math.random() * 44;
-      const dl  = Math.random() * 750;
-      const dur = 950 + Math.random() * 1050;
-      const lft = -5 + Math.random() * 110;
-      const rS  = -40 + Math.random() * 80;
-      const rE  = rS + (-220 + Math.random() * 440);
-      const dr  = -55 + Math.random() * 110;
-      el.style.cssText =
-        `position:absolute;left:${lft}%;top:-${w*0.6+12}px;` +
-        `width:${w}px;height:${w*0.5}px;` +
-        `background:url("${FLAG_URL}") center/cover no-repeat;` +
-        `border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,0.32);` +
-        `animation:flag-fall ${dur}ms ease-in ${dl}ms both;`;
-      el.style.setProperty('--rot-start', rS + 'deg');
-      el.style.setProperty('--rot-end',   rE + 'deg');
-      el.style.setProperty('--drift',     dr + 'px');
-      rain.appendChild(el);
-    }
-    setTimeout(() => {
-      const agenda = document.getElementById('agenda');
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      agenda.classList.add('active');
-      agenda.style.opacity = '0';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          agenda.style.transition = 'opacity 0.65s ease';
-          agenda.style.opacity = '1';
-          setTimeout(() => { agenda.style.transition = ''; rain.remove(); }, 750);
-        });
-      });
-    }, 1150);
-  }
+  const dotsHtml = Array.from({length:NH}, (_,i) =>
+    `<div style="position:absolute;left:-6px;top:${i*PX+4}px;width:10px;height:10px;border-radius:50%;background:#C8102E;z-index:2;"></div>`
+  ).join('');
 
-  // ── Harry Potter animation ────────────────────────
-  function hpAnimation(callback) {
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:1500;overflow:hidden;';
+  const colEl = document.createElement('div');
+  colEl.style.cssText = `flex:1;position:relative;border-left:2px solid #DCDFE6;height:${NH*PX}px;`;
+  colEl.innerHTML = dotsHtml;
 
-    const glow = document.createElement('div');
-    glow.style.cssText = 'position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(212,175,55,0.45) 0%,rgba(106,27,154,0.30) 40%,transparent 70%);animation:hp-glow 820ms ease-out forwards;';
-    overlay.appendChild(glow);
+  evts.forEach(ev => {
+    const top    = Math.max(0, px(ev.start));
+    const height = Math.max(44, px(ev.end) - top);
+    const chip   = document.createElement('div');
+    chip.className = 'event-chip';
+    chip.dataset.evId  = ev.id;
+    chip.dataset.evDay = dayIdx;
+    chip.style.cssText = `background:${ev.color};left:10px;right:0;top:${top}px;height:${height}px;z-index:${ev._z||1};touch-action:none;`;
 
-    const bolt = document.createElement('div');
-    bolt.style.cssText = 'position:absolute;top:50%;left:50%;font-size:80px;animation:hp-bolt 820ms ease-out forwards;';
-    bolt.textContent = '⚡';
-    overlay.appendChild(bolt);
+    const travel = (ev.travelRoute !== undefined && travelTimes[ev.travelRoute] !== null)
+      ? `<a class="event-chip-travel" href="${TRAVEL_ROUTES[ev.travelRoute].mapsUrl}" target="_blank" onclick="event.stopPropagation()">🚗 ~${fmtDur(travelTimes[ev.travelRoute])} <span>Voir trafic →</span></a>` : '';
+    const metro = ev.metro ? `<div class="event-chip-metro">🚇 ${ev.metro}</div>` : '';
 
-    const symbols = ['✨','⭐','🌟','💫','✨','🌟','💫','⭐'];
-    for (let i = 0; i < 20; i++) {
-      const sp = document.createElement('div');
-      const angle = (i / 20) * 360;
-      const dist  = 90 + Math.random() * 110;
-      const tx = Math.cos(angle * Math.PI / 180) * dist;
-      const ty = Math.sin(angle * Math.PI / 180) * dist;
-      const delay = Math.random() * 250;
-      const sz = 14 + Math.random() * 18;
-      sp.style.cssText = `position:absolute;top:50%;left:50%;margin:-${sz/2}px;font-size:${sz}px;--tx:${tx}px;--ty:${ty}px;animation:hp-sparkle 720ms ease-out ${delay}ms forwards;`;
-      sp.textContent = symbols[i % symbols.length];
-      overlay.appendChild(sp);
-    }
+    chip.innerHTML = `
+      <div class="event-chip-header">
+        <div class="event-chip-label">${ev.label}</div>
+        <span class="event-chip-title">${ev.title}</span>
+      </div>
+      <div class="event-chip-time">${ev.time}</div>
+      ${metro}${travel}
+      <div class="resize-handle" data-handle="1"></div>`;
 
-    document.body.appendChild(overlay);
-    setTimeout(() => { overlay.remove(); callback(); }, 830);
-  }
+    attachChipListeners(chip, ev, dayIdx);
+    colEl.appendChild(chip);
+  });
 
-  // ── Countdown ─────────────────────────────────────
-  const DEPARTURE = new Date(2026, 4, 29, 6, 5, 0);
-  function pad2(n) { return String(Math.floor(Math.abs(n))).padStart(2,'0'); }
-  function tick() {
-    const d = Math.max(0, Math.floor((DEPARTURE - Date.now()) / 1000));
-    const r = d % 86400;
-    document.getElementById('days-display').textContent  = 'J- ' + pad2(Math.floor(d / 86400));
-    document.getElementById('clock-display').textContent =
-      pad2(Math.floor(r/3600)) + ':' + pad2(Math.floor((r%3600)/60)) + ':' + pad2(r%60);
-  }
-  tick(); setInterval(tick, 1000);
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;padding:18px 18px 40px 0;';
+  const hourCol = document.createElement('div');
+  hourCol.style.cssText = 'width:80px;flex-shrink:0;';
+  hourCol.innerHTML = hoursHtml;
+  wrap.appendChild(hourCol);
+  wrap.appendChild(colEl);
+  tl.appendChild(wrap);
+}
 
-  // ── Agenda ────────────────────────────────────────
-  const DAYS = [
-    { name:'Vendredi', date:'29 mai 2026' },
-    { name:'Samedi',   date:'30 mai 2026' },
-    { name:'Dimanche', date:'31 mai 2026' },
-  ];
-  function buildTimeline(dayIdx) {
-    const evts = EVENTS[dayIdx] || {};
-    const PX   = 68;      // px par heure
-    const BASE = 6 * 60;  // 06:00 en minutes
-    const NH   = 15;       // heures affichées 06h–20h
-    const px   = m => ((m - BASE) / 60) * PX;
+// ── Drag & resize ────────────────────────────────────
+let dragState = null;
 
-    const hoursHtml = Array.from({length:NH}, (_, i) => {
-      const h = i + 6;
-      return `<div style="height:${PX}px;text-align:right;padding-right:10px;padding-top:2px;
-        color:#012169;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;">
-        ${String(h).padStart(2,'0')}h00</div>`;
-    }).join('');
+function attachChipListeners(chip, ev, dayIdx) {
+  chip.addEventListener('touchstart',  e => onDragStart(e, ev, dayIdx, chip), { passive:false });
+  chip.addEventListener('touchmove',   e => onDragMove(e),   { passive:false });
+  chip.addEventListener('touchend',    e => onDragEnd(e),    { passive:false });
+  chip.addEventListener('mousedown',   e => onMouseDragStart(e, ev, dayIdx, chip));
+}
 
-    const dotsHtml = Array.from({length:NH}, (_, i) =>
-      `<div style="position:absolute;left:-6px;top:${i*PX+4}px;width:10px;height:10px;
-        border-radius:50%;background:#C8102E;z-index:2;"></div>`
-    ).join('');
+function onDragStart(e, ev, dayIdx, chip) {
+  const touch = e.touches[0];
+  const isResize = e.target.dataset.handle === '1';
+  dragState = { ev, dayIdx, chip, isResize,
+    startY: touch.clientY,
+    startTop: parseInt(chip.style.top) || 0,
+    startHeight: parseInt(chip.style.height) || 44,
+    didMove: false };
+  e.preventDefault();
+}
 
-    const eventsHtml = Object.values(evts).map(ev => {
-      const top    = px(ev.start);
-      const height = Math.max(px(ev.end) - top, 38);
-      const travel = ev.travelRoute !== undefined && travelTimes[ev.travelRoute] !== null
-        ? `<a class="event-chip-travel" href="${TRAVEL_ROUTES[ev.travelRoute].mapsUrl}" target="_blank" onclick="event.stopPropagation()">🚗 ~${fmtDur(travelTimes[ev.travelRoute])} <span>Voir trafic →</span></a>` : '';
-      return `<div class="event-chip"
-          style="background:${ev.color};position:absolute;left:10px;right:0;top:${top}px;height:${height}px;"
-          onclick="${ev.modal ? `openModal('${ev.modal}')` : 'void 0'}">
-        <div class="event-chip-header">
-          <div class="event-chip-label">${ev.label}</div>
-          <span class="event-chip-title">${ev.title}</span>
-        </div>
-        <div class="event-chip-time">${ev.time}</div>
-        ${travel}
-      </div>`;
-    }).join('');
-
-    document.getElementById('timeline').innerHTML =
-      `<div style="display:flex;padding:18px 18px 40px 0;">
-        <div style="width:80px;flex-shrink:0;">${hoursHtml}</div>
-        <div style="flex:1;position:relative;border-left:2px solid #DCDFE6;height:${NH*PX}px;">
-          ${dotsHtml}${eventsHtml}
-        </div>
-      </div>`;
-  }
-
-  let currentDay = 0;
-
-  function selectDay(idx) {
-    if (idx === currentDay) return;
-    currentDay = idx;
-    document.querySelectorAll('#tab-bar .tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+function onDragMove(e) {
+  if (!dragState) return;
+  const touch = e.touches[0];
+  const dy = touch.clientY - dragState.startY;
+  if (Math.abs(dy) > 5) dragState.didMove = true;
+  if (dragState.isResize) {
+    const newH = Math.max(34, dragState.startHeight + dy);
+    dragState.chip.style.height = newH + 'px';
+  } else {
     const tl = document.getElementById('timeline');
-    tl.scrollTop = 0;
-    tl.style.transition = 'opacity 0.18s ease';
-    tl.style.opacity = '0';
-    hpAnimation(() => {
-      document.getElementById('hdr-name').textContent = DAYS[idx].name;
-      document.getElementById('hdr-date').textContent = DAYS[idx].date;
-      buildTimeline(idx);
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        tl.style.transition = 'opacity 0.32s ease';
-        tl.style.opacity = '1';
-        setTimeout(() => { tl.style.transition = ''; }, 380);
-      }));
+    const colTop = tl.querySelector('[style*="border-left"]').getBoundingClientRect().top;
+    const newTop = Math.max(0, Math.min(dragState.startTop + dy, NH * PX - 34));
+    dragState.chip.style.top = newTop + 'px';
+  }
+  e.preventDefault();
+}
+
+function onDragEnd(e) {
+  if (!dragState) return;
+  const { ev, dayIdx, chip, isResize, didMove, startTop, startHeight } = dragState;
+  dragState = null;
+
+  if (!didMove) {
+    if (ev.modal) openModal(ev.modal, ev);
+    return;
+  }
+
+  const SNAP = 15;
+  if (isResize) {
+    const h = parseInt(chip.style.height);
+    const mins = Math.max(SNAP, Math.round(h / PX * 60 / SNAP) * SNAP);
+    ev.end = ev.start + mins;
+    ev.time = fmtTime(ev.start) + ' – ' + fmtTime(ev.end);
+  } else {
+    const top = parseInt(chip.style.top);
+    const rawMins = minFromPx(top);
+    const snappedMins = Math.round(rawMins / SNAP) * SNAP;
+    const dur = ev.end - ev.start;
+    ev.start = Math.max(BASE, snappedMins);
+    ev.end = ev.start + dur;
+    ev.time = fmtTime(ev.start) + ' – ' + fmtTime(ev.end);
+  }
+  saveState();
+  buildTimeline(dayIdx);
+}
+
+function onMouseDragStart(e, ev, dayIdx, chip) {
+  const isResize = e.target.dataset.handle === '1';
+  const startY = e.clientY;
+  const startTop = parseInt(chip.style.top) || 0;
+  const startH   = parseInt(chip.style.height) || 44;
+  let didMove = false;
+
+  function onMove(ev2) {
+    const dy = ev2.clientY - startY;
+    if (Math.abs(dy) > 3) didMove = true;
+    if (isResize) { chip.style.height = Math.max(34, startH + dy) + 'px'; }
+    else { chip.style.top = Math.max(0, Math.min(startTop + dy, NH*PX-34)) + 'px'; }
+  }
+  function onUp() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (!didMove) { if (ev.modal) openModal(ev.modal, ev); return; }
+    const SNAP = 15;
+    if (isResize) {
+      const h = parseInt(chip.style.height);
+      const mins = Math.max(SNAP, Math.round(h/PX*60/SNAP)*SNAP);
+      ev.end = ev.start + mins;
+      ev.time = fmtTime(ev.start) + ' – ' + fmtTime(ev.end);
+    } else {
+      const top = parseInt(chip.style.top);
+      const raw = minFromPx(top);
+      const snap = Math.round(raw/SNAP)*SNAP;
+      const dur = ev.end - ev.start;
+      ev.start = Math.max(BASE, snap);
+      ev.end = ev.start + dur;
+      ev.time = fmtTime(ev.start) + ' – ' + fmtTime(ev.end);
+    }
+    saveState(); buildTimeline(dayIdx);
+  }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+  e.preventDefault();
+}
+
+function fmtTime(m) { return String(Math.floor(m/60)).padStart(2,'0') + 'h' + String(m%60).padStart(2,'0'); }
+
+// ── Navigation ───────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── Modal générique événement ────────────────────────
+let currentDetailEv = null;
+function openModal(id, ev) {
+  if (id === 'event-detail' && ev) {
+    currentDetailEv = ev;
+    document.getElementById('ed-title').textContent = ev.title;
+    const day = DAYS[ev.day];
+    document.getElementById('ed-subtitle').textContent = day ? day.date : '';
+    document.getElementById('ed-time').textContent = ev.time;
+    const metroRow = document.getElementById('ed-metro-row');
+    if (ev.metro) { metroRow.style.display='flex'; document.getElementById('ed-metro').textContent = ev.metro; }
+    else metroRow.style.display='none';
+    const mapLink = document.getElementById('ed-map-link');
+    if (ev.coords) mapLink.href = `https://maps.google.com/maps?q=${ev.coords[0]},${ev.coords[1]}`;
+    else mapLink.href = `https://maps.google.com/maps?q=${encodeURIComponent(ev.mapName+' London')}`;
+    document.getElementById('ed-delete-btn').style.display = ev.isUser ? 'flex' : 'none';
+  }
+  if (id === 'nhm') {
+    setTimeout(() => {
+      const codes = ['1001401807011380629','1001401807011380630','1001401807011380631'];
+      codes.forEach((code,i) => {
+        const el = document.getElementById('qr-nhm-' + (i+1));
+        if (el && !el.firstChild) new QRCode(el, { text:code, width:140, height:140, colorDark:'#000', colorLight:'#fff' });
+      });
+    }, 100);
+  }
+  document.getElementById('modal-' + id).classList.add('open');
+}
+function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
+
+function deleteCurrentEvent() {
+  if (!currentDetailEv || !currentDetailEv.isUser) return;
+  const ev = currentDetailEv;
+  EVENTS_BY_DAY[ev.day] = EVENTS_BY_DAY[ev.day].filter(e => e.id !== ev.id);
+  saveState();
+  closeModal('event-detail');
+  buildTimeline(currentDay);
+  if (lMap) rebuildMapMarkers();
+}
+
+// ── QR Fullscreen ────────────────────────────────────
+const NHM_CODES = ['1001401807011380629','1001401807011380630','1001401807011380631'];
+let qrPopupGenerated = {};
+
+function openQrPopup(name, code, idx) {
+  document.getElementById('qr-popup-name').textContent = name;
+  document.getElementById('qr-popup-code').textContent = code;
+  const container = document.getElementById('qr-popup-canvas');
+  if (!qrPopupGenerated[code]) {
+    container.innerHTML = '';
+    new QRCode(container, { text:code, width:220, height:220, colorDark:'#000', colorLight:'#fff' });
+    qrPopupGenerated[code] = true;
+  }
+  document.getElementById('qr-popup').classList.add('open');
+}
+function closeQrPopup() { document.getElementById('qr-popup').classList.remove('open'); }
+
+// ── Day selection ────────────────────────────────────
+function selectDay(idx) {
+  if (idx === currentDay) return;
+  currentDay = idx;
+  document.querySelectorAll('#tab-bar .tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  const tl = document.getElementById('timeline');
+  tl.style.transition = 'opacity 0.18s ease';
+  tl.style.opacity = '0';
+  hpAnimation(() => {
+    document.getElementById('hdr-name').textContent = DAYS[idx].name;
+    document.getElementById('hdr-date').textContent = DAYS[idx].date;
+    buildTimeline(idx);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      tl.style.transition = 'opacity 0.32s ease';
+      tl.style.opacity = '1';
+      setTimeout(() => { tl.style.transition=''; }, 380);
+    }));
+  });
+}
+
+// ── Météo ────────────────────────────────────────────
+let weatherCache = null;
+function wmoIcon(code, wind) {
+  if (wind > 45) return '💨';
+  if (code === 0) return '☀️';
+  if (code <= 2) return '⛅';
+  if (code <= 3) return '🌥️';
+  if (code <= 48) return '🌫️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '🌦️';
+  if (code <= 86) return '🌨️';
+  return '⛈️';
+}
+function wmoDesc(code, wind) {
+  if (wind > 45) return 'Très venteux';
+  const d = {0:'Ensoleillé',1:'Peu nuageux',2:'Partiellement nuageux',3:'Couvert',45:'Brumeux',48:'Givrant',51:'Bruine légère',53:'Bruine',55:'Bruine dense',61:'Pluie légère',63:'Pluie',65:'Pluie forte',71:'Neige légère',73:'Neige',75:'Neige dense',80:'Averses légères',81:'Averses',82:'Averses fortes',85:'Averses de neige',86:'Averses neige fortes',95:'Orage',96:'Orage + grêle',99:'Orage + grêle forte'};
+  return d[code] || 'Nuageux';
+}
+
+async function fetchWeather() {
+  if (weatherCache) return weatherCache;
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=51.51&longitude=-0.13&daily=temperature_2m_max,temperature_2m_min,weathercode,windspeed_10m_max&hourly=temperature_2m,weathercode,precipitation_probability&current_weather=true&timezone=Europe%2FLondon&forecast_days=10';
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const d = await r.json();
+    weatherCache = d;
+    return d;
+  } catch(_) { return null; }
+}
+
+async function loadWeatherBtn() {
+  const d = await fetchWeather();
+  if (!d) return;
+  const cur = d.current_weather;
+  if (!cur) return;
+  const icon = wmoIcon(cur.weathercode, cur.windspeed);
+  document.getElementById('weather-btn-icon').textContent = icon;
+  document.getElementById('weather-btn-temp').textContent = Math.round(cur.temperature) + '°';
+}
+
+async function openWeatherPanel() {
+  closeMenu();
+  document.getElementById('weather-panel').classList.add('open');
+  const content = document.getElementById('weather-content');
+  content.innerHTML = '<div class="weather-loading">Chargement de la météo…</div>';
+  const d = await fetchWeather();
+  if (!d) {
+    content.innerHTML = '<div class="weather-error">Impossible de charger la météo.<br>Vérifiez votre connexion.</div>';
+    return;
+  }
+
+  const cur = d.current_weather;
+  const hourly = d.hourly;
+  let html = '';
+
+  if (cur) {
+    const cIcon = wmoIcon(cur.weathercode, cur.windspeed);
+    html += `<div class="weather-current-card">
+      <div class="weather-card-icon" style="font-size:40px;flex-shrink:0">${cIcon}</div>
+      <div class="weather-card-info">
+        <div class="weather-card-desc">${wmoDesc(cur.weathercode, cur.windspeed)}</div>
+        <div class="weather-card-temps">${Math.round(cur.temperature)}°C <small>maintenant</small></div>
+        <div class="weather-card-wind">💨 Vent ${Math.round(cur.windspeed)} km/h</div>
+      </div>
+    </div>`;
+  }
+
+  const tripDays = [
+    { label:'Vendredi 29 mai', dateStr:'2026-05-29' },
+    { label:'Samedi 30 mai',   dateStr:'2026-05-30' },
+    { label:'Dimanche 31 mai', dateStr:'2026-05-31' },
+  ];
+
+  if (hourly && hourly.time) {
+    tripDays.forEach(td => {
+      const rows = [];
+      hourly.time.forEach((t, i) => {
+        if (!t.startsWith(td.dateStr)) return;
+        const hour = parseInt(t.slice(11, 13));
+        if (hour < 6 || hour > 22) return;
+        const temp = Math.round(hourly.temperature_2m[i]);
+        const code = hourly.weathercode[i];
+        const rain = (hourly.precipitation_probability || [])[i] || 0;
+        const icon = wmoIcon(code, 0);
+        const desc = wmoDesc(code, 0);
+        rows.push(`<div class="weather-hour-row">
+          <div class="weather-hour-time">${String(hour).padStart(2,'0')}h</div>
+          <div class="weather-hour-icon">${icon}</div>
+          <div class="weather-hour-temp">${temp}°</div>
+          <div class="weather-hour-desc">${desc}</div>
+          <div class="weather-hour-rain">${rain > 0 ? '💧 '+rain+'%' : ''}</div>
+        </div>`);
+      });
+      if (rows.length) {
+        html += `<div class="weather-day-section">
+          <div class="weather-section-header">${td.label}</div>
+          ${rows.join('')}
+        </div>`;
+      }
     });
   }
 
-  // Init agenda
-  document.getElementById('hdr-name').textContent = DAYS[0].name;
-  document.getElementById('hdr-date').textContent = DAYS[0].date;
-  buildTimeline(0);
-  loadTravelTimes();
-  setInterval(loadTravelTimes, 10 * 60 * 1000);
+  content.innerHTML = html || '<div class="weather-loading">Données météo indisponibles pour ces dates.</div>';
+}
+function closeWeatherPanel() { document.getElementById('weather-panel').classList.remove('open'); }
 
-  // ── Carte Leaflet ─────────────────────────────────
-  let lMap = null;
-  const mapMarkersByDay = { 0:[], 1:[], 2:[] };
-  const mapRoutesByDay  = { 0:[], 1:[], 2:[] };
+// ── Ajout d'événement ────────────────────────────────
+const ADD_COLORS = ['#C8102E','#1565C0','#1B5E20','#E65100','#6A1B9A','#00695C','#37474F','#880E4F','#F57F17','#00838F'];
+let addSelectedDay = 0;
+let addSelectedColor = ADD_COLORS[0];
+let addEventCounter = 100;
 
-  function showMap() {
-    showScreen('map-screen');
-    if (!lMap) {
-      setTimeout(() => { initMap(); filterMapDay(currentDay); }, 80);
+function openAddEvent() {
+  addSelectedDay = currentDay;
+  addSelectedColor = ADD_COLORS[0];
+  // Populate hour select
+  const hourSel = document.getElementById('add-hour');
+  hourSel.innerHTML = '';
+  for (let h = 6; h <= 22; h++) {
+    const o = document.createElement('option');
+    o.value = h; o.textContent = String(h).padStart(2,'0') + 'h';
+    if (h === 10) o.selected = true;
+    hourSel.appendChild(o);
+  }
+  // Day buttons
+  [0,1,2].forEach(i => {
+    const btn = document.getElementById('add-day-' + i);
+    btn.classList.toggle('active', i === addSelectedDay);
+  });
+  // Colors
+  const colWrap = document.getElementById('add-colors');
+  colWrap.innerHTML = '';
+  ADD_COLORS.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'add-color-dot' + (i===0?' active':'');
+    d.style.background = c;
+    d.onclick = () => {
+      addSelectedColor = c;
+      colWrap.querySelectorAll('.add-color-dot').forEach(el => el.classList.remove('active'));
+      d.classList.add('active');
+    };
+    colWrap.appendChild(d);
+  });
+  document.getElementById('add-activity').value = '';
+  document.getElementById('add-geocoding-status').textContent = '';
+  openModal('add-event');
+}
+
+function selectAddDay(i) {
+  addSelectedDay = i;
+  [0,1,2].forEach(j => document.getElementById('add-day-'+j).classList.toggle('active', j===i));
+}
+
+async function submitAddEvent() {
+  const name = document.getElementById('add-activity').value.trim();
+  if (!name) { document.getElementById('add-geocoding-status').textContent = '⚠️ Saisir un nom de lieu'; return; }
+  const hour = parseInt(document.getElementById('add-hour').value);
+  const min  = parseInt(document.getElementById('add-minute').value);
+  const dur  = parseInt(document.getElementById('add-duration').value);
+  const start = hour * 60 + min;
+  const end   = start + dur;
+  const status = document.getElementById('add-geocoding-status');
+  status.textContent = '🔍 Recherche du lieu…';
+
+  let coords = null;
+  try {
+    const geo = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name+' London UK')}&format=json&limit=1`, { headers:{'Accept-Language':'fr','User-Agent':'LondonTripApp/1.0'}, signal:AbortSignal.timeout(6000) });
+    const gd = await geo.json();
+    if (gd.length > 0) coords = [parseFloat(gd[0].lat), parseFloat(gd[0].lon)];
+  } catch(_) {}
+
+  const labels = 'QRSTUVWXYZ0123456789';
+  const label  = labels[addEventCounter % labels.length];
+  const newEv  = {
+    id: 'user_' + (++addEventCounter),
+    day: addSelectedDay,
+    label,
+    title: '📍 ' + name,
+    time: fmtTime(start) + ' – ' + fmtTime(end),
+    color: addSelectedColor,
+    modal: 'event-detail',
+    coords,
+    mapName: name,
+    start, end,
+    metro: null,
+    isUser: true,
+  };
+
+  EVENTS_BY_DAY[addSelectedDay].push(newEv);
+  saveState();
+  closeModal('add-event');
+  if (addSelectedDay !== currentDay) selectDay(addSelectedDay);
+  else buildTimeline(currentDay);
+  if (lMap) rebuildMapMarkers();
+  status.textContent = coords ? '✅ Lieu trouvé et ajouté !' : '✅ Ajouté (lieu introuvable sur la carte)';
+}
+
+// ── Flag Rain ────────────────────────────────────────
+const FLAG_URL = (() => {
+  const s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(s);
+})();
+function triggerFlagRain() {
+  const rain = document.createElement('div');
+  rain.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;';
+  document.body.appendChild(rain);
+  for (let i = 0; i < 38; i++) {
+    const el=document.createElement('div'), w=22+Math.random()*44, dl=Math.random()*750, dur=950+Math.random()*1050,
+          lft=-5+Math.random()*110, rS=-40+Math.random()*80, rE=rS+(-220+Math.random()*440), dr=-55+Math.random()*110;
+    el.style.cssText=`position:absolute;left:${lft}%;top:-${w*0.6+12}px;width:${w}px;height:${w*0.5}px;background:url("${FLAG_URL}") center/cover no-repeat;border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,0.32);animation:flag-fall ${dur}ms ease-in ${dl}ms both;`;
+    el.style.setProperty('--rot-start',rS+'deg'); el.style.setProperty('--rot-end',rE+'deg'); el.style.setProperty('--drift',dr+'px');
+    rain.appendChild(el);
+  }
+  setTimeout(() => {
+    const agenda=document.getElementById('agenda');
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    agenda.classList.add('active'); agenda.style.opacity='0';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      agenda.style.transition='opacity 0.65s ease'; agenda.style.opacity='1';
+      setTimeout(()=>{ agenda.style.transition=''; rain.remove(); },750);
+    }));
+  }, 1150);
+}
+
+// ── HP Animation ─────────────────────────────────────
+function hpAnimation(cb) {
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:1500;overflow:hidden;';
+  const glow=document.createElement('div');
+  glow.style.cssText='position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(212,175,55,0.45) 0%,rgba(106,27,154,0.30) 40%,transparent 70%);animation:hp-glow 820ms ease-out forwards;';
+  ov.appendChild(glow);
+  const bolt=document.createElement('div');
+  bolt.style.cssText='position:absolute;top:50%;left:50%;font-size:80px;animation:hp-bolt 820ms ease-out forwards;';
+  bolt.textContent='⚡'; ov.appendChild(bolt);
+  const syms=['✨','⭐','🌟','💫','✨','🌟','💫','⭐'];
+  for(let i=0;i<20;i++){const sp=document.createElement('div'),a=(i/20)*360,dist=90+Math.random()*110,tx=Math.cos(a*Math.PI/180)*dist,ty=Math.sin(a*Math.PI/180)*dist,dl=Math.random()*250,sz=14+Math.random()*18;sp.style.cssText=`position:absolute;top:50%;left:50%;margin:-${sz/2}px;font-size:${sz}px;--tx:${tx}px;--ty:${ty}px;animation:hp-sparkle 720ms ease-out ${dl}ms forwards;`;sp.textContent=syms[i%8];ov.appendChild(sp);}
+  document.body.appendChild(ov);
+  setTimeout(()=>{ ov.remove(); cb(); }, 830);
+}
+
+// ── Countdown ────────────────────────────────────────
+const DEPARTURE=new Date(2026,4,29,6,5,0);
+function pad2(n){return String(Math.floor(Math.abs(n))).padStart(2,'0');}
+function tick(){const d=Math.max(0,Math.floor((DEPARTURE-Date.now())/1000)),r=d%86400;document.getElementById('days-display').textContent='J- '+pad2(Math.floor(d/86400));document.getElementById('clock-display').textContent=pad2(Math.floor(r/3600))+':'+pad2(Math.floor((r%3600)/60))+':'+pad2(r%60);}
+tick(); setInterval(tick,1000);
+
+// ── Carte ────────────────────────────────────────────
+function flightArcPts(from,to,steps=50){const mLat=(from[0]+to[0])/2+Math.abs(to[0]-from[0])*0.22,mLng=(from[1]+to[1])/2;return Array.from({length:steps+1},(_,i)=>{const t=i/steps;return[(1-t)*(1-t)*from[0]+2*(1-t)*t*mLat+t*t*to[0],(1-t)*(1-t)*from[1]+2*(1-t)*t*mLng+t*t*to[1]];});}
+const MRS=[43.4365,5.2150],STN=[51.8870,0.2441],HTL=[51.5141,-0.1566],NHM=[51.4967,-0.1764],BDW=[51.5235,-0.1273],WBS=[51.6903,-0.4181];
+const BP=[51.5014,-0.1419],WST=[51.4994,-0.1272],SOHO=[51.5099,-0.1337],NOTTING=[51.5130,-0.1979],TOWER=[51.5055,-0.0754],HYDE=[51.5073,-0.1657];
+
+const MAP_ROUTES = {
+  0:[
+    {pts:flightArcPts(MRS,STN),color:'#1565C0',weight:3,dash:null},
+    {pts:[STN,HTL],color:'#E65100',weight:2.5,dash:'9,5'},
+    {pts:[HTL,BP],color:'#B71C1C',weight:2,dash:'5,4'},
+    {pts:[BP,WST],color:'#37474F',weight:2,dash:'5,4'},
+    {pts:[WST,NHM],color:'#1B5E20',weight:2,dash:'5,4'},
+    {pts:[NHM,HTL],color:'#4527A0',weight:2,dash:'5,4'},
+    {pts:[HTL,SOHO],color:'#880E4F',weight:2,dash:'5,4'},
+  ],
+  1:[
+    {pts:[HTL,NOTTING],color:'#00695C',weight:2,dash:'5,4'},
+    {pts:[NOTTING,HTL],color:'#4527A0',weight:2,dash:'5,4'},
+    {pts:[HTL,BDW],color:'#6A1B9A',weight:2,dash:'5,4'},
+    {pts:[BDW,WBS],color:'#6A1B9A',weight:2.5,dash:'9,5'},
+    {pts:[HTL,TOWER],color:'#1A237E',weight:2,dash:'5,4'},
+  ],
+  2:[
+    {pts:[HTL,HYDE],color:'#2E7D32',weight:2,dash:'5,4'},
+    {pts:[HTL,STN],color:'#E65100',weight:2.5,dash:'9,5'},
+    {pts:flightArcPts(STN,MRS),color:'#1565C0',weight:3,dash:null},
+  ],
+};
+
+const MAP_EXTRAS = [
+  {day:1,label:'W',title:'🎬 Warner Bros. Studios',time:'30 mai — 13h00',color:'#6A1B9A',coords:WBS,mapName:'Warner Bros. Studio Tour'},
+  {day:0,label:'M',title:'✈ Départ Marseille',time:'29 mai — 06h05',color:'#1565C0',coords:MRS,mapName:'Aéroport Marseille (MRS)'},
+  {day:2,label:'M',title:'✈ Arrivée Marseille',time:'31 mai — 16h25',color:'#1565C0',coords:[MRS[0]+0.0005,MRS[1]+0.0005],mapName:'Aéroport Marseille (MRS)'},
+  {day:0,label:'★',title:'👁 London Eye',time:'29 mai — 12h00',color:'#37474F',coords:[51.5033,-0.1196],mapName:'London Eye'},
+];
+
+let lMap = null;
+const mapMarkersByDay = {0:[],1:[],2:[]};
+const mapRoutesByDay  = {0:[],1:[],2:[]};
+
+function showMap() {
+  showScreen('map-screen');
+  if (!lMap) { setTimeout(()=>{ initMap(); filterMapDay(currentDay); },80); }
+  else { lMap.invalidateSize(); filterMapDay(currentDay); }
+}
+
+function makeMarker(coords, label, color, title, time, mapName, usedKeys) {
+  const key = coords.join(',');
+  const n = usedKeys[key] = (usedKeys[key]||0)+1;
+  const off = (n-1)*0.0003;
+  const c = [coords[0]+off, coords[1]+off];
+  const icon = L.divIcon({
+    html:`<div style="background:${color};color:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;box-shadow:0 3px 12px rgba(0,0,0,0.45);border:3px solid #fff;font-family:-apple-system,sans-serif;">${label}</div>`,
+    className:'',iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-20],
+  });
+  return L.marker(c,{icon}).bindPopup(`<div style="font-family:-apple-system,sans-serif;min-width:160px;margin:0"><div style="background:${color};color:#fff;padding:6px 12px;margin:-1px -1px 7px;border-radius:6px 6px 0 0;font-weight:700;font-size:12px;">${label} — ${mapName}</div><div style="padding:0 12px 9px"><div style="font-size:13px;color:#222;font-weight:600;">${title}</div><div style="font-size:11px;color:#888;margin-top:2px;">${time}</div></div></div>`,{maxWidth:240});
+}
+
+function rebuildMapMarkers() {
+  if (!lMap) return;
+  [0,1,2].forEach(d => mapMarkersByDay[d].forEach(m => lMap.hasLayer(m) && lMap.removeLayer(m)));
+  mapMarkersByDay[0]=[]; mapMarkersByDay[1]=[]; mapMarkersByDay[2]=[];
+  const usedKeys = {};
+  Object.entries(EVENTS_BY_DAY).forEach(([dayStr,evts]) => {
+    const day=parseInt(dayStr);
+    evts.forEach(ev => {
+      if (!ev.coords) return;
+      const m = makeMarker(ev.coords, ev.label, ev.color, ev.title, ev.time, ev.mapName, usedKeys);
+      mapMarkersByDay[day].push(m);
+    });
+  });
+  MAP_EXTRAS.forEach(pt => {
+    const m = makeMarker(pt.coords, pt.label, pt.color, pt.title, pt.time, pt.mapName, usedKeys);
+    mapMarkersByDay[pt.day].push(m);
+  });
+  filterMapDay(currentDay);
+}
+
+function initMap() {
+  lMap = L.map('leaflet-map',{zoomControl:true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(lMap);
+  rebuildMapMarkers();
+  Object.entries(MAP_ROUTES).forEach(([dayStr,routes]) => {
+    const day=parseInt(dayStr);
+    routes.forEach(r => {
+      const poly=L.polyline(r.pts,{color:r.color,weight:r.weight,dashArray:r.dash,opacity:0.70});
+      mapRoutesByDay[day].push(poly);
+    });
+  });
+}
+
+function filterMapDay(dayIdx) {
+  document.querySelectorAll('#map-tab-bar .tab').forEach(t=>t.classList.toggle('active',parseInt(t.dataset.mapday)===dayIdx));
+  Object.entries(mapMarkersByDay).forEach(([day,markers]) => {
+    const vis=dayIdx===-1||parseInt(day)===dayIdx;
+    markers.forEach(m=>{ if(vis&&!lMap.hasLayer(m)) m.addTo(lMap); if(!vis&&lMap.hasLayer(m)) lMap.removeLayer(m); });
+  });
+  Object.entries(mapRoutesByDay).forEach(([day,routes]) => {
+    const vis=dayIdx===-1||parseInt(day)===dayIdx;
+    routes.forEach(r=>{ if(vis&&!lMap.hasLayer(r)) r.addTo(lMap); if(!vis&&lMap.hasLayer(r)) lMap.removeLayer(r); });
+  });
+  const pts=[];
+  Object.entries(mapMarkersByDay).forEach(([day,markers]) => {
+    if(dayIdx===-1||parseInt(day)===dayIdx) markers.forEach(m=>pts.push(m.getLatLng()));
+  });
+  if(pts.length===1) lMap.setView(pts[0],14);
+  else if(pts.length>1) lMap.fitBounds(pts,{padding:[50,50]});
+}
+
+// ── Menu ─────────────────────────────────────────────
+function openMenu() {
+  document.getElementById('menu-overlay').classList.add('open');
+  document.getElementById('menu-btn').classList.add('hp-open');
+}
+function closeMenu() {
+  document.getElementById('menu-overlay').classList.remove('open');
+  const btn = document.getElementById('menu-btn');
+  if (btn) btn.classList.remove('hp-open');
+}
+
+// ── Spin Wheel ────────────────────────────────────────
+const SPIN_NAMES = ['Mia', 'Aurélia', 'Jonathan'];
+const SPIN_COLORS = [
+  ['#FF3B30', '#FF9500'],   // Mia: red, orange
+  ['#FFCC00', '#34C759'],   // Aurélia: yellow, green
+  ['#007AFF', '#AF52DE'],   // Jonathan: blue, purple
+];
+const SPIN_EMOJIS = ['🎀', '✨', '⚡'];
+let spinAngle = 0;
+let spinAnimId = null;
+let spinIsSpinning = false;
+let spinSelected = -1;
+
+function drawSpinWheel(angle) {
+  const canvas = document.getElementById('spin-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const r = cx - 4;
+  const n = 6;
+  const seg = (Math.PI * 2) / n;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Shadow ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + 3, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';
+  ctx.fill();
+
+  // Draw 6 colored sectors (2 per name)
+  for (let i = 0; i < n; i++) {
+    const nameIdx = Math.floor(i / 2);
+    const color = SPIN_COLORS[nameIdx][i % 2];
+    const startA = angle + i * seg - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startA, startA + seg);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  // Name labels rotated along each 120° zone
+  for (let i = 0; i < 3; i++) {
+    const midA = angle + (i * 2 + 1) * seg - Math.PI / 2;
+    const tr = r * 0.60;
+    const tx = cx + Math.cos(midA) * tr;
+    const ty = cy + Math.sin(midA) * tr;
+    ctx.save();
+    ctx.translate(tx, ty);
+    ctx.rotate(midA + Math.PI / 2);
+    ctx.font = 'bold 15px -apple-system,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.shadowColor = 'rgba(0,0,0,0.65)';
+    ctx.shadowBlur = 5;
+    ctx.fillText(SPIN_NAMES[i], 0, 0);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
+  // Outer rim
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+
+function getSpinWinner(angle) {
+  const seg = Math.PI * 2 / 6;
+  const relAngle = ((-angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+  const sectorIdx = Math.floor(relAngle / seg) % 6;
+  return Math.floor(sectorIdx / 2);
+}
+
+function triggerSpin() {
+  if (spinIsSpinning) return;
+  spinIsSpinning = true;
+  const spins = 6 + Math.random() * 4;
+  const extraAngle = Math.random() * Math.PI * 2;
+  const totalRotation = spins * Math.PI * 2 + extraAngle;
+  const duration = 3800 + Math.random() * 900;
+  const startAngle = spinAngle;
+  const targetAngle = startAngle + totalRotation;
+  const startTime = performance.now();
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3.5); }
+
+  function frame(now) {
+    const t = Math.min((now - startTime) / duration, 1);
+    spinAngle = startAngle + totalRotation * easeOut(t);
+    drawSpinWheel(spinAngle);
+    if (t < 1) {
+      spinAnimId = requestAnimationFrame(frame);
     } else {
-      lMap.invalidateSize();
-      filterMapDay(currentDay);
+      spinIsSpinning = false;
+      spinAnimId = null;
+      spinAngle = targetAngle;
+      drawSpinWheel(spinAngle);
+      setTimeout(() => showWinnerOverlay(getSpinWinner(spinAngle)), 350);
     }
   }
+  spinAnimId = requestAnimationFrame(frame);
+}
 
-  function initMap() {
-    lMap = L.map('leaflet-map', { zoomControl:true });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>', maxZoom:18
-    }).addTo(lMap);
+function showWinnerOverlay(nameIdx) {
+  const name = SPIN_NAMES[nameIdx];
+  const colors = SPIN_COLORS[nameIdx];
+  const emoji = SPIN_EMOJIS[nameIdx];
 
-    const usedKeys = {};
+  // Blur the spin screen content
+  const wrap = document.querySelector('.spin-canvas-wrap');
+  const btns = document.querySelector('.spin-name-buttons');
+  const hint = document.querySelector('.spin-hint-txt');
+  if (wrap) wrap.style.filter = 'blur(12px)';
+  if (btns) btns.style.filter = 'blur(10px)';
+  if (hint) hint.style.opacity = '0';
 
-    Object.entries(EVENTS).forEach(([dayStr, dayEvts]) => {
-      const day = parseInt(dayStr);
-      Object.values(dayEvts).forEach(ev => {
-        if (!ev.coords) return;
-        const key = ev.coords.join(',');
-        const n   = usedKeys[key] = (usedKeys[key] || 0) + 1;
-        const off = (n - 1) * 0.0003;
-        const c   = [ev.coords[0] + off, ev.coords[1] + off];
+  const ov = document.getElementById('winner-overlay');
+  ov.querySelector('.winner-bg').style.background = `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
+  ov.querySelector('.winner-name-txt').textContent = name;
+  ov.querySelector('.winner-emoji-big').textContent = emoji;
+  ov.classList.add('open');
 
-        const icon = L.divIcon({
-          html:`<div style="background:${ev.color};color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;box-shadow:0 3px 12px rgba(0,0,0,0.45);border:3px solid #fff;font-family:-apple-system,sans-serif;">${ev.label}</div>`,
-          className:'', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22],
-        });
+  setTimeout(() => {
+    ov.classList.remove('open');
+    if (wrap) wrap.style.filter = '';
+    if (btns) btns.style.filter = '';
+    if (hint) hint.style.opacity = '';
+  }, 3000);
+}
 
-        const marker = L.marker(c, { icon }).bindPopup(`
-          <div style="font-family:-apple-system,sans-serif;min-width:170px;margin:0">
-            <div style="background:${ev.color};color:#fff;padding:7px 12px;margin:-1px -1px 8px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px;">${ev.label} — ${ev.mapName}</div>
-            <div style="padding:0 12px 10px">
-              <div style="font-size:13px;color:#222;font-weight:600;">${ev.title}</div>
-              <div style="font-size:12px;color:#888;margin-top:3px;font-variant-numeric:tabular-nums;">${ev.time}</div>
-            </div>
-          </div>`, { maxWidth:240 });
+function openSpinWheel() {
+  closeMenu();
+  document.getElementById('spin-overlay').classList.add('open');
+  spinSelected = -1;
+  document.querySelectorAll('.spin-name-btn').forEach(b => b.classList.remove('selected'));
+  drawSpinWheel(spinAngle);
+}
 
-        mapMarkersByDay[day].push(marker);
-      });
-    });
+function closeSpinWheel() {
+  if (spinAnimId) { cancelAnimationFrame(spinAnimId); spinAnimId = null; }
+  spinIsSpinning = false;
+  document.getElementById('spin-overlay').classList.remove('open');
+}
 
-    // Points carte uniquement (Warner Bros etc.)
-    MAP_POINTS.forEach(pt => {
-      const key = pt.coords.join(',');
-      const n   = usedKeys[key] = (usedKeys[key] || 0) + 1;
-      const off = (n - 1) * 0.0003;
-      const c   = [pt.coords[0] + off, pt.coords[1] + off];
-      const icon = L.divIcon({
-        html:`<div style="background:${pt.color};color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;box-shadow:0 3px 12px rgba(0,0,0,0.45);border:3px solid #fff;font-family:-apple-system,sans-serif;">${pt.label}</div>`,
-        className:'', iconSize:[36,36], iconAnchor:[18,18], popupAnchor:[0,-22],
-      });
-      const marker = L.marker(c, { icon }).bindPopup(`
-        <div style="font-family:-apple-system,sans-serif;min-width:170px;margin:0">
-          <div style="background:${pt.color};color:#fff;padding:7px 12px;margin:-1px -1px 8px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px;">${pt.label} — ${pt.mapName}</div>
-          <div style="padding:0 12px 10px">
-            <div style="font-size:13px;color:#222;font-weight:600;">${pt.title}</div>
-            <div style="font-size:12px;color:#888;margin-top:3px;font-variant-numeric:tabular-nums;">${pt.time}</div>
-          </div>
-        </div>`, { maxWidth:240 });
-      mapMarkersByDay[pt.day].push(marker);
-    });
+function selectSpinName(idx) {
+  spinSelected = idx;
+  document.querySelectorAll('.spin-name-btn').forEach((b, i) => b.classList.toggle('selected', i === idx));
+}
 
-    // Itinéraires
-    Object.entries(MAP_ROUTES).forEach(([dayStr, routes]) => {
-      const day = parseInt(dayStr);
-      routes.forEach(r => {
-        const poly = L.polyline(r.pts, { color:r.color, weight:r.weight, dashArray:r.dash, opacity:0.70 });
-        mapRoutesByDay[day].push(poly);
-      });
-    });
-  }
-
-  function filterMapDay(dayIdx) {
-    // Onglet actif
-    document.querySelectorAll('#map-tab-bar .tab').forEach(t => {
-      t.classList.toggle('active', parseInt(t.dataset.mapday) === dayIdx);
-    });
-
-    // Marqueurs
-    Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
-      const vis = dayIdx === -1 || parseInt(day) === dayIdx;
-      markers.forEach(m => {
-        if (vis  && !lMap.hasLayer(m)) m.addTo(lMap);
-        if (!vis &&  lMap.hasLayer(m)) lMap.removeLayer(m);
-      });
-    });
-
-    // Itinéraires
-    Object.entries(mapRoutesByDay).forEach(([day, routes]) => {
-      const vis = dayIdx === -1 || parseInt(day) === dayIdx;
-      routes.forEach(r => {
-        if (vis  && !lMap.hasLayer(r)) r.addTo(lMap);
-        if (!vis &&  lMap.hasLayer(r)) lMap.removeLayer(r);
-      });
-    });
-
-    // Recadrage sur les éléments visibles
-    const pts = [];
-    Object.entries(mapMarkersByDay).forEach(([day, markers]) => {
-      if (dayIdx === -1 || parseInt(day) === dayIdx)
-        markers.forEach(m => pts.push(m.getLatLng()));
-    });
-    if (pts.length === 1)    lMap.setView(pts[0], 13);
-    else if (pts.length > 1) lMap.fitBounds(pts, { padding:[50,50] });
-  }
+// ── Init ──────────────────────────────────────────────
+document.getElementById('hdr-name').textContent = DAYS[0].name;
+document.getElementById('hdr-date').textContent = DAYS[0].date;
+buildTimeline(0);
+loadTravelTimes();
+loadWeatherBtn();
+setInterval(loadTravelTimes, 10*60*1000);
+setInterval(()=>{ weatherCache=null; loadWeatherBtn(); }, 30*60*1000);
 </script>
 </body>
 </html>
