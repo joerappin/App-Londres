@@ -141,6 +141,13 @@
     .modal-section-title { font-size:13px; color:#999; text-transform:uppercase; letter-spacing:0.8px; padding:12px 24px 6px; }
     .modal-pickup-link { display:flex; align-items:center; justify-content:center; gap:8px; background:#E3F2FD; border-radius:8px; padding:12px 18px; margin:0 24px 12px; color:#1565C0; font-size:14px; font-weight:600; text-decoration:none; }
     .modal-pickup-link:active { opacity:0.7; }
+    .modal-pickup-info { background:#E3F2FD; border-radius:10px; padding:14px 18px; margin:0 24px 12px; }
+    .modal-pickup-info-title { font-size:13px; font-weight:700; color:#1565C0; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+    .modal-pickup-info-text { font-size:15px; color:#1A1A1A; margin-bottom:6px; line-height:1.5; }
+    .modal-pickup-info-ref { font-size:12px; color:#555; margin-bottom:8px; font-family:monospace; }
+    .modal-pickup-info-row { font-size:13px; color:#444; margin-bottom:4px; line-height:1.4; }
+    .modal-pickup-info-tel { display:block; font-size:13px; font-weight:600; color:#1565C0; margin-top:8px; text-decoration:none; }
+    .modal-pickup-info-tel:active { opacity:0.7; }
     .modal-delete-btn { display:flex; align-items:center; justify-content:center; gap:8px; background:#FFEBEE; border-radius:8px; padding:12px 18px; margin:4px 24px 16px; color:#C62828; font-size:14px; font-weight:600; cursor:pointer; border:none; width:calc(100% - 48px); font-family:inherit; }
     .modal-delete-btn:active { opacity:0.7; }
 
@@ -439,19 +446,25 @@
         <span style="font-size:26px">📋</span>
         <div>
           <div class="modal-reservation-label">Référence réservation</div>
-          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">AG8NMB</div>
+          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">LM-28782553</div>
           <div class="modal-reservation-sub">Voiture privée · Holiday Taxis</div>
         </div>
       </div>
       <div class="modal-rows">
         <div class="modal-row"><div class="modal-icon">🛬</div><div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">London Stansted Airport</div></div></div>
-        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value-sm">Sortie arrivées — panneau Holiday Taxis</div></div></div>
+        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value-sm">Hall des arrivées · à côté du <strong>Costa Coffee</strong> · pancarte à votre nom</div></div></div>
         <div class="modal-row"><div class="modal-icon">🏨</div><div><div class="modal-info-label">Destination</div><div class="modal-info-value">Marble Arch Hotel by Thistle</div></div></div>
         <div class="modal-row"><div class="modal-icon">👥</div><div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div></div>
         <div class="modal-row"><div class="modal-icon">⏱️</div><div><div class="modal-info-label">Durée estimée</div><div class="modal-info-value-sm">~1h30 — variable selon trafic</div></div></div>
       </div>
-      <div class="modal-note">✅ Transfert confirmé — Le chauffeur attend à la sortie arrivées avec votre nom</div>
-      <a class="modal-pickup-link" href="https://checkpickup.com/AG8NMB" target="_blank">📲 Voir les instructions de prise en charge</a>
+      <div class="modal-pickup-info">
+        <div class="modal-pickup-info-title">Instructions de prise en charge</div>
+        <div class="modal-pickup-info-text">🕐 Être au point de rendez-vous <strong>10–15 min avant</strong> la prise en charge</div>
+        <div class="modal-pickup-info-row">⚠️ Retard vol &gt; 60 min → appeler le fournisseur (60 min d'attente incluses)</div>
+        <div class="modal-pickup-info-ref">Réf. chauffeur : LM-28782553</div>
+        <a class="modal-pickup-info-tel" href="tel:+442081244700">📞 +44 208 124 4700 · Fournisseur 24h/24</a>
+        <a class="modal-pickup-info-tel" href="tel:+441273828200">📞 +44 1273 828 200 · Holiday Taxis (8h–20h UK)</a>
+      </div>
       <a class="modal-map-link" href="https://maps.google.com/maps?q=51.5141,-0.1566" target="_blank">🗺️ Marble Arch Hotel</a>
     </div>
   </div>
@@ -603,19 +616,26 @@
         <span style="font-size:26px">📋</span>
         <div>
           <div class="modal-reservation-label">Référence réservation</div>
-          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">AG8NMB</div>
+          <div class="modal-reservation-code" style="font-size:20px;letter-spacing:2px">LM-28782554</div>
           <div class="modal-reservation-sub">Voiture privée · Holiday Taxis</div>
         </div>
       </div>
       <div class="modal-rows">
-        <div class="modal-row"><div class="modal-icon">🏨</div><div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">Marble Arch Hotel — ~11h00</div></div></div>
-        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value-sm">Devant l'entrée principale de l'hôtel</div></div></div>
+        <div class="modal-row"><div class="modal-icon">🏨</div><div><div class="modal-info-label">Prise en charge</div><div class="modal-info-value">Marble Arch Hotel — <strong>08h55</strong></div></div></div>
+        <div class="modal-row"><div class="modal-icon">📍</div><div><div class="modal-info-label">Point de rendez-vous</div><div class="modal-info-value-sm">Réception de l'hôtel · 10–15 min avant la prise en charge</div></div></div>
         <div class="modal-row"><div class="modal-icon">✈️</div><div><div class="modal-info-label">Destination</div><div class="modal-info-value">London Stansted Airport</div></div></div>
         <div class="modal-row"><div class="modal-icon">⏱️</div><div><div class="modal-info-label">Durée estimée</div><div class="modal-info-value-sm">~1h30 — variable selon trafic</div></div></div>
         <div class="modal-row"><div class="modal-icon">👥</div><div><div class="modal-info-label">Passagers</div><div class="modal-info-value">3 — Famille Rappin</div></div></div>
       </div>
-      <div class="modal-note">✅ Vol départ 13h25 — arriver à STN avant 12h00 — être prêts à <strong>10h45</strong></div>
-      <a class="modal-pickup-link" href="https://checkpickup.com/AG8NMB" target="_blank">📲 Voir les instructions de prise en charge</a>
+      <div class="modal-note">✅ Vol départ 13h25 — arriver à STN avant 12h00 — être prêts à <strong>08h40</strong> à la réception</div>
+      <div class="modal-pickup-info">
+        <div class="modal-pickup-info-title">Instructions de prise en charge</div>
+        <div class="modal-pickup-info-text">🕐 Heure confirmée : <strong>08h55</strong> (à confirmer 24h avant avec le fournisseur)</div>
+        <div class="modal-pickup-info-row">📋 Patienter à la réception de l'hôtel, pancarte à votre nom</div>
+        <div class="modal-pickup-info-ref">Réf. chauffeur : LM-28782554</div>
+        <a class="modal-pickup-info-tel" href="tel:+441737371777">📞 +44 1737 371 777 · Fournisseur 24h/24 7j/7</a>
+        <a class="modal-pickup-info-tel" href="tel:+441273828200">📞 +44 1273 828 200 · Holiday Taxis (8h–20h UK)</a>
+      </div>
       <a class="modal-map-link" href="https://maps.google.com/maps?q=51.8870,0.2441" target="_blank">🗺️ London Stansted Airport</a>
     </div>
   </div>
