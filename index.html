@@ -71,6 +71,8 @@
     .event-chip.dragging { opacity:0.6; box-shadow:0 8px 28px rgba(0,0,0,0.5) !important; }
     .chip-lock-btn { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.28); border:none; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer; padding:0; font-family:inherit; z-index:10; touch-action:manipulation; }
     .chip-lock-btn:active { opacity:0.6; }
+    .chip-edit-btn { position:absolute; top:6px; right:36px; background:rgba(0,0,0,0.28); border:none; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer; padding:0; font-family:inherit; z-index:10; touch-action:manipulation; }
+    .chip-edit-btn:active { opacity:0.6; }
     .event-chip-header { display:flex; align-items:center; gap:8px; }
     .event-chip-label { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.28); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; }
     .event-chip-title { color:#fff; font-size:13px; font-weight:700; line-height:1.2; }
@@ -1030,6 +1032,7 @@ function buildTimeline(dayIdx) {
       </div>
       <div class="event-chip-time">${ev.time}</div>
       ${metro}${travel}
+      <button class="chip-edit-btn">✏️</button>
       <button class="chip-lock-btn">${ev.locked === false ? '🔓' : '🔒'}</button>
       <div class="resize-handle" data-handle="1"></div>`;
 
@@ -1063,6 +1066,10 @@ function attachChipListeners(chip, ev, dayIdx) {
   lockBtn.addEventListener('touchstart', e => { e.stopPropagation(); e.preventDefault(); toggleLock(ev, lockBtn); }, { passive:false });
   lockBtn.addEventListener('click',      e => { e.stopPropagation(); });
 
+  const editBtn = chip.querySelector('.chip-edit-btn');
+  editBtn.addEventListener('touchstart', e => { e.stopPropagation(); e.preventDefault(); openEditEvent(ev); }, { passive:false });
+  editBtn.addEventListener('click',      e => { e.stopPropagation(); });
+
   chip.addEventListener('touchstart',  e => onTouchStart(e, ev, dayIdx, chip), { passive:false });
   chip.addEventListener('touchmove',   e => onDragMove(e),   { passive:false });
   chip.addEventListener('touchend',    e => onDragEnd(e),    { passive:false });
@@ -1071,7 +1078,7 @@ function attachChipListeners(chip, ev, dayIdx) {
 }
 
 function onTouchStart(e, ev, dayIdx, chip) {
-  if (e.target.closest('.chip-lock-btn')) return;
+  if (e.target.closest('.chip-lock-btn') || e.target.closest('.chip-edit-btn')) return;
   const touch = e.touches[0];
   const isResize = e.target.dataset.handle === '1';
   const dragEnabled = ev.locked === false;
@@ -1135,7 +1142,7 @@ function onDragEnd(e) {
 }
 
 function onMouseDragStart(e, ev, dayIdx, chip) {
-  if (e.target.closest('.chip-lock-btn')) return;
+  if (e.target.closest('.chip-lock-btn') || e.target.closest('.chip-edit-btn')) return;
   const dragEnabled = ev.locked === false;
   const isResize = e.target.dataset.handle === '1';
   const startY = e.clientY;
@@ -1223,7 +1230,14 @@ function openModal(id, ev) {
   }
   document.getElementById('modal-' + id).classList.add('open');
 }
-function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
+function closeModal(id) {
+  document.getElementById('modal-' + id).classList.remove('open');
+  if (id === 'add-event') {
+    editingEvent = null;
+    document.querySelector('#modal-add-event .modal-title-hero').textContent = '➕ Ajouter un événement';
+    document.querySelector('#modal-add-event .add-submit-btn').textContent = 'Ajouter à l\'agenda';
+  }
+}
 
 function deleteCurrentEvent() {
   if (!currentDetailEv || !currentDetailEv.isUser) return;
@@ -1398,35 +1412,32 @@ async function openWeatherPanel(dayIdx) {
 }
 function closeWeatherPanel() { document.getElementById('weather-panel').classList.remove('open'); }
 
-// ── Ajout d'événement ────────────────────────────────
+// ── Ajout / Modification d'événement ─────────────────
 const ADD_COLORS = ['#C8102E','#1565C0','#1B5E20','#E65100','#6A1B9A','#00695C','#37474F','#880E4F','#F57F17','#00838F'];
 let addSelectedDay = 0;
 let addSelectedColor = ADD_COLORS[0];
 let addEventCounter = 100;
+let editingEvent = null;
 
-function openAddEvent() {
-  addSelectedDay = currentDay;
-  addSelectedColor = ADD_COLORS[0];
-  // Populate hour select
+function populateAddForm(defaultHour, defaultColor, defaultDay) {
+  addSelectedDay = defaultDay;
+  addSelectedColor = defaultColor;
   const hourSel = document.getElementById('add-hour');
   hourSel.innerHTML = '';
   for (let h = 6; h <= 22; h++) {
     const o = document.createElement('option');
     o.value = h; o.textContent = String(h).padStart(2,'0') + 'h';
-    if (h === 10) o.selected = true;
+    if (h === defaultHour) o.selected = true;
     hourSel.appendChild(o);
   }
-  // Day buttons
   [0,1,2].forEach(i => {
-    const btn = document.getElementById('add-day-' + i);
-    btn.classList.toggle('active', i === addSelectedDay);
+    document.getElementById('add-day-' + i).classList.toggle('active', i === defaultDay);
   });
-  // Colors
   const colWrap = document.getElementById('add-colors');
   colWrap.innerHTML = '';
-  ADD_COLORS.forEach((c, i) => {
+  ADD_COLORS.forEach(c => {
     const d = document.createElement('div');
-    d.className = 'add-color-dot' + (i===0?' active':'');
+    d.className = 'add-color-dot' + (c === defaultColor ? ' active' : '');
     d.style.background = c;
     d.onclick = () => {
       addSelectedColor = c;
@@ -1435,8 +1446,55 @@ function openAddEvent() {
     };
     colWrap.appendChild(d);
   });
-  document.getElementById('add-activity').value = '';
+  if (!ADD_COLORS.includes(defaultColor)) {
+    const d = document.createElement('div');
+    d.className = 'add-color-dot active';
+    d.style.background = defaultColor;
+    d.onclick = () => {
+      addSelectedColor = defaultColor;
+      colWrap.querySelectorAll('.add-color-dot').forEach(el => el.classList.remove('active'));
+      d.classList.add('active');
+    };
+    colWrap.appendChild(d);
+  }
   document.getElementById('add-geocoding-status').textContent = '';
+}
+
+function openAddEvent() {
+  editingEvent = null;
+  document.querySelector('#modal-add-event .modal-title-hero').textContent = '➕ Ajouter un événement';
+  document.querySelector('#modal-add-event .add-submit-btn').textContent = 'Ajouter à l\'agenda';
+  populateAddForm(10, ADD_COLORS[0], currentDay);
+  document.getElementById('add-activity').value = '';
+  const durSel = document.getElementById('add-duration');
+  Array.from(durSel.options).forEach(o => { o.selected = (o.value === '60'); if (o.dataset.custom) o.remove(); });
+  const minSel = document.getElementById('add-minute');
+  Array.from(minSel.options).forEach(o => { o.selected = (o.value === '0'); });
+  openModal('add-event');
+}
+
+function openEditEvent(ev) {
+  editingEvent = ev;
+  document.querySelector('#modal-add-event .modal-title-hero').textContent = '✏️ Modifier l\'événement';
+  document.querySelector('#modal-add-event .add-submit-btn').textContent = 'Enregistrer';
+  populateAddForm(Math.floor(ev.start / 60), ev.color || ADD_COLORS[0], ev.day);
+  document.getElementById('add-activity').value = ev.title;
+  const snapMin = Math.round((ev.start % 60) / 15) * 15 % 60;
+  const minSel = document.getElementById('add-minute');
+  Array.from(minSel.options).forEach(o => { o.selected = parseInt(o.value) === snapMin; });
+  const dur = ev.end - ev.start;
+  const durSel = document.getElementById('add-duration');
+  Array.from(durSel.options).forEach(o => { if (o.dataset.custom) o.remove(); });
+  let found = false;
+  Array.from(durSel.options).forEach(o => { o.selected = false; if (parseInt(o.value) === dur) { o.selected = true; found = true; } });
+  if (!found) {
+    const h = Math.floor(dur / 60), m = dur % 60;
+    const o = document.createElement('option');
+    o.value = dur;
+    o.textContent = h > 0 ? (m > 0 ? `${h}h${String(m).padStart(2,'0')}` : `${h}h`) : `${m} min`;
+    o.selected = true; o.dataset.custom = '1';
+    durSel.appendChild(o);
+  }
   openModal('add-event');
 }
 
@@ -1448,14 +1506,51 @@ function selectAddDay(i) {
 async function submitAddEvent() {
   const name = document.getElementById('add-activity').value.trim();
   if (!name) { document.getElementById('add-geocoding-status').textContent = '⚠️ Saisir un nom de lieu'; return; }
-  const hour = parseInt(document.getElementById('add-hour').value);
-  const min  = parseInt(document.getElementById('add-minute').value);
-  const dur  = parseInt(document.getElementById('add-duration').value);
+  const hour  = parseInt(document.getElementById('add-hour').value);
+  const min   = parseInt(document.getElementById('add-minute').value);
+  const dur   = parseInt(document.getElementById('add-duration').value);
   const start = hour * 60 + min;
   const end   = start + dur;
   const status = document.getElementById('add-geocoding-status');
-  status.textContent = '🔍 Recherche du lieu…';
 
+  // ── Mode édition ─────────────────────────────────────
+  if (editingEvent) {
+    const ev = editingEvent;
+    editingEvent = null;
+    const oldDay = ev.day;
+    let newCoords = ev.coords;
+    if (ev.isUser) {
+      status.textContent = '🔍 Recherche du lieu…';
+      try {
+        const geo = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name+' London UK')}&format=json&limit=1`, { headers:{'Accept-Language':'fr','User-Agent':'LondonTripApp/1.0'}, signal:AbortSignal.timeout(6000) });
+        const gd = await geo.json();
+        if (gd.length > 0) newCoords = [parseFloat(gd[0].lat), parseFloat(gd[0].lon)];
+      } catch(_) {}
+    }
+    ev.title  = name;
+    ev.start  = start;
+    ev.end    = end;
+    ev.time   = fmtTime(start) + ' – ' + fmtTime(end);
+    ev.color  = addSelectedColor;
+    ev.coords = newCoords;
+    if (ev.isUser) ev.mapName = name;
+    if (oldDay !== addSelectedDay) {
+      EVENTS_BY_DAY[oldDay] = (EVENTS_BY_DAY[oldDay] || []).filter(e => e.id !== ev.id);
+      ev.day = addSelectedDay;
+      EVENTS_BY_DAY[addSelectedDay] = EVENTS_BY_DAY[addSelectedDay] || [];
+      EVENTS_BY_DAY[addSelectedDay].push(ev);
+    }
+    saveState();
+    closeModal('add-event');
+    if (addSelectedDay !== currentDay) selectDay(addSelectedDay);
+    else buildTimeline(currentDay);
+    if (oldDay !== addSelectedDay && oldDay === currentDay) buildTimeline(currentDay);
+    if (lMap) rebuildMapMarkers();
+    return;
+  }
+
+  // ── Mode ajout ───────────────────────────────────────
+  status.textContent = '🔍 Recherche du lieu…';
   let coords = null;
   try {
     const geo = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(name+' London UK')}&format=json&limit=1`, { headers:{'Accept-Language':'fr','User-Agent':'LondonTripApp/1.0'}, signal:AbortSignal.timeout(6000) });
