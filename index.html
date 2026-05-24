@@ -68,7 +68,9 @@
     #agenda { background:#F7F8FA; }
     .timeline { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:18px 0 24px; }
     .event-chip { border-radius:10px; padding:8px 12px 0; cursor:pointer; display:flex; flex-direction:column; box-shadow:0 2px 12px rgba(0,0,0,0.22); user-select:none; overflow:hidden; position:absolute; transition:opacity 0.4s ease, box-shadow 0.4s ease; }
-    .event-chip.dragging { opacity:0.55; box-shadow:0 8px 28px rgba(0,0,0,0.5) !important; }
+    .event-chip.dragging { opacity:0.6; box-shadow:0 8px 28px rgba(0,0,0,0.5) !important; }
+    .chip-lock-btn { position:absolute; top:6px; right:6px; background:rgba(0,0,0,0.28); border:none; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:12px; cursor:pointer; padding:0; font-family:inherit; z-index:10; touch-action:manipulation; }
+    .chip-lock-btn:active { opacity:0.6; }
     .event-chip-header { display:flex; align-items:center; gap:8px; }
     .event-chip-label { width:22px; height:22px; border-radius:50%; background:rgba(255,255,255,0.28); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; color:#fff; flex-shrink:0; }
     .event-chip-title { color:#fff; font-size:13px; font-weight:700; line-height:1.2; }
@@ -1028,6 +1030,7 @@ function buildTimeline(dayIdx) {
       </div>
       <div class="event-chip-time">${ev.time}</div>
       ${metro}${travel}
+      <button class="chip-lock-btn">${ev.locked === false ? '🔓' : '🔒'}</button>
       <div class="resize-handle" data-handle="1"></div>`;
 
     attachChipListeners(chip, ev, dayIdx);
@@ -1048,9 +1051,18 @@ function buildTimeline(dayIdx) {
 
 // ── Drag & resize ────────────────────────────────────
 let dragState = null;
-let longPressTimer = null;
+
+function toggleLock(ev, btn) {
+  ev.locked = ev.locked !== false ? false : true;
+  btn.textContent = ev.locked !== false ? '🔒' : '🔓';
+  if (navigator.vibrate) navigator.vibrate(30);
+}
 
 function attachChipListeners(chip, ev, dayIdx) {
+  const lockBtn = chip.querySelector('.chip-lock-btn');
+  lockBtn.addEventListener('touchstart', e => { e.stopPropagation(); e.preventDefault(); toggleLock(ev, lockBtn); }, { passive:false });
+  lockBtn.addEventListener('click',      e => { e.stopPropagation(); });
+
   chip.addEventListener('touchstart',  e => onTouchStart(e, ev, dayIdx, chip), { passive:false });
   chip.addEventListener('touchmove',   e => onDragMove(e),   { passive:false });
   chip.addEventListener('touchend',    e => onDragEnd(e),    { passive:false });
@@ -1059,40 +1071,28 @@ function attachChipListeners(chip, ev, dayIdx) {
 }
 
 function onTouchStart(e, ev, dayIdx, chip) {
+  if (e.target.closest('.chip-lock-btn')) return;
   const touch = e.touches[0];
   const isResize = e.target.dataset.handle === '1';
-  if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+  const dragEnabled = ev.locked === false;
   dragState = { ev, dayIdx, chip, isResize,
     startY: touch.clientY,
     startTop: parseInt(chip.style.top) || 0,
     startHeight: parseInt(chip.style.height) || 44,
     didMove: false,
-    dragEnabled: isResize };
+    dragEnabled };
   e.preventDefault();
-  if (!isResize) {
-    longPressTimer = setTimeout(() => {
-      longPressTimer = null;
-      if (dragState && dragState.chip === chip) {
-        dragState.dragEnabled = true;
-        chip.classList.add('dragging');
-        if (navigator.vibrate) navigator.vibrate(50);
-      }
-    }, 3000);
-  }
 }
 
 function onDragMove(e) {
   if (!dragState) return;
   const touch = e.touches[0];
   const dy = touch.clientY - dragState.startY;
-  if (!dragState.dragEnabled) {
-    if (Math.abs(dy) > 8) {
-      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
-    }
-    e.preventDefault();
-    return;
+  if (!dragState.dragEnabled) { e.preventDefault(); return; }
+  if (Math.abs(dy) > 5) {
+    if (!dragState.didMove) dragState.chip.classList.add('dragging');
+    dragState.didMove = true;
   }
-  if (Math.abs(dy) > 5) dragState.didMove = true;
   if (dragState.isResize) {
     const newH = Math.max(34, dragState.startHeight + dy);
     dragState.chip.style.height = newH + 'px';
@@ -1104,14 +1104,13 @@ function onDragMove(e) {
 }
 
 function onDragEnd(e) {
-  if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (!dragState) return;
   const { ev, dayIdx, chip, isResize, didMove, dragEnabled } = dragState;
   chip.classList.remove('dragging');
   dragState = null;
 
   if (!didMove) {
-    if (!dragEnabled && ev.modal) openModal(ev.modal, ev);
+    if (ev.modal) openModal(ev.modal, ev);
     return;
   }
   if (!dragEnabled) return;
@@ -1136,6 +1135,8 @@ function onDragEnd(e) {
 }
 
 function onMouseDragStart(e, ev, dayIdx, chip) {
+  if (e.target.closest('.chip-lock-btn')) return;
+  const dragEnabled = ev.locked === false;
   const isResize = e.target.dataset.handle === '1';
   const startY = e.clientY;
   const startTop = parseInt(chip.style.top) || 0;
@@ -1143,15 +1144,18 @@ function onMouseDragStart(e, ev, dayIdx, chip) {
   let didMove = false;
 
   function onMove(ev2) {
+    if (!dragEnabled) return;
     const dy = ev2.clientY - startY;
-    if (Math.abs(dy) > 3) didMove = true;
+    if (Math.abs(dy) > 3) { if (!didMove) chip.classList.add('dragging'); didMove = true; }
     if (isResize) { chip.style.height = Math.max(34, startH + dy) + 'px'; }
     else { chip.style.top = Math.max(0, Math.min(startTop + dy, NH*PX-34)) + 'px'; }
   }
   function onUp() {
     document.removeEventListener('mousemove', onMove);
     document.removeEventListener('mouseup', onUp);
+    chip.classList.remove('dragging');
     if (!didMove) { if (ev.modal) openModal(ev.modal, ev); return; }
+    if (!dragEnabled) return;
     const SNAP = 15;
     if (isResize) {
       const h = parseInt(chip.style.height);
