@@ -925,26 +925,61 @@ let EVENTS_BY_DAY = {
   ],
 };
 
-// Restore saved positions from previous session
-(function restorePositions() {
+async function restoreFromServer() {
   try {
-    const pos = JSON.parse(localStorage.getItem('ltr_positions') || '{}');
-    Object.values(EVENTS_BY_DAY).flat().forEach(ev => {
-      if (pos[ev.id]) { ev.start = pos[ev.id].s; ev.end = pos[ev.id].e; }
+    const res = await fetch('/api/state');
+    if (!res.ok) return;
+    const data = await res.json();
+    const snapshots = data.snapshots || [];
+    if (!snapshots.length) return;
+
+    const savedById = {};
+    snapshots.forEach(s => { savedById[s.id] = s; });
+
+    // Appliquer les changements aux événements fixes (titre, couleur, horaires, jour)
+    const toMove = [];
+    [0, 1, 2].forEach(d => {
+      (EVENTS_BY_DAY[d] || []).slice().forEach(ev => {
+        const s = savedById[ev.id];
+        if (!s) return;
+        ev.start = s.start; ev.end = s.end; ev.time = s.time;
+        ev.title = s.title; ev.color = s.color;
+        if (s.day !== d) toMove.push({ ev, fromDay: d, toDay: s.day });
+      });
     });
-    const userEvts = JSON.parse(localStorage.getItem('ltr_user_events') || '[]');
-    userEvts.forEach(ev => { if (EVENTS_BY_DAY[ev.day]) EVENTS_BY_DAY[ev.day].push(ev); });
+    toMove.forEach(({ ev, fromDay, toDay }) => {
+      EVENTS_BY_DAY[fromDay] = EVENTS_BY_DAY[fromDay].filter(e => e.id !== ev.id);
+      ev.day = toDay;
+      (EVENTS_BY_DAY[toDay] = EVENTS_BY_DAY[toDay] || []).push(ev);
+    });
+
+    // Restaurer les événements créés par l'utilisateur
+    snapshots.filter(s => s.isUser).forEach(s => {
+      const exists = [0,1,2].some(d => (EVENTS_BY_DAY[d]||[]).find(e => e.id === s.id));
+      if (!exists) {
+        (EVENTS_BY_DAY[s.day] = EVENTS_BY_DAY[s.day] || []).push(s);
+        const num = parseInt((s.id||'').replace('user_',''));
+        if (!isNaN(num) && num >= addEventCounter) addEventCounter = num + 1;
+      }
+    });
   } catch(_) {}
-})();
+}
 
 function saveState() {
-  try {
-    const pos = {};
-    Object.values(EVENTS_BY_DAY).flat().forEach(ev => { pos[ev.id] = { s:ev.start, e:ev.end }; });
-    localStorage.setItem('ltr_positions', JSON.stringify(pos));
-    const userEvts = Object.values(EVENTS_BY_DAY).flat().filter(e => e.isUser);
-    localStorage.setItem('ltr_user_events', JSON.stringify(userEvts));
-  } catch(_) {}
+  const snapshots = [];
+  [0, 1, 2].forEach(d => {
+    (EVENTS_BY_DAY[d] || []).forEach(ev => {
+      snapshots.push(ev.isUser
+        ? { ...ev }
+        : { id:ev.id, day:ev.day, title:ev.title, color:ev.color, start:ev.start, end:ev.end, time:ev.time }
+      );
+    });
+  });
+  fetch('/api/state', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ snapshots })
+  }).catch(() => {});
 }
 
 // ── Temps de trajet ──────────────────────────────────
@@ -1956,11 +1991,13 @@ function selectSpinName(idx) {
 // ── Init ──────────────────────────────────────────────
 document.getElementById('hdr-name').textContent = DAYS[0].name;
 document.getElementById('hdr-date').textContent = DAYS[0].date;
-buildTimeline(0);
-loadTravelTimes();
-loadWeatherBtn();
-setInterval(loadTravelTimes, 10*60*1000);
-setInterval(()=>{ weatherCache=null; loadWeatherBtn(); }, 30*60*1000);
+restoreFromServer().then(() => {
+  buildTimeline(0);
+  loadTravelTimes();
+  loadWeatherBtn();
+  setInterval(loadTravelTimes, 10*60*1000);
+  setInterval(()=>{ weatherCache=null; loadWeatherBtn(); }, 30*60*1000);
+});
 </script>
 </body>
 </html>
